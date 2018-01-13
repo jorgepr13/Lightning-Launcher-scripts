@@ -6,6 +6,29 @@ var taskerStatus = TaskerIntent.testStatus(context);
 //var taskerVar = LL.getEvent().getData() || null;
 //if(taskerVar == null || taskerVar == undefined || taskerVar == "") {return [null];}
 
+function emptyVariable(myVar){return myVar == null || myVar == undefined || myVar == "";} 
+
+//setTaskerVariable("%SCREEN_FILTER",1);
+
+function setTaskerVariable(name,value){
+  if(taskerStatus != "OK") {
+    Android.makeNewToast("Tasker status: " + taskerStatus,false).show();
+  } else {
+    if(emptyVariable(name)) {return;}
+    if(emptyVariable(value) && value != "") {return;}
+    value = value.toString();
+
+    var i = new TaskerIntent("Set_Var");
+    i.addAction(ActionCodes.SET_VARIABLE);//547
+    i.addArg(name);//"Name"
+    i.addArg(value);//"To"
+    i.addArg(false);//"Recurse Variables"
+    i.addArg(false);//"Do Maths"
+    i.addArg(false);//"Append"
+    sendTaskerIntent(i, true);//true=wait for task completion
+  }
+}
+
 
 /*Tasker Variable Request
 About the script
@@ -43,7 +66,7 @@ for(var i=0;i<value.length;i++){msg += tVar[i] + ": " + value[i] + "\n";}
 alert(msg);//Android.makeNewToast(msg,true).show();
 
 function getTaskerVariable(taskerVar){
-  if(taskerVar == null || taskerVar == undefined || taskerVar == "") {return null;}
+  if(emptyVariable(taskerVar)) {return null;}
   if(typeoff(taskerVar) != "array" && typeoff(taskerVar) != "string") {return null;}
   if(typeoff(taskerVar) == "string") {var taskerVar = [taskerVar];}
   // Configuration
