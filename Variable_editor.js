@@ -1,0 +1,132 @@
+
+/*
+About the script
+Purpose : This is a tool script to help editing the list of lightning variables.
+Author : TrianguloY
+Link: https://plus.google.com/u/1/105066926163073195690/posts/ftAFbdRpp7d
+How to use the script
+It lets you modify current variables and/or create new ones.
+
+How to use it:
+Launch the script, the list of all current variables and an extra 'create a variable' entry will be shown.
+Click a variable to see it's type and value. You can modify it's value and save it. If you click cancel it will ask to delete it.
+If you choose 'create a variable' input a name and a value and it will be created.
+Note: the variables are set using lightning's action 'set a variable'. This means that the value is converted to it's type by lightning itself, this script doesn't use the script API calls because they need to specify a type.
+
+For the 'how does this work?': Saves lightning to force it to save the variables into the variables file. Reads the available variables from the variables file (because there is no way to obtain the variables elsewhere, or at least I don't know how) Shows the list of variables to choose, a lot of prompts, etc. To set/create a value it calls lightning activity 'set a variable'. 
+To delete a variable it calls LL.getVariables().edit().setString(name,null).commit();﻿
+*/
+
+//classes
+LL.bindClass("android.app.AlertDialog");
+LL.bindClass("android.content.DialogInterface");
+LL.bindClass("java.io.BufferedReader");
+LL.bindClass("java.io.FileReader");
+LL.bindClass("java.io.File");
+
+//global variables
+var newvariabletext = " --- create a new variable --- ";
+var vars;
+var names;
+
+//starts
+show();
+
+function show(){
+  LL.save();//save to force the file to be updated
+  vars = JSON.parse(read("data/data/net.pierrox.lightning_launcher_extreme/files/variables"));//reads the content of the file
+  names = vars.v == null?[]:vars.v.map(function(a){return a.n + ": '" + a.v + "'"});//extracts the variable names, if any
+  names.push(newvariabletext);//adds the 'create variable' entry
+
+  list(names,clicked,"Choose a variable, or create a new one");//shows the list
+
+} //end show()
+
+//when clicked an element
+function clicked(dialog,which){
+  //var variable = vars.v[which];
+  if (which == names.length-1){addvariable();} 
+  else {editvariable(vars.v[which]);
+    //editvariable(variable);
+  }
+  setTimeout(show,0);//shows the list again. On a timeout so the startActivity() is correctly launched before
+}
+
+//editing a variable
+function editvariable(variable){
+  var name = variable.n;
+
+  //gets it's type
+  var llvar = LL.getVariables();
+  var type = llvar.getType(name);
+
+  //gets its value
+  var oldv = variable.v
+  //var oldv = vars.v.filter(function(obj){return obj.n==name})[0].v;
+
+  //asks for a new value
+  var newv = prompt(name + " (" + type + ")",oldv);
+  if(newv == null){
+    //cancelled. delete?
+    if (confirm("Do you want to delete this variable?")) {llvar.edit().setString(name,null).commit();}
+    return;
+  }
+ 
+  //update the value
+  lightningcall(name,newv);
+}
+
+//adding a variable
+function addvariable(){
+  var name = "";
+
+  do {name = prompt("Name of the variable",name);}
+  while (names.indexOf(name) != -1 && !confirm("This variable name is already used, do you want to continue? (will be overwritten)"));
+ 
+  if(name == null || name == "") {return;}//cancelled
+ 
+  //asks for the value
+  var value = prompt("Value of the variable '" + name + "'","");
+  if(value == null) {return;}//cancelled
+
+  //create the variable
+  lightningcall(name,value);
+}
+
+//calls lightning action 'set a variable'
+function lightningcall(name,value){
+  var intent = new Intent.getIntent("#Intent;component=net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard;i.a=41;end");//the base intent
+  intent.putExtra("d",name + "/" + value);//the extra data
+  LL.startActivity(intent);
+}
+
+
+//function to display a List in a Popup, where the user can select one item. Taken from Lukas Morawietz's Multi tool script
+function list(items,onClickFunction,title){
+  var builder = new AlertDialog.Builder(LL.getContext());
+  var listener = new DialogInterface.OnClickListener(){
+    onClick:function(dialog,which){
+      dialog.dismiss();
+      setTimeout(function(){onClickFunction(dialog,which);},0);
+      return true;
+    }
+  }
+  builder.setTitle(title);
+  builder.setItems(items,listener);
+  builder.setCancelable(true);
+  builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+    onClick:function(dialog,id){dialog.cancel();}});//it has a Cancel Button
+  builder.show();
+}
+
+function read(filePath){
+  var file = new File(filePath);
+  var r = new BufferedReader(new FileReader(file));
+  var s = "";
+  var l;
+  while((l = r.readLine()) != null) {s+=(l+"\n");}
+  return s.substring(0, s.length - 1);
+}
+
+//script_variable_editor.txt · Last modified: 2015/10/13 15:36 by trianguloy
+//Except where otherwise noted, content on this wiki is licensed under the following license: CC Attribution-Share Alike 3.0 Unported
