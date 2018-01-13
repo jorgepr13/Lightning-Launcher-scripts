@@ -1,4 +1,27 @@
-Object.prototype.typeoff     = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+
+/*Tasker Variable Request
+About the script
+Purpose: This is a tool script to request Tasker variables without creating bindings.
+Author: jorgepr13
+
+ * References *
+http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
+https://groups.google.com/forum/m/#!topic/tasker/FjOpMXN4wf0
+http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
+https://forum.xda-developers.com/showthread.php?t=2489449
+
+How to use it:
+1. Change the configuration variables with the variables/values you need
+2. Create a Tasker task described below, (optional if you are able to run the send intent from LL) 
+3. Launch the script
+
+ * Configuration Info *
+taskerVar, the tasker variable to request
+intent, can be sent to any unique name, and must not contain any space
+taskerTask, used in the workaround to call a previously defined task that sends the variable/s value/s
+key, auto-generated, can be set to any name, but different from the other keys, and must not contain any space
+value, the requested Tasker variable value, or null by default
+*/
 
 var context = getActiveScreen().getContext();//var context = LL.getContext();
 var taskerStatus = TaskerIntent.testStatus(context);
@@ -29,30 +52,6 @@ function setTaskerVariable(name,value){
   }
 }
 
-
-/*Tasker Variable Request
-About the script
-Purpose: This is a tool script to request Tasker variables without creating bindings.
-Author: jorgepr13
-
- * References *
-http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
-https://groups.google.com/forum/m/#!topic/tasker/FjOpMXN4wf0
-http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
-https://forum.xda-developers.com/showthread.php?t=2489449
-
-How to use it:
-1. Change the configuration variables with the variables/values you need
-2. Create a Tasker task described below, (optional if you are able to run the send intent from LL) 
-3. Launch the script
-
- * Configuration Info *
-taskerVar, the tasker variable to request
-intent, can be sent to any unique name, and must not contain any space
-taskerTask, used in the workaround to call a previously defined task that sends the variable/s value/s
-key, auto-generated, can be set to any name, but different from the other keys, and must not contain any space
-value, the requested Tasker variable value, or null by default
-*/
 
 //test data
 var tVar = ["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"];
