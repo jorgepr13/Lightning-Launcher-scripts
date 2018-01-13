@@ -23,6 +23,8 @@ key, auto-generated, can be set to any name, but different from the other keys, 
 value, the requested Tasker variable value, or null by default
 */
 
+Object.prototype.typeoff = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+
 var context = getActiveScreen().getContext();//var context = LL.getContext();
 var taskerStatus = TaskerIntent.testStatus(context);
 
@@ -52,7 +54,7 @@ function setTaskerVariable(name,value){
   }
 }
 
-
+/*
 //test data
 var tVar = ["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"];
 var tVar = "%BLUE";
@@ -63,11 +65,12 @@ var msg = "";
 if(typeoff(tVar) == "string") {var tVar = [tVar];}
 for(var i=0;i<value.length;i++){msg += tVar[i] + ": " + value[i] + "\n";}
 alert(msg);//Android.makeNewToast(msg,true).show();
-
+*/
 function getTaskerVariable(taskerVar){
+  var typeStr = false;
   if(emptyVariable(taskerVar)) {return null;}
   if(typeoff(taskerVar) != "array" && typeoff(taskerVar) != "string") {return null;}
-  if(typeoff(taskerVar) == "string") {var taskerVar = [taskerVar];}
+  if(typeoff(taskerVar) == "string") {var taskerVar = [taskerVar];typeStr = true;}
   // Configuration
   //var taskerVar  = ["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"];
   var intent     = ["net.tasker.SHARE_VAR"];
@@ -187,5 +190,6 @@ function getTaskerVariable(taskerVar){
   for(var i=0;i<value.length;i++){msg += taskerVar[i] + ": " + value[i] + "\n";}
   alert(msg);//Android.makeNewToast(msg,true).show();
   */
+  if(typeStr){return value[0];}
   return value;
 }//end func getTaskerVariable
