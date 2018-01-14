@@ -1,0 +1,126 @@
+
+// https://jsperf.com/native-arr-foreach-vs-custom-foreach
+
+  var i, values = [],
+      sum = 0;
+  for (i = 0; i < 10000; i++) {
+    values[i] = i;
+  }
+
+  function add(val) {
+    sum += val;
+  }
+
+  function foreach(fn) {
+    var arr = this;
+    var len = arr.length;
+    for(var i=0; i<len; ++i) {
+        fn(arr[i]);
+    }
+  }
+  
+  Object.defineProperty(Array.prototype, 'customForEach', {
+    enumerable: false,
+    value: foreach
+  });
+
+//
+//
+//
+
+
+for (i = 0; i < values.length; i++) {
+  add(values[i]);
+}
+
+
+values.forEach(add);
+
+/*
+function foreach(fn) {
+    var arr = this;
+    var len = arr.length;
+    for(var i=0; i<len; ++i) {
+        fn(arr[i]);
+    }
+}
+
+Object.defineProperty(Array.prototype, 'customForEach', {
+    enumerable: false,
+    value: foreach
+});
+
+*/
+values.customForEach(add);
+
+
+
+
+//
+//
+//
+
+
+
+/*
+https://stackoverflow.com/questions/23614054/javascript-nuances-of-myarray-foreach-vs-for-loop
+You can use your custom foreach function which will perform much better then Array.forEach
+
+You should add this once to your code. This will add new function to the Array.
+*/
+
+function foreach(fn) {
+    var arr = this;
+    var len = arr.length;
+    for(var i=0; i<len; ++i) {
+        fn(arr[i], i);
+    }
+}
+
+Object.defineProperty(Array.prototype, 'customForEach', {
+    enumerable: false,
+    value: foreach
+});
+
+/*
+Then you can use it anywhere like the Array.forEach
+*/
+
+[1,2,3].customForEach(function(val, i){
+
+});
+
+/*
+The only difference it is 3 times faster. https://jsperf.com/native-arr-foreach-vs-custom-foreach
+*/
+
+
+/*
+The most substantive difference between the for loop and the forEach method is that, with the former, you may break out of the loop. You can simulate continue by simply returning from the function passed to forEach, but there is no way to stop looping altogether.
+
+Aside from that, the two accomplish effectively the same functionality. Another minor difference involves the scope of the index (and all containing variables) in the for loop, due to variable hoisting.
+*/
+
+// 'i' is scoped to the containing function
+for (var i = 0; i < arr.length; i++) { ... }
+
+// 'i' is scoped to the internal function
+arr.forEach(function (elem, i) { ... });
+
+/*
+However, I find that forEach is much more expressive—it represents your intent to iterate through each element of an array, and it provides you with a reference to the element, not just the index. Overall, it mostly comes down to personal taste, but if you can use forEach, I would recommend using it.
+
+There are a few more substantial differences between the two versions, specifically regarding performance. In fact, the simple for loop performs considerably better than the forEach method, as demonstrated by this jsperf test.
+
+Whether or not such performance is necessary for you is up to you to decide, and in most cases, I would favor expressiveness over speed. This speed difference is likely due to the minor semantic differences between the basic loop and the method when operating on sparse arrays, as noted in this answer.
+
+If you don't need the behavior of forEach and/or you need to break out of the loop early, you can use Lo-Dash's _.each as an alternative, which will also work cross-browser. If you're using jQuery, it also provides a similar $.each, just note the differences in arguments passed to the callback function in each variation.
+
+(As for the forEach polyfill, it should work in older browsers without problems, if you choose to go that route.)
+
+*/
+
+
+
+
+

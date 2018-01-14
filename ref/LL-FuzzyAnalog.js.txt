@@ -1,0 +1,100 @@
+var widget = LL.getEvent().getItem();
+    widget.setTag("QT", "notheme");
+
+var update = function()
+{
+var WIDTH = widget.getWidth();
+
+var HEIGHT = widget.getHeight();
+
+var lng = Math.min(HEIGHT,WIDTH)/2;
+
+var img = LL.createImage(lng,lng);
+
+widget.setBoxBackground(img, "ns");
+
+// create a paint object
+
+var p = new Paint();
+
+p.setAntiAlias(true);
+p.setStyle(Paint.Style.FILL);
+p.setStrokeWidth(3);
+
+// retrieve the canvas
+var c = img.draw();
+
+if (typeof self.quickColor != "undefined") {
+//   p.setColor(self.quickColor.DarkMuted.tint);
+   p.setColor(self.quickColor.DarkMuted.half);
+   c.drawRect(0,0,lng,lng,p);
+   p.setColor(self.quickColor.Vibrant.solid);
+
+}else{
+   LL.runScript( "QuickTheme-load", null);
+   c.drawARGB(42,250,250,250);
+   p.setColor(Color.CYAN);
+}
+
+var datum = new Date();
+
+var min = datum.getMinutes();
+var uur = datum.getHours();
+
+var lngUur = lng * 1.6;
+
+// Calculate Center.
+var CntX = (lng - lng * Math.cos( (uur + (min/60)) * 0.52359877559 - 1.57079632679) )/2;
+var CntY = (lng + lng * Math.sin( (uur + (min/60)) * 0.52359877559 + 1.57079632679) )/2;
+
+// Draw 	thicks
+for (var i = 0; i < 72; i++) 	{ 	
+	var innerDist		= (i % 6) ? 0.89 : 0.84; 		
+ var outerDist	= (i % 6) ? 0.94 : .965; 	
+	 		 	
+	var thick = (Math.PI * (i/36)) - (Math.PI/2); 	
+
+	var x1 = CntX + Math.cos( thick ) * (innerDist * lng);
+	var y1 = CntY + Math.sin( thick ) * (innerDist * lng); 	
+	var x2 = CntX + Math.cos( thick ) * (outerDist * lng); 	
+	var y2 = CntY + Math.sin( thick ) * (outerDist * lng); 		
+
+ 	c.drawLine(x1, y1, x2, y2, p); 
+	} 	
+
+// Draw 	numbers
+p.setTextSize(lng * .2);
+p.setStyle(Paint.Style.STROKE);
+p.setStrokeWidth(1);
+for (var i = 1; i <= 12; i++) 	{ 	
+	var innerDist		= .7; 
+	 		 	
+	var thick = (Math.PI * (i/6)) - (Math.PI/2); 	
+	var x1 = (CntX - (lng * .1)) + Math.cos( thick ) * (innerDist * lng);
+  var y1 = (CntY + (lng * .1)) + Math.sin( thick ) * (innerDist * lng); 		
+ 		c.drawText(i.toString(), x1, y1, p); 
+	} 	
+
+// uur 
+//p.setColor(Color.RED);
+if (typeof self.quickColor != "undefined") {
+   p.setColor(self.quickColor.LightVibrant.solid);
+
+}else{
+
+   p.setColor(0xF0F06020);
+}
+p.setStrokeWidth(3);
+
+c.drawLine( ( CntX - lngUur * Math.cos(((uur + (min/60)) * 0.52359877559 ) -  1.57079632679) ), (CntY - lngUur * Math.sin(((uur + (min/60)) * 0.52359877559 ) - 1.57079632679) ) , ( CntX + lngUur * Math.cos(((uur + (min/60)) * 0.52359877559 ) -  1.57079632679) ), (CntY + lngUur * Math.sin(((uur + (min/60)) * 0.52359877559 ) - 1.57079632679) ), p);
+
+// update so that changes are flipped to the screen
+
+img.update();
+
+  // set the timer again
+  widget.setTag(setTimeout(update, 6000));
+}
+
+// initiate the periodic update
+update();﻿

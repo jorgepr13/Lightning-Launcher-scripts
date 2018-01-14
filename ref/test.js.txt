@@ -1,0 +1,45 @@
+var scene = "Side menu - Connections"
+var element ="Text_img_Bluetooth";
+var color="0xFFFFFFFF";
+var color="0xFF33B5E5";
+var icon="D";
+//wait(500)
+var icon="C";
+color = color.slice(2);
+
+var ok = createScene(scene);
+var ok = showScene(scene,"OverBlocking",100,0,false,false);
+//wait(500);
+//var ok = hideScene(scene);
+		var ok = elemText(scene,element,"repl",icon);
+var ok = elemTextColour(scene,element,color);
+	
+	/*
+var ok = elemBackColour(scene,element, str startColour, str endColour )
+var ok = elemBorder(scene,element, int width, str colour )
+var ok = elemTextSize(scene,element, int size )
+
+
+var ok = elemVisibility(scene,element, boolean visible,0)
+
+var ok = elemPosition(scene,element, str orientation, int x, int y,0)
+//orientation: must be one of "port" or "land"
+
+var ok = performTask( str taskName, int priority, str parameterOne, str parameterTwo )
+
+*/
+
+
+alert (ok);
+
+exit();
+
+/*
+alert("test js");
+
+function test_a(){
+alert("this is test_a");
+var test_a="something_ab_c";
+}
+
+*/

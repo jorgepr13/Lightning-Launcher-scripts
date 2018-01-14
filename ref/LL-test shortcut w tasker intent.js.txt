@@ -1,0 +1,216 @@
+var event = LL.getEvent();
+if (event.getItem() !== null) {
+    alert("Run from empty. \n Do NOT set 'item menu'. \n Only set 'Lightning menu' in script-editor.");
+    return;
+}
+
+var e_cont = event.getContainer();
+if (e_cont.getId() == 99) {
+    alert("Don't run from the app drawer.");
+    return;
+}
+
+var cont=LL.getCurrentDesktop();
+
+var name="test_tasker";
+var itm = cont.getItemByName(name);
+if (itm == null) {
+	//create a shortcut;
+	var itm = cont.addShortcut(name, new Intent(), 0, 0);
+	itm.setName(name);
+};
+var r=2; var c=2;
+itm.setCell(c,r,c+1,r+1,true);
+//	itm.setBinding("s.label",'$weather_day_name_f'+i+'.substr(0,3)',true);
+//itm.getProperties().edit().setFloat("s.labelFontSize", 12).commit();
+
+var ed = itm.getProperties().edit();
+ed.setBoolean("s.iconVisibility", false);
+ed.setBoolean("s.labelVisibility", true);
+ed.setFloat("s.labelFontSize", 9);
+//ed.setBoolean("i.enabled", false);
+//ed.setString("s.labelFontStyle",			"NORMAL");
+//ed.setInteger("s.labelFontColor", 		0x64ffffff);
+//ed.setInteger("s.selectionColorLabel", 	0xffffffff);
+//ed.setInteger("s.focusColorLabel",		0xffffffff);
+//ed.setInteger("s.labelMaxLines", 2);
+
+ed.setEventHandler(
+"i.tap",EventHandler.RUN_SCRIPT,
+LL.getScriptByName("test-shortcut").getId()+"/"+name);
+
+ed.commit();
+
+/*
+//var task = "f Task find and launch";
+var task = "Weather - Read";
+var intent = new TaskerIntent(task);
+intent.addParameter( data );
+intent.addVariable( "%name", "value" );
+LL.sendTaskerIntent(intent, false);
+*/
+
+
+//LL.bindClass("android.net.Uri");  
+LL.bindClass("android.content.Intent");
+LL.bindClass("android.content.ComponentName");
+
+var intent = new Intent ();
+
+//intent.setAction ("net.dinglisch.android.tasker.WIDICKYUM");
+
+//intent.setAction ("net.dinglisch.android.tasker.ACTION_TASK");
+intent.setAction ("com.totally.made.up.action.LAUNCH_TASK");
+//
+
+intent.setData (Uri.parse("task:Weather - Read"));
+
+//intent.setData (Uri.parse("task_name:Weather - Read"));
+
+//
+
+//intent.putExtra (net.dinglisch.android.tasker.EXTRA_TASK_NAME,"Weather - Read");
+
+//
+
+//intent.setComponent (ComponentName("net.dinglisch.android.taskerm"));
+
+//intent.setComponent (ComponentName("net.dinglisch.android.taskerm","net.dinglisch.android.taskerm.IntentHandler"));
+
+intent.setComponent (ComponentName("net.dinglisch.android.taskerm","net.dinglisch.android.taskerm.TaskerIntent"));
+
+//
+
+itm.setIntent(intent);
+
+
+
+
+/*
+
+Req. Tasker task shortcut intent 
+Hi, I'm using Lightning Launcher (LL), and I'm trying to create custom icons that would launch an specific Tasker task, just like creating a shortcut, but I would be creating it myself through a script. 
+
+I'm aware that LL allows to use different methods to accomplish launching a specific task, but I would like to accomplish the same as a shortcut, which is a more direct way, like all in one, without a "third man" (a script) on the way. 
+
+I have search for it, but I haven't been able to replicate the shortcut intent. Most of the findings were about sending a broadcast intent through shell, but to my understanding, I'm not able to do that (as a shortcut intent). 
+Then I tried to convert it to intent, and it didn't worked at all, neither I found how to do the broadcast as a "static" intent (launched from the launcher, LL in my case). 
+
+Another suggestion that I found, was to do a send intent with a custom action and then receive that custom action in Tasker and act upon it, but I got stuck on that one. 
+I don't know how to set up the action or the component in the intent. 
+Should it be something like the intent below? And then create an intent received profile in Tasker with that intent action? 
+Intent { 
+act=com.totally.made.up.action.LAUNCHMYTASK
+dat=task:my task name 
+cmp=net.dinglisch.android.tasker }
+Reference: 
+https://www.reddit.com/r/tasker/comments/52ru8l/request_intent_for_tasker_to_perform_a_task/
+https://www.reddit.com/r/tasker/comments/1lha5e/task_to_send_intent_to_run_a_tasker_task/
+
+This is the intent that I read from a shortcut created through the launcher vs a shortcut I created through scripting 
+shortcut = Intent { act=net.dinglisch.android.tasker.WIDICKYUM dat=task:my task name cmp=net.dinglisch.android.taskerm/.IntentHandler (has extras) }
+script   = Intent { act=net.dinglisch.android.tasker.WIDICKYUM dat=task:my task name cmp=net.dinglisch.android.taskerm/.IntentHandler }
+
+Here is my Javascript/LL code so far, 
+//LL.bindClass("android.net.Uri");
+LL.bindClass("android.content.Intent");
+LL.bindClass("android.content.ComponentName");
+
+var cont=LL.getCurrentDesktop();
+var name="test_tasker";
+var itm = cont.getItemByName(name);
+if (itm == null) {
+	//create a shortcut;
+	var itm = cont.addShortcut(name, new Intent(), 0, 0);
+	itm.setName(name);
+};
+
+var intent = new Intent ();
+intent.setAction ("net.dinglisch.android.tasker.WIDICKYUM");
+intent.setData (Uri.parse("task:my task name"));
+intent.setComponent (ComponentName("net.dinglisch.android.taskerm","net.dinglisch.android.taskerm.IntentHandler"));
+itm.setIntent(intent);
+
+It creates the shortcut, but when I launch it, Tasker flashes "Sorry, this content cannot not be handled by Tasker." 
+
+Any help will be greatly appreciated. 
+
+
+
+
+https://www.reddit.com/r/tasker/comments/52ru8l/request_intent_for_tasker_to_perform_a_task/
+
+Simply use send intent with action "myaction", target broadcast receiver and in the extra task:mytaskname. 
+Then in the intent received Tasker side, you can create a condition with action "myaction" and you should have the variable %task containing mytaskname, you can use the name to perform the task
+
+Alternatively in a shell:
+am broadcast -a net.dinglisch.android.tasker.ACTION_TASK -e task_name myaction
+
+
+https://www.reddit.com/r/tasker/comments/1lha5e/task_to_send_intent_to_run_a_tasker_task/
+
+If anybody cares, i figured out a way to do it by running a shell task with the command: 
+am broadcast -a net.dinglisch.android.tasker.ACTION_TASK --es "task_name" "your task name"
+
+
+# TaskerIntent
+
+https://github.com/NordicSemiconductor/Android-nRF-Beacon/blob/master/app/src/main/java/net/dinglisch/android/tasker/TaskerIntent.java
+
+#
+am broadcast 
+-a net.dinglisch.android.tasker.ACTION_TASK 
+-e task_name myaction
+
+
+#
+I'm looking for a way to run a Tasker task named test via ADB command. I found this thread Running a tasker task via SSHDroid (or adb shell) and tried but did not succeed. All I got was
+
+adb shell am broadcast -a net.dinglisch.android.tasker.ACTION_TASK -es task_name test
+Broadcasting: Intent { act=net.dinglisch.android.tasker.ACTION_TASK pkg=test (has extras) }
+Broadcast completed: result=0
+So how can I run a Tasker task via ADB command?
+
+
+
+https://developer.android.com/guide/components/intents-filters.html#Building
+
+https://developer.android.com/reference/android/content/Intent.html#Intent(android.content.Context, java.lang.Class<?>)
+
+
+http://tasker.wikidot.com/bluedock
+
+install BlueDock
+install Manual Intent Shortcuts
+set up a task within Tasker that does whatever you want done each time - for this example let's assume the task is called "Play music"
+start BlueDock
+click on the device you want to configure a task for
+you can select Connect as well as Disconnect (*)
+select "Shortcuts"
+select "Manual Intent Shortcuts"
+fill in the following fields
+Shortcut Name: whatever you like - I don't know whether you can leave it empty
+Action: net.dinglisch.android.tasker.ACTION_TASK
+Extra key: task_name
+Extra value: Play music
+leave the other fields empty
+select Broadcast
+press Ok
+
+
+https://groups.google.com/forum/m/#!searchin/tasker/shortcut$20intent$20/tasker/S1ysXF8B75s
+
+#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=com.android.providers.downloads.ui/.DownloadList;end
+
+task:intent#Intent;action=net.dinglisch.android.tasker.WIDICKYUM;component=net.dinglisch.android.taskerm/.IntentHandler;S.mcro=%3CTask%20sr%3D%22%22%3E%3Cid%3E-4%3C%2Fid%3E%3CImg%20sr%3D%22icn%22ve%3D%222%22%3E%3Cnme%3Ecust_star%3C%2Fnme%3E%3C%2FImg%3E%3Cnme%3Eintent%3C%2Fnme%3E%3Crty%3E2%3C%2Frty%3E%3CAction%20sr%3D%22act0%22ve%3D%227%22%3E%3CStr%20sr%3D%22arg0%22ve%3D%223%22%3Eintent%3C%2FStr%3E%3CInt%20sr%3D%22arg1%22val%3D%227%22%2F%3E%3CStr%20sr%3D%22arg2%22ve%3D%223%22%2F%3E%3CStr%20sr%3D%22arg3%22ve%3D%223%22%2F%3E%3CStr%20sr%3D%22arg4%22ve%3D%223%22%2F%3E%3CInt%20sr%3D%22arg5%22val%3D%221%22%2F%3E%3Ccode%3E130%3C%2Fcode%3E%3C%2FAction%3E%3Ccdate%3E1461427722956%3C%2Fcdate%3E%3Cedate%3E1461427722956%3C%2Fedate%3E%3C%2FTask%3E;end
+
+URL decoded:
+task:intent#Intent;action=net.dinglisch.android.tasker.WIDICKYUM;component=net.dinglisch.android.taskerm/.IntentHandler;S.mcro=<Task sr=""><id>-4</id><Img sr="icn"ve="2"><nme>cust_star</nme></Img><nme>intent</nme><rty>2</rty><Action sr="act0"ve="7"><Str sr="arg0"ve="3">intent</Str><Int sr="arg1"val="7"/><Str sr="arg2"ve="3"/><Str sr="arg3"ve="3"/><Str sr="arg4"ve="3"/><Int sr="arg5"val="1"/><code>130</code></Action><cdate>1461427722956</cdate><edate>1461427722956</edate></Task>;end
+
+
+*/
+
+
+
+
+

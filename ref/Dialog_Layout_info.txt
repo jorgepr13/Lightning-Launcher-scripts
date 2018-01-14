@@ -1,0 +1,3855 @@
+<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>
+LAYOUT PROGRAMATICALLY
+======================
+
+https://developer.android.com/reference/android/widget/LinearLayout.html
+java.lang.Object
+   ↳	android.view.View
+ 	   ↳	android.view.ViewGroup
+ 	 	   ↳	android.widget.LinearLayout
+
+Constants
+int	HORIZONTAL
+int	SHOW_DIVIDER_BEGINNING
+Show a divider at the beginning of the group.
+
+int	SHOW_DIVIDER_END
+Show a divider at the end of the group.
+
+int	SHOW_DIVIDER_MIDDLE
+Show dividers between each item in the group.
+
+int	SHOW_DIVIDER_NONE
+Don't show any dividers.
+
+int	VERTICAL
+
+Public constructors
+LinearLayout(Context context)
+LinearLayout(Context context, AttributeSet attrs)
+LinearLayout(Context context, AttributeSet attrs, int defStyleAttr)
+LinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+Public methods
+LinearLayout.LayoutParams	generateLayoutParams(AttributeSet attrs)
+Returns a new set of layout parameters based on the supplied attributes set.
+
+CharSequence	getAccessibilityClassName()
+Return the class name of this object to be used for accessibility purposes.
+
+int	getBaseline()
+Return the offset of the widget's text baseline from the widget's top boundary.
+
+int	getBaselineAlignedChildIndex()
+Drawable	getDividerDrawable()
+int	getDividerPadding()
+Get the padding size used to inset dividers in pixels
+
+int	getGravity()
+Returns the current gravity.
+
+int	getOrientation()
+Returns the current orientation.
+
+int	getShowDividers()
+float	getWeightSum()
+Returns the desired weights sum.
+
+boolean	isBaselineAligned()
+Indicates whether widgets contained within this layout are aligned on their baseline or not.
+
+boolean	isMeasureWithLargestChildEnabled()
+When true, all children with a weight will be considered having the minimum size of the largest child.
+
+void	onRtlPropertiesChanged(int layoutDirection)
+Called when any RTL property (layout direction or text direction or text alignment) has been changed.
+
+void	setBaselineAligned(boolean baselineAligned)
+Defines whether widgets contained in this layout are baseline-aligned or not.
+
+void	setBaselineAlignedChildIndex(int i)
+void	setDividerDrawable(Drawable divider)
+Set a drawable to be used as a divider between items.
+
+void	setDividerPadding(int padding)
+Set padding displayed on both ends of dividers.
+
+void	setGravity(int gravity)
+Describes how the child views are positioned.
+
+void	setHorizontalGravity(int horizontalGravity)
+void	setMeasureWithLargestChildEnabled(boolean enabled)
+When set to true, all children with a weight will be considered having the minimum size of the largest child.
+
+void	setOrientation(int orientation)
+Should the layout be a column or a row.
+orientation	int: Pass HORIZONTAL or VERTICAL. 
+Default value is HORIZONTAL.
+
+void	setShowDividers(int showDividers)
+Set how dividers should be shown between items in this layout
+Parameters
+showDividers	int: One or more of 
+SHOW_DIVIDER_BEGINNING, SHOW_DIVIDER_MIDDLE, or SHOW_DIVIDER_END to show dividers, or 
+SHOW_DIVIDER_NONE to show no dividers
+
+void	setVerticalGravity(int verticalGravity)
+
+void	setWeightSum(float weightSum)
+Defines the desired weights sum.
+weightSum	float: a number greater than 0.0f, or a number lower than or equals to 0.0f if the weight sum should be computed from the children's layout_weight
+
+boolean	shouldDelayChildPressedState()
+Return true if the pressed state should be delayed for children or descendants of this ViewGroup.
+
+Protected methods
+boolean	checkLayoutParams(ViewGroup.LayoutParams p)
+
+LinearLayout.LayoutParams	generateDefaultLayoutParams()
+Returns a set of layout parameters with a width of MATCH_PARENT and a height of WRAP_CONTENT when the layout's orientation is VERTICAL. 
+When the orientation is HORIZONTAL, the width is set to WRAP_CONTENT and the height to WRAP_CONTENT.
+Returns
+LinearLayout.LayoutParams	a set of default layout parameters or null
+
+LinearLayout.LayoutParams	generateLayoutParams(ViewGroup.LayoutParams lp)
+Returns a safe set of layout parameters based on the supplied layout params.
+
+void	onDraw(Canvas canvas)
+Implement this to do your drawing.
+
+void	onLayout(boolean changed, int l, int t, int r, int b)
+Called from layout when this view should assign a size and position to each of its children.
+
+void	onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+Measure the view and its content to determine the measured width and the measured height.
+
+============
+
+https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html
+java.lang.Object
+   ↳	android.view.ViewGroup.LayoutParams
+
+Constants
+int	FILL_PARENT
+Special value for the height or width requested by a View.
+FILL_PARENT means that the view wants to be as big as its parent, minus the parent's padding, if any. This value is deprecated starting in API Level 8 and replaced by MATCH_PARENT.
+Constant Value: -1 (0xffffffff)
+
+int	MATCH_PARENT
+Special value for the height or width requested by a View.
+MATCH_PARENT means that the view wants to be as big as its parent, minus the parent's padding, if any. Introduced in API Level 8.
+Constant Value: -1 (0xffffffff)
+
+int	WRAP_CONTENT
+Special value for the height or width requested by a View. 
+WRAP_CONTENT means that the view wants to be just large enough to fit its own internal content, taking its own padding into account.
+Constant Value: -2 (0xfffffffe)
+
+Public constructors
+ViewGroup.LayoutParams(Context c, AttributeSet attrs)
+Creates a new set of layout parameters.
+
+ViewGroup.LayoutParams(int width, int height)
+Creates a new set of layout parameters with the specified width and height.
+
+ViewGroup.LayoutParams(ViewGroup.LayoutParams source)
+Copy constructor.
+
+Public methods
+void	resolveLayoutDirection(int layoutDirection)
+Resolve layout parameters depending on the layout direction. 
+Subclasses that care about layoutDirection changes should override this method. 
+The default implementation does nothing.
+Parameters
+layoutDirection	int: the direction of the layout 
+LAYOUT_DIRECTION_LTR 
+LAYOUT_DIRECTION_RTL
+
+Protected methods
+void	setBaseAttributes(TypedArray a, int widthAttr, int heightAttr)
+Extracts the layout parameters from the supplied attributes.
+
+
+========
+########
+
+https://developer.android.com/reference/android/app/AlertDialog.Builder.html
+
+AlertDialog.Builder
+public static class AlertDialog.Builder 
+extends Object 
+
+java.lang.Object
+   ↳	android.app.AlertDialog.Builder
+
+Summary
+Public constructors
+AlertDialog.Builder(Context context)
+Creates a builder for an alert dialog that uses the default alert dialog theme.
+
+AlertDialog.Builder(Context context, int themeResId)
+Creates a builder for an alert dialog that uses an explicit theme resource.
+
+Public methods
+AlertDialog	create()
+Creates an AlertDialog with the arguments supplied to this builder.
+
+Context	getContext()
+Returns a Context with the appropriate theme for dialogs created by this Builder.
+
+AlertDialog.Builder	setAdapter(ListAdapter adapter, DialogInterface.OnClickListener listener)
+Set a list of items, which are supplied by the given ListAdapter, to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setCancelable(boolean cancelable)
+Sets whether the dialog is cancelable or not.
+
+AlertDialog.Builder	setCursor(Cursor cursor, DialogInterface.OnClickListener listener, String labelColumn)
+Set a list of items, which are supplied by the given Cursor, to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setCustomTitle(View customTitleView)
+Set the title using the custom view customTitleView.
+
+AlertDialog.Builder	setIcon(Drawable icon)
+Set the Drawable to be used in the title.
+
+AlertDialog.Builder	setIcon(int iconId)
+Set the resource id of the Drawable to be used in the title.
+
+AlertDialog.Builder	setIconAttribute(int attrId)
+Set an icon as supplied by a theme attribute.
+
+AlertDialog.Builder	setInverseBackgroundForced(boolean useInverseBackground)
+This method was deprecated in API level 23. This flag is only used for pre-Material themes. Instead, specify the window background using on the alert dialog theme.
+
+AlertDialog.Builder	setItems(int itemsId, DialogInterface.OnClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setItems(CharSequence[] items, DialogInterface.OnClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setMessage(int messageId)
+Set the message to display using the given resource id.
+
+AlertDialog.Builder	setMessage(CharSequence message)
+Set the message to display.
+
+AlertDialog.Builder	setMultiChoiceItems(CharSequence[] items, boolean[] checkedItems, DialogInterface.OnMultiChoiceClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setMultiChoiceItems(Cursor cursor, String isCheckedColumn, String labelColumn, DialogInterface.OnMultiChoiceClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setMultiChoiceItems(int itemsId, boolean[] checkedItems, DialogInterface.OnMultiChoiceClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setNegativeButton(CharSequence text, DialogInterface.OnClickListener listener)
+Set a listener to be invoked when the negative button of the dialog is pressed.
+
+AlertDialog.Builder	setNegativeButton(int textId, DialogInterface.OnClickListener listener)
+Set a listener to be invoked when the negative button of the dialog is pressed.
+
+AlertDialog.Builder	setNeutralButton(CharSequence text, DialogInterface.OnClickListener listener)
+Set a listener to be invoked when the neutral button of the dialog is pressed.
+
+AlertDialog.Builder	setNeutralButton(int textId, DialogInterface.OnClickListener listener)
+Set a listener to be invoked when the neutral button of the dialog is pressed.
+
+AlertDialog.Builder	setOnCancelListener(DialogInterface.OnCancelListener onCancelListener)
+Sets the callback that will be called if the dialog is canceled.
+
+AlertDialog.Builder	setOnDismissListener(DialogInterface.OnDismissListener onDismissListener)
+Sets the callback that will be called when the dialog is dismissed for any reason.
+
+AlertDialog.Builder	setOnItemSelectedListener(AdapterView.OnItemSelectedListener listener)
+Sets a listener to be invoked when an item in the list is selected.
+
+AlertDialog.Builder	setOnKeyListener(DialogInterface.OnKeyListener onKeyListener)
+Sets the callback that will be called if a key is dispatched to the dialog.
+
+AlertDialog.Builder	setPositiveButton(int textId, DialogInterface.OnClickListener listener)
+Set a listener to be invoked when the positive button of the dialog is pressed.
+
+AlertDialog.Builder	setPositiveButton(CharSequence text, DialogInterface.OnClickListener listener)
+Set a listener to be invoked when the positive button of the dialog is pressed.
+
+AlertDialog.Builder	setSingleChoiceItems(int itemsId, int checkedItem, DialogInterface.OnClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setSingleChoiceItems(ListAdapter adapter, int checkedItem, DialogInterface.OnClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setSingleChoiceItems(Cursor cursor, int checkedItem, String labelColumn, DialogInterface.OnClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setSingleChoiceItems(CharSequence[] items, int checkedItem, DialogInterface.OnClickListener listener)
+Set a list of items to be displayed in the dialog as the content, you will be notified of the selected item via the supplied listener.
+
+AlertDialog.Builder	setTitle(CharSequence title)
+Set the title displayed in the Dialog.
+
+AlertDialog.Builder	setTitle(int titleId)
+Set the title using the given resource id.
+
+AlertDialog.Builder	setView(int layoutResId)
+Set a custom view resource to be the contents of the Dialog.
+
+AlertDialog.Builder	setView(View view)
+Sets a custom view to be the contents of the alert dialog.
+
+AlertDialog	show()
+Creates an AlertDialog with the arguments supplied to this builder and immediately displays the dialog.
+
+Inherited methods
+  From class java.lang.Object
+
+
+
+########
+========
+
+https://developer.android.com/reference/android/widget/Adapter.html#getView(int,%20android.view.View,%20android.view.ViewGroup)
+
+getItemViewType
+added in API level 1
+int getItemViewType (int position)
+Get the type of View that will be created by getView(int, View, ViewGroup) for the specified item.
+
+Parameters
+position	int: The position of the item within the adapter's data set whose view type we want.
+Returns
+int	An integer representing the type of View. Two views should share the same type if one can be converted to the other in getView(int, View, ViewGroup). Note: Integers must be in the range 0 to getViewTypeCount() - 1. IGNORE_ITEM_VIEW_TYPE can also be returned.
+See also:
+
+IGNORE_ITEM_VIEW_TYPE
+getView
+added in API level 1
+View getView (int position, 
+                View convertView, 
+                ViewGroup parent)
+Get a View that displays the data at the specified position in the data set. You can either create a View manually or inflate it from an XML layout file. When the View is inflated, the parent View (GridView, ListView...) will apply default layout parameters unless you use inflate(int, android.view.ViewGroup, boolean) to specify a root view and to prevent attachment to the root.
+
+Parameters
+position	int: The position of the item within the adapter's data set of the item whose view we want.
+convertView	View: The old view to reuse, if possible. Note: You should check that this view is non-null and of an appropriate type before using. If it is not possible to convert this view to display the correct data, this method can create a new view. Heterogeneous lists can specify their number of view types, so that this View is always of the right type (see getViewTypeCount() and getItemViewType(int)).
+parent	ViewGroup: The parent that this view will eventually be attached to
+Returns
+View	A View corresponding to the data at the specified position.
+getViewTypeCount
+added in API level 1
+int getViewTypeCount ()
+Returns the number of types of Views that will be created by getView(int, View, ViewGroup). Each type represents a set of views that can be converted in getView(int, View, ViewGroup). If the adapter always returns the same type of View for all items, this method should return 1.
+
+This method will only be called when the adapter is set on the AdapterView.
+
+Returns
+int	The number of types of Views that will be created by this adapter
+
+
+
+============
+
+https://developer.android.com/reference/android/text/InputType.html
+android.text.InputType
+
+Constants
+int	TYPE_CLASS_DATETIME
+Class for dates and times.
+
+int	TYPE_CLASS_NUMBER
+Class for numeric text.
+
+int	TYPE_CLASS_PHONE
+Class for a phone number.
+
+int	TYPE_CLASS_TEXT
+Class for normal text.
+
+int	TYPE_DATETIME_VARIATION_DATE
+Default variation of TYPE_CLASS_DATETIME: allows entering only a date.
+
+int	TYPE_DATETIME_VARIATION_NORMAL
+Default variation of TYPE_CLASS_DATETIME: allows entering both a date and time.
+
+int	TYPE_DATETIME_VARIATION_TIME
+Default variation of TYPE_CLASS_DATETIME: allows entering only a time.
+
+int	TYPE_MASK_CLASS
+Mask of bits that determine the overall class of text being given.
+
+int	TYPE_MASK_FLAGS
+Mask of bits that provide addition bit flags of options.
+
+int	TYPE_MASK_VARIATION
+Mask of bits that determine the variation of the base content class.
+
+int	TYPE_NULL
+Special content type for when no explicit type has been specified.
+
+int	TYPE_NUMBER_FLAG_DECIMAL
+Flag of TYPE_CLASS_NUMBER: the number is decimal, allowing a decimal point to provide fractional values.
+
+int	TYPE_NUMBER_FLAG_SIGNED
+Flag of TYPE_CLASS_NUMBER: the number is signed, allowing a positive or negative sign at the start.
+
+int	TYPE_NUMBER_VARIATION_NORMAL
+Default variation of TYPE_CLASS_NUMBER: plain normal numeric text.
+
+int	TYPE_NUMBER_VARIATION_PASSWORD
+Variation of TYPE_CLASS_NUMBER: entering a numeric password.
+
+int	TYPE_TEXT_FLAG_AUTO_COMPLETE
+Flag for TYPE_CLASS_TEXT: the text editor (which means the application) is performing auto-completion of the text being entered based on its own semantics, which it will present to the user as they type.
+
+int	TYPE_TEXT_FLAG_AUTO_CORRECT
+Flag for TYPE_CLASS_TEXT: the user is entering free-form text that should have auto-correction applied to it.
+
+int	TYPE_TEXT_FLAG_CAP_CHARACTERS
+Flag for TYPE_CLASS_TEXT: capitalize all characters.
+
+int	TYPE_TEXT_FLAG_CAP_SENTENCES
+Flag for TYPE_CLASS_TEXT: capitalize the first character of each sentence.
+
+int	TYPE_TEXT_FLAG_CAP_WORDS
+Flag for TYPE_CLASS_TEXT: capitalize the first character of every word.
+
+int	TYPE_TEXT_FLAG_IME_MULTI_LINE
+Flag for TYPE_CLASS_TEXT: the regular text view associated with this should not be multi-line, but when a fullscreen input method is providing text it should use multiple lines if it can.
+
+int	TYPE_TEXT_FLAG_MULTI_LINE
+Flag for TYPE_CLASS_TEXT: multiple lines of text can be entered into the field.
+
+int	TYPE_TEXT_FLAG_NO_SUGGESTIONS
+Flag for TYPE_CLASS_TEXT: the input method does not need to display any dictionary-based candidates.
+
+int	TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+Variation of TYPE_CLASS_TEXT: entering an e-mail address.
+
+int	TYPE_TEXT_VARIATION_EMAIL_SUBJECT
+Variation of TYPE_CLASS_TEXT: entering the subject line of an e-mail.
+
+int	TYPE_TEXT_VARIATION_FILTER
+Variation of TYPE_CLASS_TEXT: entering text to filter contents of a list etc.
+
+int	TYPE_TEXT_VARIATION_LONG_MESSAGE
+Variation of TYPE_CLASS_TEXT: entering the content of a long, possibly formal message such as the body of an e-mail.
+
+int	TYPE_TEXT_VARIATION_NORMAL
+Default variation of TYPE_CLASS_TEXT: plain old normal text.
+
+int	TYPE_TEXT_VARIATION_PASSWORD
+Variation of TYPE_CLASS_TEXT: entering a password.
+
+int	TYPE_TEXT_VARIATION_PERSON_NAME
+Variation of TYPE_CLASS_TEXT: entering the name of a person.
+
+int	TYPE_TEXT_VARIATION_PHONETIC
+Variation of TYPE_CLASS_TEXT: entering text for phonetic pronunciation, such as a phonetic name field in contacts.
+
+int	TYPE_TEXT_VARIATION_POSTAL_ADDRESS
+Variation of TYPE_CLASS_TEXT: entering a postal mailing address.
+
+int	TYPE_TEXT_VARIATION_SHORT_MESSAGE
+Variation of TYPE_CLASS_TEXT: entering a short, possibly informal message such as an instant message or a text message.
+
+int	TYPE_TEXT_VARIATION_URI
+Variation of TYPE_CLASS_TEXT: entering a URI.
+
+int	TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+Variation of TYPE_CLASS_TEXT: entering a password, which should be visible to the user.
+
+int	TYPE_TEXT_VARIATION_WEB_EDIT_TEXT
+Variation of TYPE_CLASS_TEXT: entering text inside of a web form.
+
+int	TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
+Variation of TYPE_CLASS_TEXT: entering e-mail address inside of a web form.
+
+int	TYPE_TEXT_VARIATION_WEB_PASSWORD
+Variation of TYPE_CLASS_TEXT: entering password inside of a web form.
+
+
+=============
+
+
+
+=============
+
+https://developer.android.com/reference/android/widget/ListView.html
+
+java.lang.Object
+   ↳	android.view.View
+ 	   ↳	android.view.ViewGroup
+ 	 	   ↳	android.widget.AdapterView<android.widget.ListAdapter>
+ 	 	 	   ↳	android.widget.AbsListView
+ 	 	 	 	   ↳	android.widget.ListView
+
+
+A list view is an adapter view that does not know the details, such as type and contents, of the views it contains. Instead list view requests views on demand from a ListAdapter as needed, such as to display new views as the user scrolls up or down.
+
+In order to display items in the list, call setAdapter(ListAdapter) to associate an adapter with the list. For a simple example, see the discussion of filling an adapter view with text in the Layouts guide.
+
+To display a more custom view for each item in your dataset, implement a ListAdapter. For example, extend BaseAdapter and create and configure the view for each data item in getView(...):
+
+private class MyAdapter extends BaseAdapter {
+
+      // override other abstract methods here
+
+      @Override
+      public View getView(int position, View convertView, ViewGroup container) {
+          if (convertView == null) {
+              convertView = getLayoutInflater().inflate(R.layout.list_item, container, false);
+          }
+
+          ((TextView) convertView.findViewById(android.R.id.text1))
+                  .setTe56xt(getItem(position));
+          return convertView;
+      }
+  }
+ListView attempts to reuse view objects in order to improve performance and avoid a lag in response to user scrolls. To take advantage of this feature, check if the convertView provided to getView(...) is null before creating or inflating a new view object. See Making ListView Scrolling Smooth for more ways to ensure a smooth user experience.
+
+For a more complete example of creating a custom adapter, see the Custom Choice List sample app.
+
+
+Public constructors
+ListView(Context context)
+ListView(Context context, AttributeSet attrs)
+ListView(Context context, AttributeSet attrs, int defStyleAttr)
+ListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+
+Public methods
+void	addFooterView(View v, Object data, boolean isSelectable)
+Add a fixed view to appear at the bottom of the list.
+
+void	addFooterView(View v)
+Add a fixed view to appear at the bottom of the list.
+
+void	addHeaderView(View v, Object data, boolean isSelectable)
+Add a fixed view to appear at the top of the list.
+
+void	addHeaderView(View v)
+Add a fixed view to appear at the top of the list.
+
+boolean	areFooterDividersEnabled()
+boolean	areHeaderDividersEnabled()
+boolean	dispatchKeyEvent(KeyEvent event)
+Dispatch a key event to the next view on the focus path.
+
+CharSequence	getAccessibilityClassName()
+Return the class name of this object to be used for accessibility purposes.
+
+ListAdapter	getAdapter()
+Returns the adapter currently in use in this ListView.
+
+long[]	getCheckItemIds()
+This method was deprecated in API level 8. Use getCheckedItemIds() instead.
+
+Drawable	getDivider()
+Returns the drawable that will be drawn between each item in the list.
+
+int	getDividerHeight()
+int	getFooterViewsCount()
+Returns the number of footer views in the list.
+
+int	getHeaderViewsCount()
+Returns the number of header views in the list.
+
+boolean	getItemsCanFocus()
+int	getMaxScrollAmount()
+Drawable	getOverscrollFooter()
+Drawable	getOverscrollHeader()
+boolean	isOpaque()
+Indicates whether this View is opaque.
+
+void	onInitializeAccessibilityNodeInfoForItem(View view, int position, AccessibilityNodeInfo info)
+Initializes an AccessibilityNodeInfo with information about a particular item in the list.
+
+boolean	onKeyDown(int keyCode, KeyEvent event)
+Default implementation of KeyEvent.Callback.onKeyDown(): perform press of the view when KEYCODE_DPAD_CENTER or KEYCODE_ENTER is released, if the view is enabled and clickable.
+
+boolean	onKeyMultiple(int keyCode, int repeatCount, KeyEvent event)
+Default implementation of KeyEvent.Callback.onKeyMultiple(): always returns false (doesn't handle the event).
+
+boolean	onKeyUp(int keyCode, KeyEvent event)
+Default implementation of KeyEvent.Callback.onKeyUp(): perform clicking of the view when KEYCODE_DPAD_CENTER, KEYCODE_ENTER or KEYCODE_SPACE is released.
+
+boolean	removeFooterView(View v)
+Removes a previously-added footer view.
+
+boolean	removeHeaderView(View v)
+Removes a previously-added header view.
+
+boolean	requestChildRectangleOnScreen(View child, Rect rect, boolean immediate)
+Called when a child of this group wants a particular rectangle to be positioned onto the screen.
+
+void	setAdapter(ListAdapter adapter)
+Sets the data behind this ListView.
+
+void	setCacheColorHint(int color)
+When set to a non-zero value, the cache color hint indicates that this list is always drawn on top of a solid, single-color, opaque background.
+
+void	setDivider(Drawable divider)
+Sets the drawable that will be drawn between each item in the list.
+
+void	setDividerHeight(int height)
+Sets the height of the divider that will be drawn between each item in the list.
+
+void	setFooterDividersEnabled(boolean footerDividersEnabled)
+Enables or disables the drawing of the divider for footer views.
+
+void	setHeaderDividersEnabled(boolean headerDividersEnabled)
+Enables or disables the drawing of the divider for header views.
+
+void	setItemsCanFocus(boolean itemsCanFocus)
+Indicates that the views created by the ListAdapter can contain focusable items.
+
+void	setOverscrollFooter(Drawable footer)
+Sets the drawable that will be drawn below all other list content.
+
+void	setOverscrollHeader(Drawable header)
+Sets the drawable that will be drawn above all other list content.
+
+void	setRemoteViewsAdapter(Intent intent)
+Sets up this AbsListView to use a remote views adapter which connects to a RemoteViewsService through the specified intent.
+
+void	setSelection(int position)
+Sets the currently selected item.
+
+void	setSelectionAfterHeaderView()
+setSelectionAfterHeaderView set the selection to be the first list item after the header views.
+
+void	smoothScrollByOffset(int offset)
+Smoothly scroll to the specified adapter position offset.
+
+void	smoothScrollToPosition(int position)
+Smoothly scroll to the specified adapter position.
+
+Protected methods
+boolean	canAnimate()
+Indicates whether the view group has the ability to animate its children after the first layout.
+
+void	dispatchDraw(Canvas canvas)
+Called by draw to draw the child views.
+
+boolean	drawChild(Canvas canvas, View child, long drawingTime)
+Draw one child of this View Group.
+
+void	layoutChildren()
+Subclasses must override this method to layout their children.
+
+void	onDetachedFromWindow()
+This is called when the view is detached from a window.
+
+void	onFinishInflate()
+Finalize inflating a view from XML.
+
+void	onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect)
+Called by the view system when the focus state of this view changes.
+
+void	onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+Measure the view and its content to determine the measured width and the measured height.
+
+void	onSizeChanged(int w, int h, int oldw, int oldh)
+This is called during layout when the size of this view has changed.
+
+Inherited methods
+  From class android.widget.AbsListView
+  From class android.widget.AdapterView
+  From class android.view.ViewGroup
+  From class android.view.View
+  From class java.lang.Object
+  From interface android.text.TextWatcher
+  From interface android.view.ViewTreeObserver.OnGlobalLayoutListener
+  From interface android.widget.Filter.FilterListener
+  From interface android.view.ViewTreeObserver.OnTouchModeChangeListener
+  From interface android.view.ViewParent
+  From interface android.view.ViewManager
+  From interface android.graphics.drawable.Drawable.Callback
+  From interface android.view.KeyEvent.Callback
+  From interface android.view.accessibility.AccessibilityEventSource
+
+
+Related methods:
+setDivider(Drawable)
+
+============
+
+https://developer.android.com/reference/android/widget/Adapter.html#getView(int,%20android.view.View,%20android.view.ViewGroup)
+
+Adapter
+public interface Adapter 
+
+android.widget.Adapter
+  Known Indirect Subclasses
+ArrayAdapter<T>,BaseAdapter,CursorAdapter,HeaderViewListAdapter,ListAdapter,ResourceCursorAdapter,SimpleAdapter,SimpleCursorAdapter,SpinnerAdapter,ThemedSpinnerAdapter,WrapperListAdapter
+ 
+
+An Adapter object acts as a bridge between an AdapterView and the underlying data for that view. The Adapter provides access to the data items. The Adapter is also responsible for making a View for each item in the data set.
+
+See also:
+
+ArrayAdapter
+CursorAdapter
+SimpleCursorAdapter
+Summary
+Constants
+int	IGNORE_ITEM_VIEW_TYPE
+An item view type that causes the AdapterView to ignore the item view.
+
+int	NO_SELECTION
+Public methods
+default CharSequence[]	getAutofillOptions()
+Gets a string representation of the adapter data that can help AutofillService autofill the view backed by the adapter.
+
+abstract int	getCount()
+How many items are in the data set represented by this Adapter.
+
+abstract Object	getItem(int position)
+Get the data item associated with the specified position in the data set.
+
+abstract long	getItemId(int position)
+Get the row id associated with the specified position in the list.
+
+abstract int	getItemViewType(int position)
+Get the type of View that will be created by getView(int, View, ViewGroup) for the specified item.
+
+abstract View	getView(int position, View convertView, ViewGroup parent)
+Get a View that displays the data at the specified position in the data set.
+
+abstract int	getViewTypeCount()
+Returns the number of types of Views that will be created by getView(int, View, ViewGroup).
+
+abstract boolean	hasStableIds()
+Indicates whether the item ids are stable across changes to the underlying data.
+
+abstract boolean	isEmpty()
+abstract void	registerDataSetObserver(DataSetObserver observer)
+Register an observer that is called when changes happen to the data used by this adapter.
+
+abstract void	unregisterDataSetObserver(DataSetObserver observer)
+Unregister an observer that has previously been registered with this adapter via registerDataSetObserver(DataSetObserver).
+
+=============
+
+https://developer.android.com/reference/android/widget/ArrayAdapter.html
+
+ArrayAdapter
+public class ArrayAdapter 
+extends BaseAdapter implements Filterable, ThemedSpinnerAdapter
+
+java.lang.Object
+   ↳	android.widget.BaseAdapter
+ 	   ↳	android.widget.ArrayAdapter<T>
+
+You can use this adapter to provide views for an AdapterView, Returns a view for each object in a collection of data objects you provide, and can be used with list-based user interface widgets such as ListView or Spinner.
+
+By default, the array adapter creates a view by calling toString() on each data object in the collection you provide, and places the result in a TextView. You may also customize what type of view is used for the data object in the collection. To customize what type of view is used for the data object, override getView(int, View, ViewGroup) and inflate a view resource. For a code example, see the CustomChoiceList sample.
+
+For an example of using an array adapter with a ListView, see the Adapter Views guide.
+
+For an example of using an array adapter with a Spinner, see the Spinners guide.
+
+Note: If you are considering using array adapter with a ListView, consider using RecyclerView instead. RecyclerView offers similar features with better performance and more flexibility than ListView provides. See the Recycler View guide.
+
+Summary
+Inherited constants
+  From interface android.widget.Adapter
+Public constructors
+ArrayAdapter(Context context, int resource)
+Constructor
+
+ArrayAdapter(Context context, int resource, int textViewResourceId)
+Constructor
+
+ArrayAdapter(Context context, int resource, T[] objects)
+Constructor
+
+ArrayAdapter(Context context, int resource, int textViewResourceId, T[] objects)
+Constructor
+
+ArrayAdapter(Context context, int resource, List<T> objects)
+Constructor
+
+ArrayAdapter(Context context, int resource, int textViewResourceId, List<T> objects)
+Constructor
+
+Public methods
+void	add(T object)
+Adds the specified object at the end of the array.
+
+void	addAll(T... items)
+Adds the specified items at the end of the array.
+
+void	addAll(Collection<? extends T> collection)
+Adds the specified Collection at the end of the array.
+
+void	clear()
+Remove all elements from the list.
+
+static ArrayAdapter<CharSequence>	createFromResource(Context context, int textArrayResId, int textViewResId)
+Creates a new ArrayAdapter from external resources.
+
+CharSequence[]	getAutofillOptions()
+Gets a string representation of the adapter data that can help AutofillService autofill the view backed by the adapter.
+
+Context	getContext()
+Returns the context associated with this array adapter.
+
+int	getCount()
+How many items are in the data set represented by this Adapter.
+
+View	getDropDownView(int position, View convertView, ViewGroup parent)
+Gets a View that displays in the drop down popup the data at the specified position in the data set.
+
+Resources.Theme	getDropDownViewTheme()
+Returns the value previously set by a call to setDropDownViewTheme(Theme).
+
+Filter	getFilter()
+Returns a filter that can be used to constrain data with a filtering pattern.
+
+T	getItem(int position)
+Get the data item associated with the specified position in the data set.
+
+long	getItemId(int position)
+Get the row id associated with the specified position in the list.
+
+int	getPosition(T item)
+Returns the position of the specified item in the array.
+
+View	getView(int position, View convertView, ViewGroup parent)
+Get a View that displays the data at the specified position in the data set.
+
+void	insert(T object, int index)
+Inserts the specified object at the specified index in the array.
+
+void	notifyDataSetChanged()
+Notifies the attached observers that the underlying data has been changed and any View reflecting the data set should refresh itself.
+
+void	remove(T object)
+Removes the specified object from the array.
+
+void	setDropDownViewResource(int resource)
+Sets the layout resource to create the drop down views.
+
+void	setDropDownViewTheme(Resources.Theme theme)
+Sets the Resources.Theme against which drop-down views are inflated.
+
+void	setNotifyOnChange(boolean notifyOnChange)
+Control whether methods that change the list (add(T), addAll(Collection), addAll(Object[]), insert(T, int), remove(T), clear(), sort(Comparator)) automatically call notifyDataSetChanged().
+
+void	sort(Comparator<? super T> comparator)
+Sorts the content of this adapter using the specified comparator.
+
+Inherited methods
+  From class android.widget.BaseAdapter
+  From class java.lang.Object
+  From interface android.widget.ListAdapter
+  From interface android.widget.SpinnerAdapter
+  From interface android.widget.Filterable
+  From interface android.widget.ThemedSpinnerAdapter
+  From interface android.widget.Adapter
+
+
+
+=============
+
+https://developer.android.com/reference/android/widget/ListAdapter.html
+
+ListAdapter
+public interface ListAdapter 
+implements Adapter
+
+android.widget.ListAdapter
+  Known Indirect Subclasses
+ArrayAdapter<T>,BaseAdapter,CursorAdapter,HeaderViewListAdapter,ResourceCursorAdapter,SimpleAdapter,SimpleCursorAdapter,WrapperListAdapter
+ 
+
+Extended Adapter that is the bridge between a ListView and the data that backs the list. Frequently that data comes from a Cursor, but that is not required. The ListView can display any data provided that it is wrapped in a ListAdapter.
+
+Summary
+Inherited constants
+  From interface android.widget.Adapter
+Public methods
+abstract boolean	areAllItemsEnabled()
+Indicates whether all the items in this adapter are enabled.
+
+abstract boolean	isEnabled(int position)
+Returns true if the item at the specified position is not a separator.
+
+Inherited methods
+  From interface android.widget.Adapter
+
+Public methods
+areAllItemsEnabled
+added in API level 1
+boolean areAllItemsEnabled ()
+Indicates whether all the items in this adapter are enabled. If the value returned by this method changes over time, there is no guarantee it will take effect. If true, it means all items are selectable and clickable (there is no separator.)
+
+Returns
+boolean	True if all items are enabled, false otherwise.
+See also:
+
+isEnabled(int)
+
+
+============
+
+https://developer.android.com/reference/android/widget/CursorAdapter.html
+
+CursorAdapter
+public abstract class CursorAdapter 
+extends BaseAdapter implements Filterable, ThemedSpinnerAdapter
+
+java.lang.Object
+   ↳	android.widget.BaseAdapter
+ 	   ↳	android.widget.CursorAdapter
+  Known Direct Subclasses
+ResourceCursorAdapter
+ 
+  Known Indirect Subclasses
+SimpleCursorAdapter
+ 
+
+Adapter that exposes data from a Cursor to a ListView widget.
+
+The Cursor must include a column named "_id" or this class will not work. Additionally, using MergeCursor with this class will not work if the merged Cursors have overlapping values in their "_id" columns.
+
+Summary
+Constants
+int	FLAG_AUTO_REQUERY
+This constant was deprecated in API level 11. This option is discouraged, as it results in Cursor queries being performed on the application's UI thread and thus can cause poor responsiveness or even Application Not Responding errors. As an alternative, use LoaderManager with a CursorLoader.
+
+int	FLAG_REGISTER_CONTENT_OBSERVER
+If set the adapter will register a content observer on the cursor and will call onContentChanged() when a notification comes in.
+
+Inherited constants
+  From interface android.widget.Adapter
+Public constructors
+CursorAdapter(Context context, Cursor c)
+This constructor was deprecated in API level 11. This option is discouraged, as it results in Cursor queries being performed on the application's UI thread and thus can cause poor responsiveness or even Application Not Responding errors. As an alternative, use LoaderManager with a CursorLoader.
+
+CursorAdapter(Context context, Cursor c, boolean autoRequery)
+Constructor that allows control over auto-requery.
+
+CursorAdapter(Context context, Cursor c, int flags)
+Recommended constructor.
+
+Public methods
+abstract void	bindView(View view, Context context, Cursor cursor)
+Bind an existing view to the data pointed to by cursor
+
+void	changeCursor(Cursor cursor)
+Change the underlying cursor to a new cursor.
+
+CharSequence	convertToString(Cursor cursor)
+Converts the cursor into a CharSequence.
+
+int	getCount()
+How many items are in the data set represented by this Adapter.
+
+Cursor	getCursor()
+Returns the cursor.
+
+View	getDropDownView(int position, View convertView, ViewGroup parent)
+Gets a View that displays in the drop down popup the data at the specified position in the data set.
+
+Resources.Theme	getDropDownViewTheme()
+Returns the value previously set by a call to setDropDownViewTheme(Theme).
+
+Filter	getFilter()
+Returns a filter that can be used to constrain data with a filtering pattern.
+
+FilterQueryProvider	getFilterQueryProvider()
+Returns the query filter provider used for filtering.
+
+Object	getItem(int position)
+Get the data item associated with the specified position in the data set.
+
+long	getItemId(int position)
+Get the row id associated with the specified position in the list.
+
+View	getView(int position, View convertView, ViewGroup parent)
+Get a View that displays the data at the specified position in the data set.
+
+boolean	hasStableIds()
+Indicates whether the item ids are stable across changes to the underlying data.
+
+View	newDropDownView(Context context, Cursor cursor, ViewGroup parent)
+Makes a new drop down view to hold the data pointed to by cursor.
+
+abstract View	newView(Context context, Cursor cursor, ViewGroup parent)
+Makes a new view to hold the data pointed to by cursor.
+
+Cursor	runQueryOnBackgroundThread(CharSequence constraint)
+Runs a query with the specified constraint.
+
+void	setDropDownViewTheme(Resources.Theme theme)
+Sets the Resources.Theme against which drop-down views are inflated.
+
+void	setFilterQueryProvider(FilterQueryProvider filterQueryProvider)
+Sets the query filter provider used to filter the current Cursor.
+
+Cursor	swapCursor(Cursor newCursor)
+Swap in a new Cursor, returning the old Cursor.
+
+Protected methods
+void	init(Context context, Cursor c, boolean autoRequery)
+This method was deprecated in API level 11. Don't use this, use the normal constructor. This will be removed in the future.
+
+void	onContentChanged()
+Called when the ContentObserver on the cursor receives a change notification.
+
+Inherited methods
+  From class android.widget.BaseAdapter
+  From class java.lang.Object
+  From interface android.widget.ListAdapter
+  From interface android.widget.SpinnerAdapter
+  From interface android.widget.Filterable
+  From interface android.widget.ThemedSpinnerAdapter
+  From interface android.widget.Adapter
+
+
+
+
+=============
+
+https://developer.android.com/reference/android/widget/SimpleCursorAdapter.html
+
+java.lang.Object
+   ↳	android.widget.BaseAdapter
+ 	   ↳	android.widget.CursorAdapter
+ 	 	   ↳	android.widget.ResourceCursorAdapter
+ 	 	 	   ↳	android.widget.SimpleCursorAdapter
+
+An easy adapter to map columns from a cursor to TextViews or ImageViews defined in an XML file. 
+You can specify which columns you want, which views you want to display the columns, 
+and the XML file that defines the appearance of these views. Binding occurs in two phases. 
+First, if a SimpleCursorAdapter.ViewBinder is available, setViewValue(android.view.View, android.database.Cursor, int) is invoked. 
+If the returned value is true, binding has occured. If the returned value is false and the view to bind is a TextView, setViewText(TextView, String) is invoked. 
+If the returned value is false and the view to bind is an ImageView, setViewImage(ImageView, String) is invoked. If no appropriate binding can be found, an IllegalStateException is thrown. 
+If this adapter is used with filtering, for instance in an AutoCompleteTextView, you can use the SimpleCursorAdapter.CursorToStringConverter and the FilterQueryProvider interfaces to get control over the filtering process. 
+You can refer to convertToString(android.database.Cursor) and runQueryOnBackgroundThread(CharSequence) for more information.
+
+Summary
+Nested classes
+interface	SimpleCursorAdapter.CursorToStringConverter
+This class can be used by external clients of SimpleCursorAdapter to define how the Cursor should be converted to a String. 
+
+interface	SimpleCursorAdapter.ViewBinder
+This class can be used by external clients of SimpleCursorAdapter to bind values fom the Cursor to views. 
+
+Inherited constants
+  From class android.widget.CursorAdapter
+  From interface android.widget.Adapter
+
+Public constructors
+SimpleCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to)
+This constructor was deprecated in API level 11. This option is discouraged, as it results in Cursor queries being performed on the application's UI thread and thus can cause poor responsiveness or even Application Not Responding errors. As an alternative, use LoaderManager with a CursorLoader.
+
+SimpleCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags)
+Standard constructor.
+
+Public methods
+void	bindView(View view, Context context, Cursor cursor)
+Binds all of the field names passed into the "to" parameter of the constructor with their corresponding cursor columns as specified in the "from" parameter.
+
+void	changeCursorAndColumns(Cursor c, String[] from, int[] to)
+Change the cursor and change the column-to-view mappings at the same time.
+
+CharSequence	convertToString(Cursor cursor)
+Returns a CharSequence representation of the specified Cursor as defined by the current CursorToStringConverter.
+
+SimpleCursorAdapter.CursorToStringConverter	getCursorToStringConverter()
+Returns the converter used to convert the filtering Cursor into a String.
+
+int	getStringConversionColumn()
+Return the index of the column used to get a String representation of the Cursor.
+
+SimpleCursorAdapter.ViewBinder	getViewBinder()
+Returns the SimpleCursorAdapter.ViewBinder used to bind data to views.
+
+void	setCursorToStringConverter(SimpleCursorAdapter.CursorToStringConverter cursorToStringConverter)
+Sets the converter used to convert the filtering Cursor into a String.
+
+void	setStringConversionColumn(int stringConversionColumn)
+Defines the index of the column in the Cursor used to get a String representation of that Cursor.
+
+void	setViewBinder(SimpleCursorAdapter.ViewBinder viewBinder)
+Sets the binder used to bind data to views.
+
+void	setViewImage(ImageView v, String value)
+Called by bindView() to set the image for an ImageView but only if there is no existing ViewBinder or if the existing ViewBinder cannot handle binding to an ImageView.
+
+void	setViewText(TextView v, String text)
+Called by bindView() to set the text for a TextView but only if there is no existing ViewBinder or if the existing ViewBinder cannot handle binding to a TextView.
+
+Cursor	swapCursor(Cursor c)
+Swap in a new Cursor, returning the old Cursor.
+
+Inherited methods
+  From class android.widget.ResourceCursorAdapter
+  From class android.widget.CursorAdapter
+  From class android.widget.BaseAdapter
+  From class java.lang.Object
+  From interface android.widget.Filterable
+  From interface android.widget.ThemedSpinnerAdapter
+  From interface android.widget.ListAdapter
+  From interface android.widget.SpinnerAdapter
+  From interface android.widget.Adapter
+
+
+=============
+
+https://developer.android.com/reference/android/R.styleable.html#ViewGroup_Layout
+R.styleable
+java.lang.Object
+    ↳ android.R.styleable 
+
+
+
+
+============
+
+http://android.amberfog.com/?p=296
+
+ANDROID TALES
+Just another Android developers blog
+HowTo: ListView, Adapter, getView and different list items’ layouts in one ListView
+FEBRUARY 5, 2010 / 106 COMMENTS
+I was surprised that getViewTypeCount() is so rarely overrided (codesearch). If you are an expert in this – this post is not for you:-)
+
+ListView and Adapter Basics
+How it works:
+
+ListView asks adapter “give me a view” (getView) for each item of the list
+A new View is returned and displayed
+Next question – what if we have one billion items? Create new view for each item? The answer is NO:-) Android caches views for you.
+
+There’s a component in Android called “Recycler”. I drawed a picture based on Romain Guy presentation at Google IO ’09.
+
+
+If you have 1 billion items – there are only visible items in the memory + view in recycler.
+ListView asks for a view type1 first time (getView) x visible items. convertView is null in getView – you create new view of type1 and return it.
+ListView asks for a view type1 when one item1 is outside of the window and new item the same type is comming from the bottom. convertView is not null = item1. You should just set new data and return convertView back. No need to create view again.
+Let’s write a simple code and put System.out to the getView:
+
+
+public class MultipleItemsList extends ListActivity {
+ 
+    private MyCustomAdapter mAdapter;
+ 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAdapter = new MyCustomAdapter();
+        for (int i = 0; i < 50; i++) {
+            mAdapter.addItem("item " + i);
+        }
+        setListAdapter(mAdapter);
+    }
+ 
+    private class MyCustomAdapter extends BaseAdapter {
+ 
+        private ArrayList mData = new ArrayList();
+        private LayoutInflater mInflater;
+ 
+        public MyCustomAdapter() {
+            mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+ 
+        public void addItem(final String item) {
+            mData.add(item);
+            notifyDataSetChanged();
+        }
+ 
+        @Override
+        public int getCount() {
+            return mData.size();
+        }
+ 
+        @Override
+        public String getItem(int position) {
+            return mData.get(position);
+        }
+ 
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+ 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            System.out.println("getView " + position + " " + convertView);
+            ViewHolder holder = null;
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.item1, null);
+                holder = new ViewHolder();
+                holder.textView = (TextView)convertView.findViewById(R.id.text);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder)convertView.getTag();
+            }
+            holder.textView.setText(mData.get(position));
+            return convertView;
+        }
+ 
+    }
+ 
+    public static class ViewHolder {
+        public TextView textView;
+    }
+}
+Run the program and see what happens:
+
+
+
+getView was called 9 times. convertView is null for all visible items
+
+02-05 13:47:32.559: INFO/System.out(947): getView 0 null
+02-05 13:47:32.570: INFO/System.out(947): getView 1 null
+02-05 13:47:32.589: INFO/System.out(947): getView 2 null
+02-05 13:47:32.599: INFO/System.out(947): getView 3 null
+02-05 13:47:32.619: INFO/System.out(947): getView 4 null
+02-05 13:47:32.629: INFO/System.out(947): getView 5 null
+02-05 13:47:32.708: INFO/System.out(947): getView 6 null
+02-05 13:47:32.719: INFO/System.out(947): getView 7 null
+02-05 13:47:32.729: INFO/System.out(947): getView 8 null
+Then scroll the list slightly down (until item 10 appears):
+
+
+
+convertView is still null because there is still no view in the recycler (border of item1 is still visible at the top:))
+
+02-05 13:48:25.169: INFO/System.out(947): getView 9 null
+Let’s scroll list a little more:
+
+
+
+Bingo! convertView is not null: item1 goes off the screen directly to the Recycler and item11 is created based on item1.
+
+02-05 13:48:42.879: INFO/System.out(947): getView 10 android.widget.LinearLayout@437430f8
+scroll more just to check what hapens:
+
+02-05 14:01:31.069: INFO/System.out(947): getView 11 android.widget.LinearLayout@437447d0
+02-05 14:01:31.142: INFO/System.out(947): getView 12 android.widget.LinearLayout@43744ff8
+02-05 14:01:31.279: INFO/System.out(947): getView 13 android.widget.LinearLayout@43743fa8
+02-05 14:01:31.350: INFO/System.out(947): getView 14 android.widget.LinearLayout@43745820
+02-05 14:01:31.429: INFO/System.out(947): getView 15 android.widget.LinearLayout@43746048
+02-05 14:01:31.550: INFO/System.out(947): getView 16 android.widget.LinearLayout@43746870
+02-05 14:01:31.669: INFO/System.out(947): getView 17 android.widget.LinearLayout@43747098
+02-05 14:01:31.839: INFO/System.out(947): getView 18 android.widget.LinearLayout@437478c0
+02-05 14:03:30.900: INFO/System.out(947): getView 19 android.widget.LinearLayout@43748df0
+02-05 14:03:32.069: INFO/System.out(947): getView 20 android.widget.LinearLayout@437430f8
+convertView is not null as we expected. After item11 goes off the screen, it view (@437430f8) comes as convertView for item 21. simple.
+
+Different list items’ layouts
+Let’s move to the “more complicated” example. How about to add separator somewhere to the list.
+
+You should do the following:
+
+Override getViewTypeCount() – return how many different view layouts you have
+Override getItemViewType(int) – return correct view type id by position
+Create correct convertView (depending on view item type) in getView
+Simple, isn’t it? Code snippet:
+
+public class MultipleItemsList extends ListActivity {
+ 
+    private MyCustomAdapter mAdapter;
+ 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAdapter = new MyCustomAdapter();
+        for (int i = 1; i < 50; i++) {
+            mAdapter.addItem("item " + i);
+            if (i % 4 == 0) {
+                mAdapter.addSeparatorItem("separator " + i);
+            }
+        }
+        setListAdapter(mAdapter);
+    }
+ 
+    private class MyCustomAdapter extends BaseAdapter {
+ 
+        private static final int TYPE_ITEM = 0;
+        private static final int TYPE_SEPARATOR = 1;
+        private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+ 
+        private ArrayList mData = new ArrayList();
+        private LayoutInflater mInflater;
+ 
+        private TreeSet mSeparatorsSet = new TreeSet();
+ 
+        public MyCustomAdapter() {
+            mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+ 
+        public void addItem(final String item) {
+            mData.add(item);
+            notifyDataSetChanged();
+        }
+ 
+        public void addSeparatorItem(final String item) {
+            mData.add(item);
+            // save separator position
+            mSeparatorsSet.add(mData.size() - 1);
+            notifyDataSetChanged();
+        }
+ 
+        @Override
+        public int getItemViewType(int position) {
+            return mSeparatorsSet.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
+        }
+ 
+        @Override
+        public int getViewTypeCount() {
+            return TYPE_MAX_COUNT;
+        }
+ 
+        @Override
+        public int getCount() {
+            return mData.size();
+        }
+ 
+        @Override
+        public String getItem(int position) {
+            return mData.get(position);
+        }
+ 
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+ 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            int type = getItemViewType(position);
+            System.out.println("getView " + position + " " + convertView + " type = " + type);
+            if (convertView == null) {
+                holder = new ViewHolder();
+                switch (type) {
+                    case TYPE_ITEM:
+                        convertView = mInflater.inflate(R.layout.item1, null);
+                        holder.textView = (TextView)convertView.findViewById(R.id.text);
+                        break;
+                    case TYPE_SEPARATOR:
+                        convertView = mInflater.inflate(R.layout.item2, null);
+                        holder.textView = (TextView)convertView.findViewById(R.id.textSeparator);
+                        break;
+                }
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder)convertView.getTag();
+            }
+            holder.textView.setText(mData.get(position));
+            return convertView;
+        }
+ 
+    }
+ 
+    public static class ViewHolder {
+        public TextView textView;
+    }
+}
+Let’s run what we wrote. Yo will see separators after each 4-th item in the list.
+
+
+
+In the log – nothing exceptional – all convertView is null for visible items both types.
+
+02-05 15:19:03.080: INFO/System.out(1035): getView 0 null type = 0
+02-05 15:19:03.112: INFO/System.out(1035): getView 1 null type = 0
+02-05 15:19:03.130: INFO/System.out(1035): getView 2 null type = 0
+02-05 15:19:03.141: INFO/System.out(1035): getView 3 null type = 0
+02-05 15:19:03.160: INFO/System.out(1035): getView 4 null type = 1
+02-05 15:19:03.170: INFO/System.out(1035): getView 5 null type = 0
+02-05 15:19:03.180: INFO/System.out(1035): getView 6 null type = 0
+02-05 15:19:03.190: INFO/System.out(1035): getView 7 null type = 0
+02-05 15:19:03.210: INFO/System.out(1035): getView 8 null type = 0
+02-05 15:19:03.210: INFO/System.out(1035): getView 9 null type = 1
+Scroll list and see what happens:
+
+02-05 15:19:54.160: INFO/System.out(1035): getView 10 null type = 0
+02-05 15:19:57.440: INFO/System.out(1035): getView 11 android.widget.LinearLayout@43744528 type = 0
+02-05 15:20:01.310: INFO/System.out(1035): getView 12 android.widget.LinearLayout@43744eb0 type = 0
+02-05 15:20:01.880: INFO/System.out(1035): getView 13 android.widget.LinearLayout@437456d8 type = 0
+02-05 15:20:02.869: INFO/System.out(1035): getView 14 null type = 1
+02-05 15:20:06.489: INFO/System.out(1035): getView 15 android.widget.LinearLayout@43745f00 type = 0
+02-05 15:20:07.749: INFO/System.out(1035): getView 16 android.widget.LinearLayout@43747170 type = 0
+02-05 15:20:10.250: INFO/System.out(1035): getView 17 android.widget.LinearLayout@43747998 type = 0
+02-05 15:20:11.661: INFO/System.out(1035): getView 18 android.widget.LinearLayout@437481c0 type = 0
+02-05 15:20:13.180: INFO/System.out(1035): getView 19 android.widget.LinearLayout@437468a0 type = 1
+02-05 15:20:16.900: INFO/System.out(1035): getView 20 android.widget.LinearLayout@437489e8 type = 0
+02-05 15:20:25.690: INFO/System.out(1035): getView 21 android.widget.LinearLayout@4374a8d8 type = 0
+convertView is null for separator view type until first separator is visible. When it goes off the screen – view also comes to the Recycler and convertView comes to play.
+
+MultipleItemsList.zip – source code
+
+enjoy)
+//DL
+
+FacebookTwitterGoogle+Share
+Categories: android, listview Tags: adapter, android, convertView, custom adapter, getItemViewType, getView, getViewTypeCount, listview, recycler
+« New WordPress for Android How weight in LinearLayout works »
+
+SEARCH FORM
+
+Search form
+Submit
+LATEST POSTS
+unable to compute hash of
+Fresco from Facebook
+Nice Shimmer library by Facebook
+The Android Browser
+Android Phone EditBox with validation and country flag
+© 2017 ANDROID TALES  — UP ↑
+
+<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>
+
+https://stackoverflow.com/questions/42466033/android-textview-and-edittext-programmatically
+
+Android TextView and EditText programmatically
+android android-layout
+I want to add 5 blocks of TextView and Edit Text as below
+
+Text View ---- Edit Text ---- Text View
+Text View ---- Edit Text ---- Text View
+Text View ---- Edit Text ---- Text View
+Text View ---- Edit Text ---- Text View
+Text View ---- Edit Text ---- Text View
+
+
+LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root_layout);
+rootLayout.setOrientation(LinearLayout.VERTICAL);
+//this layout still needs to be vertical to hold the children.
+for (int i = 0; i < 6; i++) {
+
+   //make a new horizontal LinearLayout each time to hold the children.
+    LinearLayout temp = new LinearLayout(this);
+    temp.setOrientation(LinearLayout.HORIZONTAL);
+    temp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams.WRAP_CONTENT,1));
+
+    TextView textView = new TextView(this);
+    textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,1));
+    textView.setText("Text");
+    temp.addView(textView); //add them to this temporary layout.
+
+    EditText editText = new EditText(this);
+    editText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,1));
+    temp.addView (editText);
+
+    TextView addTextView = new TextView(this);
+    addTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,1));
+    addTextView.setText("Additional Text");
+    temp.addView(addTextViewtextView);
+
+    rootLayout.addView(temp);
+In this way, you can add several linear layouts inside one. So basically, for each set of TextViews, you are making a separate LinearLayout, and then adding each of these layouts to your main LinearLayout which is still vertical in orientation.
+
+
+<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+LIST VIEW COLOR
+===============
+
+https://stackoverflow.com/questions/4533440/android-listview-text-color
+
+You can do this in your code:
+
+final ListView lv = (ListView) convertView.findViewById(R.id.list_view);
+
+for (int i = 0; i < lv.getChildCount(); i++) {
+    ((TextView)lv.getChildAt(i)).setTextColor(getResources().getColor(R.color.black));
+}
+
+==========
+
+https://stackoverflow.com/questions/22779909/can-i-change-listview-text-color
+
+getListView().setCacheColorHint(Color.rgb(36, 33, 32));
+
+==========
+
+https://forums.xamarin.com/discussion/84546/how-to-change-background-color-of-selected-item-in-a-listview-on-xamarin-form
+
+youListViewName.GetChildAt( e.Position).SetBackgroundColor( Color.Red); 
+
+
+<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+
+https://stackoverflow.com/questions/16954196/alertdialog-with-checkbox-in-android
+
+
+Adding checkbox in AlertDialog is well explained in the blog with example AlertDialog With CheckBox In Android
+//http://learnandroideasily.blogspot.in/2013/01/adding-check-boxes-in-dialog.html
+
+You can visit the blog AlertDialog With CheckBox In Android for more detail, and the following is taken from the same blog
+
+final CharSequence[] items = {" Easy "," Medium "," Hard "," Very Hard "};
+
+// arraylist to keep the selected items
+final ArrayList seletedItems=new ArrayList();
+
+AlertDialog dialog = new AlertDialog.Builder(this)
+.setTitle("Select The Difficulty Level")
+.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+    @Override
+    public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+        if (isChecked) {
+            // If the user checked the item, add it to the selected items
+            seletedItems.add(indexSelected);
+        } else if (seletedItems.contains(indexSelected)) {
+            // Else, if the item is already in the array, remove it
+            seletedItems.remove(Integer.valueOf(indexSelected));
+        }
+    }
+}).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    @Override
+    public void onClick(DialogInterface dialog, int id) {
+        //  Your code when user clicked on OK
+        //  You can write the code  to save the selected item here
+    }
+}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    @Override
+    public void onClick(DialogInterface dialog, int id) {
+        //  Your code when user clicked on Cancel
+    }
+}).create();
+dialog.show();
+
+
+
+SparseBooleanArray CheCked = ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+        if (CheCked.get(0))
+
+
+dialog.getListView().setItemChecked(i, true); 
+
+
+
+LayoutInflater inflater = getLayoutInflater();
+     View layout = ingflater.inflate(R.layout.popuplayout, null);
+     helpBuilder.setView(layout);
+
+
+https://stackoverflow.com/questions/14657490/how-to-properly-retain-a-dialogfragment-through-rotation
+
+Inside your DialogFragment, call Fragment.setRetainInstance(boolean) with the value true. You don't need to save the fragment manually, the framework already takes care of all of this. Calling this will prevent your fragment from being destroyed on rotation and your network requests will be unaffected.
+
+You may have to add this code to stop your dialog from being dismissed on rotation, due to a bug with the compatibility library:
+
+@Override
+public void onDestroyView() {
+    Dialog dialog = getDialog();
+    // handles https://code.google.com/p/android/issues/detail?id=17423
+    if (dialog != null && getRetainInstance()) {
+        dialog.setDismissMessage(null);
+    }
+    super.onDestroyView();
+}
+
+
+<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+LAYOUT PROGRAMATICALLY
+======================
+
+https://stackoverflow.com/questions/23699895/giving-a-programmatically-created-dialogs-buttons-the-default-style-of-dialog-b
+
+Giving a programmatically-created Dialog's buttons the default style of dialog buttons
+android dialog android-styles
+I'm creating a Dialog (not AlertDialog, and don't tell me to use one because it would give another unsolvable problem) programmatically, with its own layout hierarchy (code below). Since I'm using a Dialog and not an AlertDialog, there's no "setPositive/NegativeButton" method so I must create the buttons as I do with the other views of the Dialog. The problem is that while the other Views use the default dialog style, the buttons don't. I tried all that I could, looked on the internet and in the source codes for the default themes and styles for dialogs, debugged the program to find the theme used by the dialog and apply it to the buttons, but nothing worked. The style of the buttons is never the right one.
+
+here's the code:
+
+    dialog = new Dialog(context);
+
+    RelativeLayout relativeLayout = new RelativeLayout(context);
+    relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
+
+    ListView listView = new ListView(context);
+    listView.setAdapter(adapter);
+
+    relativeLayout.addView(listView);
+
+    LinearLayout buttonsLayout = new LinearLayout(context);
+    buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+    RelativeLayout.LayoutParams buttonsLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+    buttonsLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+    buttonsLayout.setLayoutParams(buttonsLayoutParams);
+
+    Button cancelButton = null;
+
+    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+        cancelButton = new Button(new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
+    //this seems to use the right style for buttons on android <= 2.3.3
+
+    } else if(Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        cancelButton = new Button(new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog));
+    //this is not the right style. see image below
+
+    } else {
+        cancelButton = new Button(context);
+        cancelButton.setBackgroundColor(android.R.drawable.dialog_holo_light_frame);
+    //this sets the background color of the buttons to match the one of the dialog,
+    //but this way the buttons have no visible margins and click animation
+    }
+
+    cancelButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+    cancelButton.setText("Cancel");
+    cancelButton.setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+
+            dialog.dismiss();
+        }
+    });
+
+    Button sendButton = null;
+
+    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+        sendButton = new Button(new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
+    //this seems to use the right style for buttons on android <= 2.3.3
+
+    } else if(Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        sendButton = new Button(new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog));
+    //this is not the right style. see image below
+
+    } else {
+        sendButton = new Button(context);
+        sendButton.setBackgroundColor(android.R.drawable.dialog_holo_light_frame);
+    //this sets the background color of the buttons to match the one of the dialog,
+    //but this way the buttons have no visible margins and click animation
+    }
+
+    sendButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+    sendButton.setText("Send");
+    sendButton.setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+
+            //do something
+
+            dialog.dismiss();
+        }
+    });
+
+    buttonsLayout.addView(cancelButton);
+    buttonsLayout.addView(sendButton);
+
+    relativeLayout.addView(buttonsLayout);
+
+    dialog.setCanceledOnTouchOutside(false);
+    dialog.setContentView(relativeLayout);
+    dialog.setTitle("Insert");
+    dialog.show();
+here's the result in android > 2.3.3 && <= 3.2:
+
+android > 2.3.3 && <= 3.2
+
+and the result on android > 3.2:
+
+android > 3.2
+
+(sorry for the buttons edited with paint, ahah)
+
+
+<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+TEXT EDIT
+=========
+
+android.widget.EditText
+Public constructors
+EditText(Context context)
+EditText(Context context, AttributeSet attrs)
+EditText(Context context, AttributeSet attrs, int defStyleAttr)
+EditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+
+Public methods
+void  extendSelection(int index)
+Convenience for extendSelection(Spannable, int).
+
+CharSequence  getAccessibilityClassName()
+Return the class name of this object to be used for accessibility purposes.
+
+boolean  getFreezesText()
+Return whether this text view is including its entire text contents in frozen icicles.
+
+Editable  getText()
+Return the text that TextView is displaying.
+
+void  selectAll()
+Convenience for selectAll(Spannable).
+
+void  setEllipsize(TextUtils.TruncateAt ellipsis)
+Causes words in the text that are longer than the view's width to be ellipsized instead of broken in the middle.
+
+void  setSelection(int start, int stop)
+Convenience for setSelection(Spannable, int, int).
+
+void  setSelection(int index)
+Convenience for setSelection(Spannable, int).
+
+void  setText(CharSequence text, TextView.BufferType type)
+Sets the text to be displayed and the TextView.BufferType.
+TextView.BufferType which defines whether the text is stored as a static text, styleable/spannable text, or editable text
+
+android.widget.TextView.BufferType
+TextView.BufferType 	EDITABLE
+TextView.BufferType 	NORMAL
+TextView.BufferType 	SPANNABLE
+
+Public methods
+static TextView.BufferType  valueOf(String name)
+static final BufferType[]   values()
+
+Protected methods
+boolean	getDefaultEditable()
+Subclasses override this to specify that they have a KeyListener by default even if not specifically called for in the XML options.
+
+MovementMethod	getDefaultMovementMethod()
+Subclasses override this to specify a default movement method.
+
+========
+
+https://stackoverflow.com/questions/18799216/how-to-make-a-edittext-box-in-a-dialog
+
+final EditText input = new EditText(MainActivity.this);
+ LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+     LinearLayout.LayoutParams.MATCH_PARENT,
+     LinearLayout.LayoutParams.MATCH_PARENT);
+ input.setLayoutParams(lp);
+ alertDialog.setView(input);
+ alertDialog.setIcon(R.drawable.key);
+
+
+========
+
+android.text.TextWatcher
+
+Public methods
+abstract void	afterTextChanged(Editable s)
+This method is called to notify you that, somewhere within s, the text has been changed.
+
+This method is called to notify you that, somewhere within s, the text has been changed. 
+It is legitimate to make further changes to s from this callback, 
+but be careful not to get yourself into an infinite loop, because any changes you make will cause this method to be called again recursively. 
+(You are not told where the change took place because other afterTextChanged() methods may already have made other changes and invalidated the offsets. 
+But if you need to know here, you can use setSpan(Object, int, int, int) in onTextChanged(CharSequence, int, int, int) to mark your place and then look up from here where the span ended up.
+
+abstract void	beforeTextChanged(CharSequence s, int start, int count, int after)
+This method is called to notify you that, within s, the count characters beginning at start are about to be replaced by new text with length after.
+
+abstract void	onTextChanged(CharSequence s, int start, int before, int count)
+This method is called to notify you that, within s, the count characters beginning at start have just replaced old text that had length before.
+
+
+
+========
+
+
+I know its too late to answer this question but for others who are searching for some thing similar to this here is a simple code of an alertbox with an edittext
+
+AlertDialog.Builder alert = new AlertDialog.Builder(this); 
+or
+new AlertDialog.Builder(mContext, R.style.MyCustomDialogTheme);
+
+if you want to change the theme of the dialog.
+
+final EditText edittext = new EditText(ActivityContext);
+alert.setMessage("Enter Your Message");
+alert.setTitle("Enter Your Title");
+
+alert.setView(edittext);
+
+alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+    public void onClick(DialogInterface dialog, int whichButton) {
+        //What ever you want to do with the value
+        Editable YouEditTextValue = edittext.getText();
+        //OR
+        String YouEditTextValue = edittext.getText().toString();
+    }
+});
+
+alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+    public void onClick(DialogInterface dialog, int whichButton) {
+        // what ever you want to do with No option.
+    }
+});
+
+alert.show();
+
+
+=============
+
+https://stackoverflow.com/questions/12799751/android-how-do-i-retrieve-edittext-gettext-in-custom-alertdialog
+
+final String inputString = null;
+        final Dialog dialog = new Dialog(YourActivityName.this);
+        dialog.setContentView(R.layout.custom_dialog_layout);
+        EditText editText = (EditText) dialog.findViewById(R.id.id_of_edit_text);
+        Button done = (Button) dialog.findViewById(R.id.done);
+        dialog.show();
+        editText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                inputString = s.toString();
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        done.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(YourActivityName.this, inputString, Toast.LENGTH_SHORT);
+                dialog.dismiss();
+
+            }
+        });
+
+
+=========
+
+https://stackoverflow.com/questions/9614320/android-edittext-text-and-hint-layout
+
+You can do it programmatically, in Java code. For example:
+
+final EditText editTxt = (EditText) findViewById(R.id.my_edit_text);
+
+editTxt.setGravity(Gravity.CENTER_HORIZONTAL);
+
+editTxt.setOnKeyListener(new OnKeyListener() {
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+        if (event.getAction() != KeyEvent.ACTION_UP) return false;
+
+        if (editTxt.getText().length() > 1) return false;
+
+        if (editTxt.getText().length() == 1) {
+            editTxt.setGravity(Gravity.LEFT);
+        }
+        else {
+            editTxt.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
+
+        return false;
+    }
+});
+Don't miss a word 'final'. It makes your textView visible in the listener code.
+
+Instead of 'final' keyword you can cast `View v` into the `TextView` in the 'onKey' method.
+
+Updated 9 March 2012:
+
+In such a case, you can remove `onKeyListener` and write `onFocusChangeListener`
+
+Here is some code:
+
+editTxt.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+
+        if (hasFocus) {
+            editTxt.setGravity(Gravity.LEFT);
+        }
+        else {
+            if (editTxt.getText().length() == 0) {
+                editTxt.setGravity(Gravity.CENTER_HORIZONTAL);
+            }
+        }               
+    }
+});
+
+
+
+
+You can use this way (prepend your hint with required number of spaces). Add this to your customized EditText class:
+
+@Override
+protected void onSizeChanged (int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    String hint = getContext().getString(R.string.my_hint);
+    float spaceSize = getPaint().measureText(" ");
+    float textSize = getPaint().measureText(hint);
+    int freeSpace = w - this.getPaddingLeft() - this.getPaddingRight();
+    int spaces = 0;
+    if (freeSpace > textSize) {
+        spaces = (int) Math.ceil((freeSpace - textSize) / 2 / spaceSize);
+    }
+    if (spaces > 0) {
+        Log.i(TAG, "Adding "+spaces+" spaces to hint");
+        hint = prependStringWithRepeatedChars(hint, ' ', spaces);
+    }
+    setHint(hint);
+}
+
+private String prependStringWithRepeatedChars(/* some args */) {
+    /// add chars to the beginning of string
+}
+
+
+
+=========
+
+https://stackoverflow.com/questions/6626006/android-custom-dialog-cant-get-text-from-edittext
+
+final Dialog dialog = new Dialog(MyActivity.this);
+ dialog.setContentView(R.layout.custom_dialog);
+ dialog.setTitle("Title");
+
+ Button button = (Button) dialog.findViewById(R.id.dialog_ok);
+ button.setOnClickListener(new OnClickListener() {
+     public void onClick(View v) {
+
+            EditText edit=(EditText)dialog.findViewById(R.id.dialog_edit);
+            String text=edit.getText().toString();
+
+            dialog.dismiss();
+            name=text;
+
+     }
+ });   
+
+
+dialog.show();
+
+
+===============
+
+If you want to inflate a xml file into dialog box for creating custom version you can use the following code which gets two input from user
+
+LayoutInflater linf = LayoutInflater.from(this);            
+final View inflator = linf.inflate(R.layout.twoinputs, null);
+AlertDialog.Builder alert = new AlertDialog.Builder(this); 
+
+alert.setTitle("Tilte"); 
+alert.setMessage("Message"); 
+alert.setView(inflator); 
+
+final EditText et1 = (EditText) inflator.findViewById(R.id.editText1);
+final EditText et2 = (EditText) inflator.findViewById(R.id.editText2);
+
+alert.setPositiveButton("ok", new DialogInterface.OnClickListener() { 
+   public void onClick(DialogInterface dialog, int whichButton) 
+   { 
+          String s1=et1.getText().toString();
+          String s2=et2.getText().toString();
+          //do operations using s1 and s2 here...
+   } 
+}); 
+
+alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() { 
+   public void onClick(DialogInterface dialog, int whichButton) { 
+            dialog.cancel(); 
+   } 
+}); 
+
+alert.show(); 
+
+
+===========
+
+https://stackoverflow.com/questions/26018709/how-to-get-text-from-edittext-inside-a-dialog
+
+You are looking for the EditText at the wrong View. Its not part of the Activity, its part of the dialog. So check the dialog for the view:
+
+ Dialog dialogView = dialog.getDialog();
+ EditText paymentEt = (EditText) dialogView.findViewById(R.id.edittext_payment);
+
+
+===========
+
+https://www.codesd.com/item/get-text-from-the-edit-text-in-the-input-dialog.html
+
+I have an alert dialog like this:
+
+AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+            context);
+    EditText input = new EditText(this);
+    input.setText(sp.getString("NAME_0",""),TextView.BufferType.EDITABLE);
+    alertDialogBuilder.setView(input);
+    String name = input.getText().toString();
+    alertDialogBuilder.setCancelable(false);
+    alertDialogBuilder.setTitle("Enter your name"); //Set the title of the box
+    //alertDialogBuilder.setMessage(""); //Set the message for the box
+    alertDialogBuilder.setPositiveButton("Start", new DialogInterface.OnClickListener(){
+        public void onClick(DialogInterface dialog, int id){
+            dialog.cancel(); //when they click dismiss we will dismiss the box
+        }
+    });
+    AlertDialog alertDialog =alertDialogBuilder.create(); //create the box
+    alertDialog.show(); //actually show the box
+
+And the problem is that 'name' always seems to be empty. Is there a different way to get the text from an edit text that is inside an alert dialog?
+
+
+ 
+The method works fine you are just assigning the variable too soon, you need to do it for example when the user clicks the button inside the onClick()
+
+
+========
+
+https://stackoverflow.com/questions/15568445/edittext-layout-issue
+
+When i am scrolling through screen , all the text field in that screen shows half text only.. i tried a lot by adjusting size but not getting what is the problem.. can anyone explain me??
+
+Here is my code
+
+ <ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dip" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="50dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/inputtext_background" >
+
+            <EditText
+                android:id="@+id/edit_signup_fname_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="10dip"
+                android:hint="@string/firstname_hint"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="50dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/inputtext_background" >
+
+            <EditText
+                android:id="@+id/edit_signup_email_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="10dip"
+                android:hint="@string/emailid_hint"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="50dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/inputtext_background" >
+
+            <EditText
+                android:id="@+id/edit_signup_familyname_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="10dip"
+                android:hint="@string/familyname_hint"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="50dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/inputtext_background"
+            android:singleLine="true" >
+
+            <EditText
+                android:id="@+id/edit_signup_familyemail_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="10dip"
+                android:hint="@string/familyemail_hint"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="50dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/inputtext_background" >
+
+            <EditText
+                android:id="@+id/edit_signup_password_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="10dip"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="50dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/inputtext_background" >
+
+            <EditText
+                android:id="@+id/edit_signup_retype_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="10dip"
+                android:hint="@string/retype_hint"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dip"
+            android:gravity="center_horizontal" >
+
+            <Button
+                android:id="@+id/btn_signup_sign_id"
+                android:layout_width="150dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:background="@drawable/btn_sign_bg"
+                android:text="@string/sign_up"
+                android:textColor="#FFFFFF"
+                android:textSize="20dip" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="200dp" />
+    </LinearLayout>
+</ScrollView>
+
+
+Give margin on either the linear layout or the Edittext. Not on both. The marginTop is cutting the edittext's space
+
+
+=========
+
+https://stackoverflow.com/questions/44784248/add-layout-at-bottom-with-edit-text-on-it-and-hide-it-if-the-edit-text-is-not-fo
+
+Add layout at bottom with edit text on it and hide it if the edit text is not focused
+android layout android-edittext
+How to add layout at bottom with edit text on it when pressed button "plus" and hide the layout if the edit text is not focused please look at this picture example
+
+share improve this question
+asked
+Jun 27 at 15:28
+
+Zheentoro
+18●7
+2 Answers
+order by  
+up vote
+0
+down vote
+Add OnFocusChangeListener to the EditText and inside the Overrided onFocusChange(View v, boolean hasFocus) method add or remove your layout based on hasFocus value (its true if it has focus).
+
+Refer this for more on OnFocusChangeListener
+
+share improve this answer
+answered
+Jun 27 at 16:07
+
+Adithya
+448●3●11
+up vote
+0
+down vote
+Your layout must have a ListView, an EditText, and a FloatingActionButton. Place all these within a RelativeLayout. An example of this would be
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"    
+tools:context="abcd.MainActivity">
+
+<android.support.design.widget.FloatingActionButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:id="@+id/fab"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"/>
+
+<android.support.design.widget.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@id/fab"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentStart="true">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input"
+        android:id="@+id/input"
+        />
+</android.support.design.widget.TextInputLayout>
+
+<ListView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:layout_above="@id/fab"
+    android:divider="@android:color/transparent"
+    android:id="@+id/list"/>
+</RelativeLayout>
+The back button by default does the function of closing the TextInputLayout. To close it on touching it outside, you can add the following to your activity.
+
+@Override
+public boolean dispatchTouchEvent(MotionEvent event) {
+if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    View v = getCurrentFocus();
+    if ( v instanceof EditText) {
+        Rect outRect = new Rect();
+        v.getGlobalVisibleRect(outRect);
+        if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+            v.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+}
+return super.dispatchTouchEvent( event );
+}
+
+
+=========
+
+https://stackoverflow.com/questions/9224927/how-to-set-edittext-box-height-and-width-programmatically-in-android
+
+how to set EditText box height and width programmatically in android
+android
+hey i want to manage height and width of EditText Box programmatically in android i tried edittext.setWidth(32); and edittext.setEms(50); both are not working please see my below coding coze i am using it to create dynamic EditText in android
+
+private EditText createEditText()
+    {
+        final LayoutParams lparams = new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT);
+        final EditText edittext = new EditText(this);
+        edittext.setLayoutParams(lparams);
+        edittext.setWidth(32);
+        edittext.setEms(50);
+        return edittext;
+    }
+share improve this question
+asked
+Feb 10 '12 at 8:36
+
+Ronak Mehta
+4,754●5●25●59 edited
+Feb 10 '12 at 8:49
+ 
+Shree Khanal
+9,660●18●63●111
+6 Answers
+order by  
+up vote
+20
+down vote
+accepted
+private EditText createEditText()
+{
+    final LayoutParams lparams = new LayoutParams(50,30); // Width , height
+    final EditText edittext = new EditText(this);
+    edittext.setLayoutParams(lparams);
+    return edittext;
+}
+Try this.
+
+share improve this answer
+answered
+Feb 10 '12 at 8:59
+
+Dhruvisha
+1,848●1●11●29
+5	 	
+Which LayoutParams to import ? – Mann Mar 3 '16 at 10:00
+2	 	
+Need to import ViewGroup.LayoutParams – MRK Jul 20 '16 at 6:52
+add a comment
+up vote
+10
+down vote
+edittext.getLayoutParams().width=32;
+share improve this answer
+answered
+Feb 10 '12 at 8:41
+
+JohnCookie
+591●2●7
+  	 	
+thank its working properly thank u so much – Ronak Mehta Feb 10 '12 at 8:43
+6	 	
+This causes me NullPointerExceptions... :-( – JerabekJakub Aug 23 '14 at 8:53
+add a comment
+up vote
+5
+down vote
+DisplayMetrics metrics = new DisplayMetrics();
+WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+wm.getDefaultDisplay().getMetrics(metrics);
+final float height = metrics.heightPixels;
+
+EditText edittext = new EditText(this);
+
+edittext.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,(int) (height/2)));
+share improve this answer
+answered
+Feb 10 '12 at 8:47
+
+B Roh
+69●4
+up vote
+1
+down vote
+RelativeLayout.LayoutParams.width = 32; 
+RelativeLayout.LayoutParams.height = 50;
+works for me. for example
+
+    lparams.width = 32;
+share improve this answer
+answered
+Jan 4 at 16:22
+
+Narek Tootikian
+96●1●9
+up vote
+0
+down vote
+    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) edittext.getLayoutParams();
+            params.width = mScreenWidth / 5;
+            params.height = mScreenWidth / 5;
+            edittext.setLayoutParams(params);
+share improve this answer
+answered
+Jun 22 at 11:34
+
+sharma_kunal
+1,395●18●24
+up vote
+-2
+down vote
+Try the following code:-
+
+Display display = getWindowManager().getDefaultDisplay(); 
+    int screenWidth = display.getWidth();
+    int screenHeight = display.getHeight();
+
+profile_pic.getLayoutParams().height=(screenHeight/6);
+    profile_pic.getLayoutParams().width=(screenHeight/6);
+share
+
+=========
+
+https://stackoverflow.com/questions/28123768/how-to-set-textview-and-edittext-params-programmatically-in-a-table-row
+
+how to set textview and edittext params programmatically in a table row?
+android android-edittext android-textview
+i wanted to add textview and edittext params by code. here is my code
+
+private void draw_table() {
+    // TODO Auto-generated method stub
+    TableLayout ll = (TableLayout) findViewById(R.id.input_table_2);
+
+    for (int i = 0; i < 2; i++) {
+
+        TableRow row = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT);
+        row.setLayoutParams(lp);
+        // setting textVIEW
+        textview = new TextView(this);
+        textview.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        //textview.setPadding(0, 0, 5, 10);
+        //textview.setTextAppearance(this,
+        //      android.R.style.TextAppearance_Medium);
+        textview.setText("Hello"); 
+        // setting editText
+        edittext = new EditText(this);
+        edittext.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        //edittext.setEms(10);
+        //edittext.setHint("gpa");
+        //edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        row.addView(textview);
+        row.addView(edittext);
+        ll.addView(row, i);
+    }
+}
+but nothing appear on the screen. whats wrong in this code ?thanks in advance :)
+
+share improve this question
+asked
+Jan 24 '15 at 8:40
+
+jubayer_sust
+19●8
+2 Answers
+order by  
+up vote
+1
+down vote
+accepted
+Use TableRow.LayoutParams to set your widgets LayoutParams. Like this
+
+textview.setLayoutParams(new TableRow.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT));
+also see how add and delete rows to table layout in java programically
+
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+Table View
+==========
+
+https://stackoverflow.com/questions/35693132/tablelayout-with-textview-and-edittext-using-android-studio
+
+TableLayout with TextView and EditText using android Studio
+android android-layout android-studio android-tablelayout android-database
+JSONArray json=new JSONArray(data);
+for(int i=0;i<json.length(); i++)
+{
+    k=json.length();
+    rowId =  i;
+    JSONObject obj=json.getJSONObject(i);
+
+    pname=obj.getString("ProductName");//database values
+    quantity= obj.getString("Quantity");
+    id = Integer.toString(k);
+    TableRow tr = new TableRow(this);
+    tr.setId(i);
+    tr.setLayoutParams(new TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT));
+
+
+    TextView labelID = new TextView(this);//header is SI:NO
+    labelID.setText(id);
+    labelID.setPadding(2, 5, 5, 0);
+    labelID.setLeft(50);
+    labelID.setTextColor(Color.BLACK);
+    tr.addView(labelID);
+
+    TextView labelNAME = new TextView(this);//header is PRODUCT NAME
+    labelNAME.setText(pname);
+    labelNAME.setRight(10);
+    labelNAME.setPadding(2, 8, 5, 0);
+    labelNAME.setTextColor(Color.BLACK);
+    tr.addView(labelNAME);
+
+    labelWEIGHT = new TextView(this);//header is QUANTITY
+    //  labelWEIGHT.setId(200 + count);
+    labelWEIGHT.setPadding(2, 6, 5, 0);
+    labelWEIGHT.setText(quantity.toString());
+    labelWEIGHT.setTextColor(Color.BLACK);
+    tr.addView(labelWEIGHT);
+
+    labelPRICE = new EditText(this);//header is PRICE...here i need to enter values and save in db
+    labelPRICE.setTextColor(Color.BLACK);
+    labelPRICE.setPadding(2, 6, 5, 0);
+    labelPRICE.setId(Integer.valueOf(rowId));
+    ar1[i]=rowId;//row id
+    tr.addView(labelPRICE);
+
+    tl.addView(tr, new TableLayout.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT));
+    count++;}
+Basically,I'm a beginner in android, and thus I need a help in doing tablelayout program with textview and edittext.I'm not able to store the user entered edittext value in the database .I tried to get the row id of each row but couldn't get that.Can anyone please help me.
+
+This is my layout.
+
+
+
+
+You can do it by first reading the data and then dumping it in DB. It can easily be done by knowing the position of the edit text with in a row
+
+Eg:
+
+TableRow row = (TableRow)tableLayout.getChildAt(rowPosition);
+EditText edit = (EditText) row.getChildAt(0);
+String text = edit.getText().toString();
+In the above code we consider that edittext is at 0th position in its row and value is read.
+
+
+
+
+First, you can get the user-entered value in an EditText using the following method.
+
+myEditText.getText().toString() ;
+Secondly, for storing the value in a database, you should create a custom class which extends the SQLiteOpenHelper.
+
+public class MyDatabaseHandler extends SQLiteOpenHelper
+After overriding the onCreate and onUpgrade methods of this class, create the following method for handling the insert method :
+
+ public void addNewData(String value)
+{
+    try
+    {
+        ContentValues values = new ContentValues();
+
+        values.put([name of the column in your database for this value],value);
+
+        getWritableDatabase().insertOrThrow([name of your table], null, values);
+    }
+
+    catch (SQLiteException sqlExc)
+    {
+        sqlExc.printStackTrace();
+    }
+
+    catch (Exception exc)
+    {
+        exc.printStackTrace();
+    }
+}
+For a complete tutorial on Using SQlite Database in Android , you can study this article.
+http://www.androidhive.info/2011/11/android-sqlite-database-tutorial/
+
+
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+
+
+https://stackoverflow.com/questions/14783409/how-can-i-create-positive-and-negative-buttons-at-custom-dialogs
+
+I'd just make your own custom class to simulate an AlertDialog, this way you can use your own layout with no strings attached. (There are some weird issues where you can't fully get rid of the frame if you want a fully styled AlertDialog). Something like this, but you can expand this as fully as you want:
+
+public class CustomDialog extends Dialog {
+    private Button positive, negative;
+
+    public CustomDialog(Context context) {
+        super(context);
+        initialize(context);
+    }
+
+    protected CustomDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
+        super(context, cancelable, cancelListener);
+        initialize(context);
+    }
+
+    public CustomDialog(Context context, int theme) {
+        super(context, theme);
+        initialize(context);
+    }
+
+    private void initialize(Context c) {
+        //Inflate your layout, get a handle for the buttons
+
+        positive = (Button)layout.findViewById(R.id.positive):
+        negative = (Button)layout.findViewById(R.id.negative):
+
+        positive.setVisibility(View.GONE);
+        negative.setVisibility(View.GONE);
+    }
+
+    public void setPositiveButton(String buttonText, View.OnClickListener listener) {
+        positive.setText(buttonText);
+        positive.setOnClickListener(listener);
+        positive.setVisibility(View.VISIBLE);
+    }
+
+    public void setNegativeButton(String buttonText, View.OnClickListener listener) {
+        negative.setText(buttonText);
+        negative.setOnClickListener(listener);
+        negative.setVisibility(View.VISIBLE);
+    }
+}
+
+Dialog myDialog = new Dialog(Overview.this);
+View view = LayoutInflater.from(context).inflate(R.layout.dialog_change,null);
+myDialog.setContentView(view);
+myDialog.setTitle("My Custom Dialog Title");
+
+Button button1 = (Button)view.findViewById(R.id.button1);
+button1.setOnClickListener(new OnClickListener() {
+
+    @Override
+    public void onClick(View v){
+        dialog.dismiss();
+    }
+});
+//Similarly for the second button
+myDialog.show();
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>
+https://stackoverflow.com/questions/8861745/is-possible-to-customize-positive-and-negative-buttons-in-alertdialog
+
+public class ComentarDialog extends DialogFragment{
+
+@Override
+public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+    builder.setMessage("Mensaje de alerta")
+           .setTitle("Comentar")
+           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+               public void onClick(DialogInterface dialog, int id) {
+
+               }
+           })
+           .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+               public void onClick(DialogInterface dialog, int id) {
+
+               }
+           });
+
+    return builder.create();
+}
+
+@Override
+public void onStart() {
+    super.onStart();
+
+    //Personalizamos
+
+    Resources res = getResources();
+
+    //Buttons
+    Button positive_button =  ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE);
+    positive_button.setBackground(res.getDrawable(R.drawable.btn_selector_dialog));
+
+    Button negative_button =  ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEGATIVE);
+    negative_button.setBackground(res.getDrawable(R.drawable.btn_selector_dialog));
+
+    int color = Color.parseColor("#304f5a");
+
+    //Title
+    int titleId = res.getIdentifier("alertTitle", "id", "android");
+    View title = getDialog().findViewById(titleId);
+    if (title != null) {
+        ((TextView) title).setTextColor(color);
+    }
+
+    //Title divider
+    int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
+    View titleDivider = getDialog().findViewById(titleDividerId);
+    if (titleDivider != null) {
+        titleDivider.setBackgroundColor(color);
+    }
+}
+}
+
+==============
+
+if you want to customize you can use dialog instead of alert dialog here is the sample code
+
+    final Dialog dialog = new Dialog(ThisweekActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
+    View view = LayoutInflater.from(ThisweekActivity.this).inflate(R.layout.issue_cover_prompt_layout, null);
+    view.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dialog.dismiss();
+        }
+    });
+    ImageView img = (ImageView) view.findViewById(R.id.issue_cover_img);
+    img.setImageBitmap(issue.getCoverImage());
+
+    dialog.setContentView(view);
+    dialog.show();
+you can set set the layout in dialog and add click listner on it
+
+
+
+<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>
+
+http://code2care.org/pages/android-alertdialog-programatically-example/
+
+package com.example.drawing;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+public class AlertDialogExample extends ActionBarActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sample);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Android Alert Message");
+        alertDialog.setMessage("Put your description text here!");
+        LinearLayout diagLayout = new LinearLayout(this);
+        diagLayout.setOrientation(LinearLayout.VERTICAL);
+        final TextView text = new TextView(this);
+        text.setText("Another text view");
+        text.setPadding(10, 10, 10, 10);
+        text.setGravity(Gravity.CENTER);
+        text.setTextSize(20);
+        diagLayout.addView(text);
+        alertDialog.setView(diagLayout);
+        alertDialog.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "OK Button pressed!", Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "CANCEL button pressed!!", Toast.LENGTH_LONG)
+                                .show();
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+}
+
+
+
+
+
+<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>
+
+AlertDialog with custom view: Resize to wrap the view's content
+java android android-layout android-alertdialog android-dialogfragment
+I have been having this problem in an application I am building. Please ignore all of the design shortcomings and lack of best practice approaches, this is purely to show an example of what I cannot solve.
+
+I have DialogFragment which returns a basic AlertDialog with a custom View set using AlertDialog.Builder.setView(). If this View has a specific size requirement, how do I get the Dialog to correctly resize itself to display all of the content in the custom View?
+
+This is the example code I have been using:
+
+package com.test.test;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+public class MainActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Use a button for launching
+        Button b = new Button(this);
+        b.setText("Launch");
+        b.setOnClickListener(new OnClickListener() {    
+            @Override
+            public void onClick(View v) {
+                // Launch the dialog
+                myDialog d = new myDialog();
+                d.show(getFragmentManager(), null);
+            }
+        });
+
+        setContentView(b);
+    }
+
+    public static class myDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {           
+            // Create the dialog
+            AlertDialog.Builder db = new AlertDialog.Builder(getActivity());
+            db.setTitle("Test Alert Dialog:");
+            db.setView(new myView(getActivity()));
+
+            return db.create();
+        }
+
+        protected class myView extends View {
+            Paint p = null;
+
+            public myView(Context ct) {
+                super(ct);
+
+                // Setup paint for the drawing
+                p = new Paint();
+                p.setColor(Color.MAGENTA);
+                p.setStyle(Style.STROKE);
+                p.setStrokeWidth(10);
+            }
+
+            @Override
+            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+                setMeasuredDimension(800, 300);
+            }
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                // Draw a rectangle showing the bounds of the view
+                canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), p);
+            }
+        }
+    }
+}
+A Button is created, which opens the DialogFragment on a click. The custom View (myView) is required to have a width of 800 and height of 300 which is correctly set in an override of onMeasure(). This View, draws its measured bounds in magenta for debugging purposes.
+
+The 800 width is wider than the default Dialog size on my device, but is clipped rather than stretching correctly.
+
+
+I have looked through the following solutions:
+
+DialogFragment.getDialog returns null
+How to control the width and height of the default Alert Dialog in Android?
+Size of Alert Dialog or Custom Alert Dialog
+I have deduced the following two coding approaches:
+
+Get the WindowManager.LayoutParams of the Dialog and override them using myDialog.getDialog().getWindow().get/setAttributes()
+Using the setLayout(w, h) method through myDialog.getDialog().getWindow().setLayout()
+I have tried them everywhere I can think of (overriding onStart(), in a onShowListener, after the Dialog is created and shown, etc) and can generally get both methods to work correctly if the LayoutParams are supplied a specific value. But whenever WRAP_CONTENT is supplied, nothing happens.
+
+Any suggestions?
+
+EDIT:
+
+Screenshot of the situation: enter image description here
+
+Screenshot of a specific value (note 900 is entered here, 850 doesn't cover the entire width of the View, which makes sense given the entire window is being adjusted. So that provides - if another was needed - reason why WRAP_CONTENT is essential / fixed values are not appropriate): enter image description here
+
+share improve this question
+asked
+Feb 16 '13 at 4:54
+
+B T
+3,711●7●27●40
+
+
+
+I have a working solution that to be honest, I think digs way too deep to obtain such a simple result. But here it is:
+
+What exactly is happening:
+
+By opening the Dialog layout with the Hierarchy Viewer, I was able to examine the entire layout of the AlertDialog and what exactly what was going on: enter image description here
+
+The blue highlight is all of the high level parts (Window, frames for the Dialog visual style, etc) and from the end of the blue down is where the components for the AlertDialog are (red = title, yellow = a scrollview stub, maybe for list AlertDialogs, green = Dialog content i.e. custom view, orange = buttons).
+
+From here it was clear that the 7-view path (from the start of the blue to the end of the green) was what was failing to correctly WRAP_CONTENT. Looking at the LayoutParams.width of each View revealed that all are given LayoutParams.width = MATCH_PARENT and somewhere (I guess at the top) a size is set. So if you follow that tree, it is clear that your custom View at the bottom of the tree, will never be able to affect the size of the Dialog.
+
+So what were the existing solutions doing?
+
+Both of the coding approaches mentioned in my question were simply getting the top View and modifying its LayoutParams. Obviously, with all View objects in the tree matching the parent, if the top level is set a static size, the whole Dialog will change size. But if the top level is set to WRAP_CONTENT, all the rest of the View objects in the tree are still looking up the tree to "MATCH their PARENT", as opposed to looking down the tree to "WRAP their CONTENT".
+
+How to solve the problem:
+Bluntly, change the LayoutParams.width of all View objects in the affecting path to be WRAP_CONTENT.
+
+I found that this could only be done AFTER onStart lifecycle step of the DialogFragment is called. So the onStart is implemented like:
+
+@Override
+public void onStart() { 
+    // This MUST be called first! Otherwise the view tweaking will not be present in the displayed Dialog (most likely overriden)
+    super.onStart();
+
+    forceWrapContent(myCustomView);
+}
+Then the function to appropriately modify the View hierarchy LayoutParams:
+
+protected void forceWrapContent(View v) {
+    // Start with the provided view
+    View current = v;
+
+    // Travel up the tree until fail, modifying the LayoutParams
+    do {
+        // Get the parent
+        ViewParent parent = current.getParent();    
+
+        // Check if the parent exists
+        if (parent != null) {
+            // Get the view
+            try {
+                current = (View) parent;
+            } catch (ClassCastException e) {
+                // This will happen when at the top view, it cannot be cast to a View
+                break;
+            }
+
+            // Modify the layout
+            current.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
+        }
+    } while (current.getParent() != null);
+
+    // Request a layout to be re-done
+    current.requestLayout();
+}
+And here is the working result: enter image description here
+
+It confuses me why the entire Dialog would not want to be WRAP_CONTENT with an explicit minWidth set to handle all cases that fit inside the default size, but I'm sure there is a good reason for it the way it is (would be interested to hear it).
+
+share improve this answer
+answered
+Feb 17 '13 at 5:25
+
+B T
+3,711●7●27●40
+
+
+
+After
+
+dialog.show();
+just use
+
+dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, yourHeight);
+Very simple solution, but it works for me. I'm extending a dialog though but assumes that this will work for DialogFragment also.
+
+share improve this answer
+answered
+Jul 18 '13 at 13:32
+
+sweggersen
+1,516●12●21
+
+
+
+AlertDialog's use these two window attributes to define the smallest size they can be so that on Tablets they float with a reasonable width in the center of the screen.
+
+http://developer.android.com/reference/android/R.attr.html#windowMinWidthMajor http://developer.android.com/reference/android/R.attr.html#windowMinWidthMinor
+
+You can extend a default Dialog style of your choice and change the values to apply your own logic.
+
+share improve this answer
+answered
+Apr 7 '15 at 13:36
+
+Simon
+5,962●26●33
+  	 	
+This is the only solution that works for me. You can apply the style through AlertDialog.Builder(context, R.style.AppTheme_Dialog). – Joshua Aug 3 at 9:46
+add a comment
+up vote
+2
+down vote
+I found one issue with B T's answer. Dialog has left alligned (not at center of screen). To fix this I added changing gravity of parent layouts. See updated forceWrapContent() method.
+
+protected void forceWrapContent(View v) {
+    // Start with the provided view
+    View current = v;
+
+    // Travel up the tree until fail, modifying the LayoutParams
+    do {
+        // Get the parent
+        ViewParent parent = current.getParent();
+
+        // Check if the parent exists
+        if (parent != null) {
+            // Get the view
+            try {
+                current = (View) parent;
+                ViewGroup.LayoutParams layoutParams = current.getLayoutParams();
+                if (layoutParams instanceof FrameLayout.LayoutParams) {
+                    ((FrameLayout.LayoutParams) layoutParams).
+                            gravity = Gravity.CENTER_HORIZONTAL;
+                } else if (layoutParams instanceof WindowManager.LayoutParams) {
+                    ((WindowManager.LayoutParams) layoutParams).
+                            gravity = Gravity.CENTER_HORIZONTAL;
+                }
+            } catch (ClassCastException e) {
+                // This will happen when at the top view, it cannot be cast to a View
+                break;
+            }
+
+            // Modify the layout
+            current.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+    } while (current.getParent() != null);
+
+    // Request a layout to be re-done
+    current.requestLayout();
+}
+share improve this answer
+answered
+Sep 1 '15 at 19:53
+
+Yuriy Ashaev
+891●11●24
+
+
+
+
+This worked ok for me:
+
+WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+lp.copyFrom(dialog.getWindow().getAttributes());
+lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+dialog.show();
+dialog.getWindow().setAttributes(lp);
+share improve this answer
+answered
+Mar 23 '16 at 20:48
+
+Rony Tesler
+124●2●8 edited
+Sep 5 '16 at 10:27
+ 
+Suragch
+129k●76●482●554
+up vote
+0
+down vote
+Use setStyle(STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
+
+share improve this answer
+answered
+May 21 '15 at 15:07
+
+Mickey Tin
+1,457●4●26●45
+up vote
+0
+down vote
+Its late answer, but i think i should share this to new comers so they know which dialog they should prefer.
+
+If you want to make an custom dialog with any of your view. Then you can choose below easiest way to do this.
+
+For the question you want dialog should be wrap content, you can make an parent layout with match_parent with transparent background and with gravity center. and put your main layout under it. so it will look like center positioned dialog.
+
+BONUS: By this method you can use scrollview, recycler view and any type of layout in dialog.
+
+In this example R.layout.dialog_update_name is the sample layout. which you want inflate on dialog.
+
+public void showCustomDialog(final Context context) {
+    this.context = context;
+    dialog = new Dialog(context);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    view = inflater.inflate(R.layout.dialog_update_name, null, false);
+    findByIds(view);  /*HERE YOU CAN FIND YOU IDS AND SET TEXTS OR BUTTONS*/
+    ((Activity) context).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    dialog.setContentView(view);
+    final Window window = dialog.getWindow();
+    window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    window.setBackgroundDrawableResource(R.color.colorTransparent);
+    window.setGravity(Gravity.CENTER);
+    dialog.show();
+}
+share improve this answer
+answered
+Oct 27 at 21:00
+
+Khemu
+403●3●19
+  	 	
+Can i know, why? – Khemu 2 days ago
+add a comment
+up vote
+-1
+down vote
+just use AppCompatDialog
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatDialog;
+import android.view.Window;
+import android.widget.ProgressBar;
+
+public class ProgressDialogCompat extends AppCompatDialog {
+
+    public ProgressDialogCompat(Context context) {
+        super(context);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Context context = getContext();
+        int padding = context.getResources().getDimensionPixelSize(R.dimen.x_medium);
+        ProgressBar progressBar = new ProgressBar(context);
+        progressBar.setPadding(padding, padding, padding, padding);
+        setContentView(progressBar);
+        setCancelable(false);
+        super.onCreate(savedInstanceState);
+    }
+}
+share improve this answer
+answered
+Mar 18 '16 at 12:43
+
+zlxrx
+49●5
+
+
+
+
+
+
+<style name="NewDialog">
+    <item name="android:windowFrame">@null</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowTitleStyle">@null</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    <item name="android:backgroundDimEnabled">false</item>
+    <item name="android:background">@android:color/transparent</item>
+</style>
+
+use in java
+
+Dialog dialog = new Dialog(this, R.style.NewDialog);
+
+
+
+android:background= "#00000000"
+
+
+
+getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+Window window = d.getWindow();
+window.setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND,WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+
+
+Use this instead from your view:
+
+((Activity) getContext()).getWindow()...
+You have a managed reference to your activity in your view, which you can retrieve using getContext(). Cast it to Activity and use any methods from the activity, such as getWindow().
+
+
+
+
+getWindow() is a method of the dialog class, not of the dialog builder. Your code should rather look like this:
+
+AlertDialog dlg = eula.show();
+WindowManager.LayoutParams lp = dlg.getWindow().getAttributes();
+lp.dimAmount = 0.0F;
+dlg.getWindow().setAttributes(lp);
+dlg.getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+
+
+
+  var window = LL.getContext().getWindow();
+  //var window = dialog.getWindow();
+  //window.setBackgroundDrawableResource(android.R.color.colorTransparent);
+  //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+  window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+
+
+
+
+Since you're talking about hex you have to start with 0x and don't forget the opacity.
+
+So basically: 0xFFFF6666
+
+ColorDrawable cd = new ColorDrawable(0xFFFF6666);
+You can also create a new colors.xml file into /res and define the colors like:
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mycolor">#FF6666</color>
+</resources>
+and simply get the color defined in R.color.mycolor
+
+getResources().getColor(R.color.mycolor)
+
+
+
+
+
+
+
+
+
+
+https://stackoverflow.com/questions/28643277/dialog-box-title-text-size-android
+
+//Use this code
+TextView myMsg = new TextView(this);
+  myMsg.setText("Succesfully send!");
+  myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
+  myMsg.setTextSize(20); 
+  myMsg.setTextColor(Color.WHITE);
+  //set custom title
+  builder.setCustomTitle(myMsg);
+
+
+
+Use custom title using builder.setCustomTitle(textView) to set size and color of title.
+
+AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    TextView title = new TextView(context);
+    title.setText("Title");
+    title.setBackgroundResource(R.drawable.gradient);
+    title.setPadding(10, 10, 10, 10);
+    title.setGravity(Gravity.CENTER);
+    title.setTextColor(getResources().getColor(R.color.green));
+    title.setTextSize(22);
+    builder.setCustomTitle(title);
+    builder.setMessage("Message");
+    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+
+    }
+    });
+    builder.setNegativeButton(R.string.no, null);
+    AlertDialog dialog = builder.show();
+    messageView = (TextView)dialog.findViewById(android.R.id.message);
+    messageView.setGravity(Gravity.CENTER);
+    dialog.show();
+
+
+
+
+
+
+builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        // dialog dismiss without button press
+    }
+});
+
+
+
+
+
+
+
+
+
+https://stackoverflow.com/questions/6562924/changing-font-size-into-an-alertdialog
+
+Changing font size into an AlertDialog
+android textview alertdialog font-size
+I am trying to put some loooong text into an AlertDialog. The only issue the default font size that is really too big, so I want to make it smaller.
+
+Here are all the workaround I tried and their issues.
+
+Workaround 1) Using a TextView and myView.setTextSize(12);
+
+final TextView myView = new TextView(getApplicationContext());
+myView.setText(myLongText);
+myView.setTextSize(12);
+final AlertDialog d = new AlertDialog.Builder(context)
+    .setPositiveButton(android.R.string.ok, null)
+.setTitle(myTitle)
+.setView(myView)
+.create();
+Issues: Layout is not scrolling
+
+Workaround 2) making TextView scrollable.
+
+message.setMovementMethod(LinkMovementMethod.getInstance());
+Issues: Layout is scrolling, bute there is no "inertia" (don't know how to call that.. But I guess you understand.)
+
+Workaround 3) Using a Scrollview.
+
+That's what I am going to try, but I cannot believe there are no easier solutions...
+
+
+
+You can actually get access to the message's TextView pretty easily, and then change it's size. I tested with a bigger size, but you could use whatever size you want. The text will scroll nicely as it already does. The view's id is android.R.id.message :
+
+    AlertDialog dialog = new AlertDialog.Builder(this).setMessage("Hello world").show();
+    TextView textView = (TextView) dialog.findViewById(android.R.id.message);
+    textView.setTextSize(40);
+This is probably a cleaner solution, though I'm not sure if there's a risk that the TextView could be null or not.
+
+
+For Buttons:
+
+final AlertDialog ad = new AlertDialog.Builder(mainScreen)
+.setPositiveButton("OK", null) 
+.setNegativeButton("Cancel", null).create();
+
+ad.setOnShowListener(new DialogInterface.OnShowListener() {
+  @Override
+    public void onShow(DialogInterface dialog) {
+      int textSize = (int) Helper.getDimen(mainScreen, R.dimen.textSize12);
+      ad.getButton(Dialog.BUTTON_POSITIVE).setTextSize(textSize);
+      ad.getButton(Dialog.BUTTON_NEGATIVE).setTextSize(textSize);
+    }
+});
+
+ad.show();
+
+
+
+https://stackoverflow.com/questions/15762593/default-alert-dialog-buttons-height-and-width
+
+private void setButtonSize(AlertDialog dialog) {
+    Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+    int height = getResources().getDimensionPixelSize(R.dimen.alertdialog_button_height);
+    int width  = getResources().getDimensionPixelSize(R.dimen.alertdialog_button_width);
+
+    button.setHeight(height);
+    button.setWidth(width);
+}
+If you're using a DialogFragment, then cast the getDialog() to AlertDialog and pass it into setButtonSize. You can additionally specify a third parameter for passing in the button id (BUTTON_NEGATIVE, BUTTON_NEUTRAL, etc.)
+
+
+
+
+final AlertDialog alert = builder.create();
+alert.setOnShowListener(new DialogInterface.OnShowListener() {
+    @Override
+    public void onShow(DialogInterface dialog) {
+        Button btnPositive = alert.getButton(Dialog.BUTTON_POSITIVE);
+        btnPositive.setTextSize(TEXT_SIZE);
+
+        Button btnNegative = alert.getButton(Dialog.BUTTON_NEGATIVE);
+        btnNegative.setTextSize(TEXT_SIZE);
+    }
+});
+
+return alert;
+
+
+
+Make sure it goes after the messageDialog.show() line:
+
+messageDialog.show(); 
+messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, 25.0f);
+messageDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextSize(TypedValue.COMPLEX_UNIT_PX, 25.0f);
+
+
+
+
+Here is my solution... you need to create the scroll container, then add the TextView inside the ScrollView just as you would in the XML layout.
+
+AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+String str = getString(R.string.upgrade_notes); 
+final ScrollView s_view = new ScrollView(getApplicationContext());
+final TextView t_view = new TextView(getApplicationContext());
+t_view.setText(str);
+t_view.setTextSize(14);     
+s_view.addView(t_view);
+alertDialog.setTitle("Upgrade notes!");
+alertDialog.setView(s_view);
+
+
+
+
+https://coderanch.com/mobile/t/570777/AlertDialog-changing-font-size-colour
+
+AlertDialog changing look of font (size, colour, align)
+
+Post by: Mathew Mintalm , Ranch Hand
+Mar 19, 2012 06:09:59
+Hello, I'm trying to change properties of my AlertDialog inside of my game, currently I'm building it with this way: 
+
+private static final int DIALOG_INFO = 1;
+private Dialog dialog;
+@Override
+protected Dialog onCreateDialog(int id)
+{
+AlertDialog.Builder builder = new AlertDialog.Builder(this);
+switch (id)
+{
+case DIALOG_INFO:
+builder.setTitle("Game Information - Diego 1.0.1");
+builder.setIcon(R.drawable.icon);
+builder.setMessage("Test there \n\n");
+builder.setCancelable(true);
+dialog = builder.create();
+dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+break;
+}
+return dialog;
+}
+
+
+And if player clicked certain button, I'm showing this dialog with this way: 
+
+showDialog(DIALOG_INFO);
+
+
+Everything works, but I decided to change look of font used in this dialog, with this way: 
+
+TextView textView = ((TextView) dialog.findViewById(android.R.id.message));
+textView.setTextColor(Color.LTGRAY);
+textView.setTextSize(13);
+textView.setGravity(Gravity.CENTER);
+
+
+But code works only, if I put this code after showDialog(DIALOG_INFO); which means I have to create new object (TextView textView = ...) everytime I'm showing dialog, and my question is, can't I do it only once while creating dialog? 
+
+Thanks in advance.
+
+
+
+
+
+
+
+
+
+
+
+
+https://stackoverflow.com/questions/13051956/how-to-set-custom-font-for-alert-dialog-in-android
+
+
+
+To do this you use alert builder to build your alert. You then get the TextView from this alert and then you set the typeface for the alert.
+
+AlertDialog dialog = new AlertDialog.Builder(this).setMessage("Hello world").show();
+TextView textView = (TextView) dialog.findViewById(android.R.id.message);
+Typeface face=Typeface.createFromAsset(getAssets(),"fonts/FONT"); 
+textView.setTypeface(face);
+
+
+
+https://stackoverflow.com/questions/10538482/changing-font-in-alertdialog
+
+Instead of setting the text of the alertdialog, you should set a custom view form your layouts. And before you do so, modify your view's font.
+
+TextView mycontent = (TextView) findViewById(R.id.yourid);
+         mycontent.setTypeface(Typeface.createFromAsset(getAssets(), "font.ttf")
+And to set the view of your alert dialog, call .setView(mycontent) instead of setMessage() Although this doesn't change your title as far as I know.
+
+Update I'm seeing you're unable to get what I'm saying, so here's a full example
+
+TextView content = new TextView(this);
+         content.setText("on another font");
+         content.setTypeface(Typeface.SANS_SERIF);
+
+//Use the first example, if your using a xml generated view
+
+     AlertDialog.Builder myalert = new AlertDialog.Builder(this);
+         myalert.setTitle("Your title");
+         myalert.setView(content);
+         myalert.setNeutralButton("Close dialog", null);
+         myalert.setCancelable(true);
+         myalert.show();
+This is using a TextView that we've just created, and it won't have margins or such. If you use a readily created one form your layout files, you'd be able to customize all those settings, although you can do that for this example to in code.
+
+
+
+
+
+
+
+
+https://stackoverflow.com/questions/3399667/creating-a-custom-dialog-in-android
+
+dialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+
+        dialog.setContentView(R.layout.custom_dialog);
+
+         LayoutParams lp=dialog.getWindow().getAttributes();    
+         lp.x=100;lp.y=100;lp.width=100;lp.height=200;lp.gravity=Gravity.TOP | Gravity.LEFT;
+         lp.dimAmount=0;            
+         lp.flags=LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_NOT_TOUCH_MODAL;
+    //   dialog.getWindow().setAttributes(lp);
+
+         dialog.show();
+This worked well for me
+
+
+
+....getWindow().setLayout(x, y);
+
+
+
+
+
+I used the following approach
+
+// Initializing the alertDialog
+AlertDialog alertDialog = new AlertDialog.Builder(QuizActivity.this).create();
+alertDialog.setTitle("Warning");
+alertDialog.setMessage("Are you sure you want to exit?");
+alertDialog.show(); // This should be called before looking up for elements
+
+
+// Getting the view elements
+TextView textView = (TextView) alertDialog.getWindow().findViewById(android.R.id.message);
+TextView alertTitle = (TextView) alertDialog.getWindow().findViewById(R.id.alertTitle);
+Button button1 = (Button) alertDialog.getWindow().findViewById(android.R.id.button1);
+Button button2 = (Button) alertDialog.getWindow().findViewById(android.R.id.button2);
+
+// Setting font
+textView.setTypeface(FontHelper.getFont(Fonts.MULI_REGULAR));
+alertTitle.setTypeface(FontHelper.getFont(Fonts.MULI_REGULAR));
+button1.setTypeface(FontHelper.getFont(Fonts.MULI_BOLD));
+button2.setTypeface(FontHelper.getFont(Fonts.MULI_BOLD));
+Tested on 7.1.1
+
+NOTE: Make sure you get the element after showing the dialog. Without this you will get NullPointerException
+
+
+
+
+
+
+https://stackoverflow.com/questions/2888508/how-to-change-the-font-on-the-textview
+How to change the font on the TextView?
+android fonts textview
+How to change the font in a TextView, as default it's shown up as Arial? How to change it to Helvetica?
+
+
+First, the default is not Arial. The default is Droid Sans.
+
+Second, to change to a different built-in font, use android:typeface in layout XML or setTypeface() in Java.
+
+Third, there is no Helvetica font in Android. The built-in choices are Droid Sans (sans), Droid Sans Mono (monospace), and Droid Serif (serif). While you can bundle your own fonts with your application and use them via setTypeface(), bear in mind that font files are big and, in some cases, require licensing agreements (e.g., Helvetica, a Linotype font).
+
+
+
+
+First download the .ttf file of the font you need (arial.ttf). Place it in the assets folder(Inside assets folder create new folder named fonts and place it inside it). If txtyour is the textviews you want to apply the font , use the following piece of code,
+
+   Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Kokila.ttf"); 
+   txtyour.setTypeface(type);
+
+
+
+Typeface tf = Typeface.createFromAsset(getAssets(),
+        "fonts/DroidSansFallback.ttf");
+TextView tv = (TextView) findViewById(R.id.CustomFontText);
+tv.setTypeface(tf);
+
+
+
+
+You might want to create static class which will contain all the fonts. That way, you won't create the font multiple times which might impact badly on performance. Just make sure that you create a sub-folder called "fonts" under "assets" folder.
+
+Do something like:
+
+public class CustomFontsLoader {
+
+public static final int FONT_NAME_1 =   0;
+public static final int FONT_NAME_2 =   1;
+public static final int FONT_NAME_3 =   2;
+
+private static final int NUM_OF_CUSTOM_FONTS = 3;
+
+private static boolean fontsLoaded = false;
+
+private static Typeface[] fonts = new Typeface[3];
+
+private static String[] fontPath = {
+    "fonts/FONT_NAME_1.ttf",
+    "fonts/FONT_NAME_2.ttf",
+    "fonts/FONT_NAME_3.ttf"
+};
+
+
+/**
+ * Returns a loaded custom font based on it's identifier. 
+ * 
+ * @param context - the current context
+ * @param fontIdentifier = the identifier of the requested font
+ * 
+ * @return Typeface object of the requested font.
+ */
+public static Typeface getTypeface(Context context, int fontIdentifier) {
+    if (!fontsLoaded) {
+        loadFonts(context);
+    }
+    return fonts[fontIdentifier];
+}
+
+
+private static void loadFonts(Context context) {
+    for (int i = 0; i < NUM_OF_CUSTOM_FONTS; i++) {
+        fonts[i] = Typeface.createFromAsset(context.getAssets(), fontPath[i]);
+    }
+    fontsLoaded = true;
+
+}
+}
+This way, you can get the font from everywhere in your application.
+
+
+
+
+Another way to consolidate font creation...
+
+public class Font {
+  public static final Font  PROXIMA_NOVA    = new Font("ProximaNovaRegular.otf");
+  public static final Font  FRANKLIN_GOTHIC = new Font("FranklinGothicURWBoo.ttf");
+  private final String      assetName;
+  private volatile Typeface typeface;
+
+  private Font(String assetName) {
+    this.assetName = assetName;
+  }
+
+  public void apply(Context context, TextView textView) {
+    if (typeface == null) {
+      synchronized (this) {
+        if (typeface == null) {
+          typeface = Typeface.createFromAsset(context.getAssets(), assetName);
+        }
+      }
+    }
+    textView.setTypeface(typeface);
+  }
+}
+And then to use in your activity...
+
+myTextView = (TextView) findViewById(R.id.myTextView);
+Font.PROXIMA_NOVA.apply(this, myTextView);
+Mind you, this double-checked locking idiom with the volatile field only works correctly with the memory model used in Java 1.5+.
+
+
+
+It's a little old, but I improved the class CustomFontLoader a little bit and I wanted to share it so it can be helpfull. Just create a new class with this code.
+
+ import android.content.Context;
+ import android.graphics.Typeface;
+
+public enum FontLoader {
+
+ARIAL("arial"),
+TIMES("times"),
+VERDANA("verdana"),
+TREBUCHET("trbuchet"),
+GEORGIA("georgia"),
+GENEVA("geneva"),
+SANS("sans"),
+COURIER("courier"),
+TAHOMA("tahoma"),
+LUCIDA("lucida");   
+
+
+private final String name;
+private Typeface typeFace;
+
+
+private FontLoader(final String name) {
+    this.name = name;
+
+    typeFace=null;  
+}
+
+public static Typeface getTypeFace(Context context,String name){
+    try {
+        FontLoader item=FontLoader.valueOf(name.toUpperCase(Locale.getDefault()));
+        if(item.typeFace==null){                
+            item.typeFace=Typeface.createFromAsset(context.getAssets(), "fonts/"+item.name+".ttf");                 
+        }           
+        return item.typeFace;
+    } catch (Exception e) {         
+        return null;
+    }                   
+}
+public static Typeface getTypeFace(Context context,int id){
+    FontLoader myArray[]= FontLoader.values();
+    if(!(id<myArray.length)){           
+        return null;
+    } 
+    try {
+        if(myArray[id].typeFace==null){     
+            myArray[id].typeFace=Typeface.createFromAsset(context.getAssets(), "fonts/"+myArray[id].name+".ttf");                       
+        }       
+        return myArray[id].typeFace;    
+    }catch (Exception e) {          
+        return null;
+    }   
+
+}
+
+public static Typeface getTypeFaceByName(Context context,String name){      
+    for(FontLoader item: FontLoader.values()){              
+        if(name.equalsIgnoreCase(item.name)){
+            if(item.typeFace==null){
+                try{
+                    item.typeFace=Typeface.createFromAsset(context.getAssets(), "fonts/"+item.name+".ttf");     
+                }catch (Exception e) {          
+                    return null;
+                }   
+            }
+            return item.typeFace;
+        }               
+    }
+    return null;
+}   
+
+public static void loadAllFonts(Context context){       
+    for(FontLoader item: FontLoader.values()){              
+        if(item.typeFace==null){
+            try{
+                item.typeFace=Typeface.createFromAsset(context.getAssets(), "fonts/"+item.name+".ttf");     
+            }catch (Exception e) {
+                item.typeFace=null;
+            }   
+        }                
+    }       
+}   
+}
+Then just use this code on you textview:
+
+ Typeface typeFace=FontLoader.getTypeFace(context,"arial");  
+ if(typeFace!=null) myTextView.setTypeface(typeFace);
+share improve this answer
+
+
+
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+
+import android.content.Context;
+import android.graphics.Typeface;
+
+public class FontsManager {
+
+    private static FontsManager instance;
+
+    private static HashMap<String, WeakReference<Typeface>> typefaces = new HashMap<String, WeakReference<Typeface>>();
+
+    private static Context context;
+
+    private FontsManager(final Context ctx) {
+        if (context == null) {
+            context = ctx;
+        }
+    }
+
+    public static FontsManager getInstance(final Context appContext) {
+        if (instance == null) {
+            instance = new FontsManager(appContext);
+        }
+        return instance;
+    }
+
+    public static FontsManager getInstance() {
+        if (instance == null) {
+            throw new RuntimeException(
+                    "Call getInstance(Context context) at least once to init the singleton properly");
+        }
+        return instance;
+    }
+
+    public Typeface getFont(final String assetName) {
+        final WeakReference<Typeface> tfReference = typefaces.get(assetName);
+        if (tfReference == null || tfReference.get() == null) {
+            final Typeface tf = Typeface.createFromAsset(context.getResources().getAssets(),
+                    assetName);
+            typefaces.put(assetName, new WeakReference<Typeface>(tf));
+            return tf;
+        }
+        return tfReference.get();
+    }
+
+}
+This way, you can create a View which inherits from TextView and calls setTypeface on its constructor.
+
+
+
+
+Maybe something a bit simpler:
+
+public class Fonts {
+  public static HashSet<String,Typeface> fonts = new HashSet<>();
+
+  public static Typeface get(Context context, String file) {
+    if (! fonts.contains(file)) {
+      synchronized (this) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), name);
+        fonts.put(name, typeface);
+      }
+    }
+    return fonts.get(file);
+  }
+}
+
+// Usage
+Typeface myFont = Fonts.get("arial.ttf");
+(Note this code is untested, but in general this approach should work well.)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

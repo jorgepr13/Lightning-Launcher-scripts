@@ -1,0 +1,311 @@
+var event = LL.getEvent();
+var event_i = event.getItem();
+//var event_t = event.getDate();
+//var eveny_c = event.getContainer();
+//var event_d = event.getData();
+//var event_s = event.getSource();
+
+if (event_i === null) {
+	alert("Run from an item. \nSet 'item menu' in script-editor.");
+	return;
+}
+
+var itm_w = event_i.getWidth();
+var itm_h = event_i.getHeight();
+var itm_sz = Math.min(itm_w,itm_h)/2;
+
+var img = LL.createImage(itm_sz,itm_sz);
+
+event_i.setBoxBackground(img, "ns");
+
+// create a paint object bg
+var p = new Paint(Paint.ANTI_ALIAS_FLAG);
+//var p = new Paint();
+//p.setAntiAlias(true);
+p.setStyle(Paint.Style.FILL);
+//p.setStrokeWidth(3);
+//p.setColor(0xAAFFFFFF);
+p.setColor(0x20FFFFFF);
+//p.setColor(0x00000000);
+
+// retrieve the canvas
+var canvas = img.draw();
+canvas.drawRect(0,0,itm_w,itm_h,p);
+canvas.save();
+img.update();
+
+
+
+var color_end=0x00000000;
+var color_start=0xFF33B5E5;
+//var tile_mode=Shader.TileMode.MIRROR;
+//var tile_mode=Shader.TileMode.REPEAT;
+var tile_mode=Shader.TileMode.CLAMP;
+var stk_w=3;
+
+// create a paint object
+var p = new Paint(Paint.ANTI_ALIAS_FLAG);
+p.setStyle(Paint.Style.STROKE);
+p.setStrokeWidth(stk_w);
+p.setShader(new LinearGradient(0, 0, 0, itm_sz/2, color_end, color_start, tile_mode));
+
+img.draw().drawCircle(itm_sz/2,itm_sz/2,(itm_sz-stk_w)/2,p);
+
+//img.save();
+//img.update();
+
+
+// create a paint object
+var p = new Paint(Paint.ANTI_ALIAS_FLAG);
+p.setStyle(Paint.Style.STROKE);
+p.setStrokeWidth(stk_w);
+p.setShader(new LinearGradient(0, (itm_sz-stk_w)/2, 0, itm_sz, color_start, color_end, tile_mode));
+
+img.draw().drawCircle(itm_sz/2,itm_sz,(itm_sz-stk_w)/2,p);
+
+img.save();
+img.update();
+
+
+//event_i.setBoxBackground(img, "ns");
+//Math.PI
+
+
+return;
+
+
+
+
+
+
+
+// create a paint object
+var p = new Paint();
+p.setAntiAlias(true);
+p.setStyle(Paint.Style.FILL);
+p.setStyle(Paint.Style.STROKE);
+p.setStrokeWidth(3);
+p.setTextSize(itm_sz * .2);
+
+p.setColor(Color.CYAN);
+p.setColor(0xF0F06020);
+
+
+pnt = new Paint(Paint.ANTI_ALIAS_FLAG);
+img = LL.createImage(imgW,imgH);
+img.draw().drawBitmap(bmp,cntX,cntY,pnt);
+img.save();
+itm.setBoxBackground(img,"ns",true);
+
+
+// retrieve the canvas
+var canvas = img.draw();
+canvas.drawRect(0,0,itm_sz,itm_sz,p);
+canvas.drawARGB(42,250,250,250);
+canvas.drawLine(x1, y1, x2, y2, p);
+canvas.drawText(i.toString(), x1, y1, p);
+canvas.drawCircle(x, y, radius, paint);
+
+// Draw the shadow
+canvas.drawOval(mShadowBounds,mShadowPaint);
+
+// Draw the label text
+canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);
+
+// Draw the pie slices
+for (int i = 0; i < mData.size(); ++i) {
+	Item it = mData.get(i);
+	mPiePaint.setShader(it.mShader);
+	canvas.drawArc(mBounds,360 - it.mEndAngle,it.mEndAngle - it.mStartAngle,true, mPiePaint);
+}
+
+// Draw the pointer
+canvas.drawLine(mTextX, mPointerY, mPointerX, mPointerY, mTextPaint);
+canvas.drawCircle(mPointerX, mPointerY, mPointerSize, mTextPaint);
+
+
+//RadialGradient class found in android.graphics.RadialGradient
+// gradient the full height of the screen.
+p.setShader(new LinearGradient(0, 0, 0, getHeight(), Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
+
+Shader test = new RadialGradient(X, Y, radius, colors, null, Shader.TileMode.CLAMP);
+paint.setShader(test);
+
+//Shader.TileMode.REPEAT
+
+canvas.drawPaint(p);
+canvas.drawPath(arrowPath, p);
+
+
+
+//Math.PI
+
+img.update();
+
+
+RectF rect1 = new RectF(50, 50, 150, 150);
+Paint paint1 = new Paint();
+paint1.setStrokeWidth(1);
+paint1.setStrokeCap(Paint.Cap.SQUARE);
+paint1.setStyle(Paint.Style.FILL);
+
+SweepGradient gradient1 = new SweepGradient(100, 100, Color.RED, Color.BLUE);
+paint1.setShader(gradient1);
+
+canvas.drawArc(rect1, 0, 90, true, paint1);
+
+
+int[] colors = {Color.RED, Color.BLUE};
+float[] positions = {0,1};
+SweepGradient gradient = new SweepGradient(100, 100, colors , positions);
+
+float[] positions = {0,Xf/360f};
+
+
+/*
+static Image	
+createImage(String path)
+Create an image from the specified file.
+
+static ImageBitmap	
+createImage(int width, int height)
+Create a blank new image of the specified size.
+
+static Image	
+createImage(String pkg, String name)
+Create an image from a package and a resource name.
+
+static ImageScript	
+createImage(Scriptable object, int width, int height)
+Create an image whose content is drawn using a script.
+
+static ImageBitmap	
+createTextIcon(String code, int size, int fgColor, int bgColor, Typeface typeface)
+Create an icon using text.
+*/
+
+
+//ImageScript is a way to draw images or animations without the need for intermediate bitmaps. Such images are scalable and memory efficient. Instances of ImageScript can be created with createImage(Scriptable, int, int). The Scriptable object must have a "draw" function, and optionally a "pause" and "resume" functions. These functions are called with a DrawingContext instance. 
+
+//Note: pause and resume functions are called when the drawing is assigned to item icons only, not for backgrounds not icon layers. Animated backgrounds are currently not supported. 
+
+//Sample 1 : draw a static image. 
+ var img = LL.createImage({
+     draw: function(context) {
+         var canvas = context.getCanvas();
+         var w = context.getWidth();
+         var h = context.getHeight();
+         var cx = w/2;
+         var cy = h/2;
+
+         var p = new Paint();
+         p.setAntiAlias(true);
+
+         var step = 1;
+         canvas.save();
+         for(var angle = 0; angle < 180; angle += step) {
+             p.setColor(Color.HSVToColor([angle*2, 1, 1]));
+             canvas.rotate(step, cx, cy);
+             canvas.drawLine(0, cy, w, cy, p);
+         }
+         canvas.restore();
+     }
+ }, -1, -1);
+ 
+
+
+//Sample 2 : this is a more complex script. It keeps tracks of timers per drawing context in order to create an animation that can be shared between several items 
+ var drawing = {
+      draw: function(context) {
+          var canvas = context.getCanvas();
+          var w = context.getWidth();
+          var h = context.getHeight();
+          var cx = w/2;
+          var cy = h/2;
+
+          var p = new Paint();
+          p.setAntiAlias(true);
+          p.setStrokeWidth(4);
+
+          var step = 4;
+          canvas.save();
+          for(var angle = 0; angle < 180; angle += step) {
+              var hue = ((angle+drawing.shift)*2)%360
+              p.setColor(Color.HSVToColor([hue, 1, 1]));
+              canvas.rotate(step, cx, cy);
+              canvas.drawLine(0, cy, w, cy, p);
+          }
+          canvas.restore();
+      },
+
+      resume: function(context) {
+          var animate = function() {
+              context.invalidate();
+              var id = ""+context.getId();
+              drawing.shift++;
+              drawing.timers[id] = setTimeout(animate, 100);
+          };
+          animate();
+      },
+
+      pause: function(context) {
+          var id = ""+context.getId();
+          clearTimeout(drawing.timers[id]);
+          delete drawing.timers[id];
+      },
+
+      shift: 0,
+      timers: {}
+ };
+
+ var img = LL.createImage(drawing, -1, -1);
+ 
+
+/* Reference
+
+https://developer.android.com/reference/android/graphics/Paint.html
+
+
+https://developer.android.com/reference/android/graphics/Shader.html
+BitmapShader, ComposeShader, LinearGradient, RadialGradient, SweepGradient
+
+BitmapShader(Bitmap bitmap, Shader.TileMode tileX, Shader.TileMode tileY)
+
+ComposeShader(Shader shaderA, Shader shaderB, Xfermode mode)
+ComposeShader(Shader shaderA, Shader shaderB, PorterDuff.Mode mode)
+
+LinearGradient(float x0, float y0, float x1, float y1, int[] colors, float[] positions, Shader.TileMode tile)
+LinearGradient(float x0, float y0, float x1, float y1, int color0, int color1, Shader.TileMode tile)
+
+RadialGradient(float centerX, float centerY, float radius, int[] colors, float[] stops, Shader.TileMode tileMode)
+RadialGradient(float centerX, float centerY, float radius, int centerColor, int edgeColor, Shader.TileMode tileMode)
+
+SweepGradient(float cx, float cy, int[] colors, float[] positions)
+SweepGradient(float cx, float cy, int color0, int color1)
+
+
+
+PorterDuff.Mode.ADD, 
+PorterDuff.Mode.CLEAR, 
+PorterDuff.Mode.DARKEN, 
+PorterDuff.Mode.DST, 
+PorterDuff.Mode.DST_ATOP, 
+PorterDuff.Mode.DST_IN, 
+PorterDuff.Mode.DST_OUT, 
+PorterDuff.Mode.DST_OVER, 
+PorterDuff.Mode.LIGHTEN, 
+PorterDuff.Mode.MULTIPLY, 
+PorterDuff.Mode.OVERLAY, 
+PorterDuff.Mode.SCREEN, 
+PorterDuff.Mode.SRC, 
+PorterDuff.Mode.SRC_ATOP, 
+PorterDuff.Mode.SRC_IN, 
+PorterDuff.Mode.SRC_OUT, 
+PorterDuff.Mode.SRC_OVER, 
+PorterDuff.Mode.XOR
+
+
+https://developer.android.com/reference/android/graphics/Shader.TileMode.html
+Shader.TileMode.MIRROR, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP
+
+*/

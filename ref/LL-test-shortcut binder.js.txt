@@ -1,0 +1,311 @@
+
+//alert("$bat_level");
+
+//shortcut_make_mod(cnt_name,name,size,lbl_u)
+shortcut_make_mod("","test_batt","","batt")
+
+function panel_make_mod(name,x,y,w,h) {
+	if (name=="") {
+		Android.makeNewToast("Error: No panel name was given.",false).show();
+		return;
+	};
+	var x=x||0;
+	var y=y||0;
+	var w=w||5;
+	var h=h||5;
+	var cnt=LL.getCurrentDesktop();
+
+	var itm = cnt.getItemByName(name);
+	if (itm == null) {
+		//create a panel; addPanel(float x, float y, float width, float height)
+		var itm = cnt.addPanel(x,y,w,h);
+		itm.setName(name);
+	};
+
+	//panel move, resize and modify the rows and columns
+	itm.getProperties().edit().setBoolean("i.onGrid", false).commit();
+	itm.setSize(w,h);
+	itm.setPosition(x,y);
+	var cnt = itm.getContainer();
+	cnt.getProperties().edit().setString("gridPColumnMode","SIZE").setString("gridPRowMode","SIZE").commit();
+	cnt.getProperties().edit().setInteger("gridPColumnSize",w).setInteger("gridPRowSize",w).commit();
+	//cnt.getProperties().edit().setInteger("gridPColumnNum", 1).setInteger("gridPRowNum", 5).commit();
+
+	var ed = itm.getProperties().edit();
+		var box = ed.getBox("i.box");
+			box.setSize("bl,br,bt,bb",0);
+			box.setSize("bl,br,bt,bb",1);
+			box.setSize("pl,pr,pt,pb,ml,mr,mt,mb",0);
+			box.setAlignment("CENTER","MIDDLE");
+	ed.commit();
+}
+
+
+function shortcut_make_mod(cnt_name,name,size,lbl_u) {
+	if (name==""||lbl_u=="") {
+		Android.makeNewToast("Error: No shortcut name or label was given.",false).show();
+		return;
+	};
+	if (lbl_u=="") {	lbl_u=name;};
+	if (cnt_name != "" || cnt_name != null) {
+		var cnt = LL.getCurrentDesktop().getItemByName(cnt_name);
+		if (cnt == null) {
+			var cnt = LL.getCurrentDesktop();
+		} else {
+			var cnt = LL.getCurrentDesktop().getItemByName(cnt_name).getContainer();
+		}
+	} else {
+		var cnt = LL.getCurrentDesktop();
+	}
+
+	var itm = cnt.getItemByName(name);
+	if (itm == null) {
+		var itm = cnt.addShortcut(lbl_u,new Intent(),0,0);
+	};
+	itm.setName(name);
+	itm.setBinding("s.label",'$bat_level+"\\n"+$ll_hour24+":"+$ll_minute',true);
+	var size=size||16;
+	//if (i != "" || i != null) {itm.setIntent(i);};
+	var ed = itm.getProperties().edit();
+	ed.setBoolean("s.iconVisibility", 	false);
+	ed.setFloat("s.labelFontSize",		size);
+	ed.setString("s.labelFontStyle",	"NORMAL");
+	ed.setInteger("s.labelFontColor", 	0x64ffffff);
+	ed.setInteger("s.selectionColorLabel", 	0xffffffff);
+	ed.setInteger("s.focusColorLabel", 	0xffffffff);
+	ed.setInteger("s.labelMaxLines", 2);
+	ed.commit();
+
+	//itm.setBinding("s.label",'$bat_level+"\\n"+$ll_hour24+":"+$ll_minute',true);
+
+	//Binding(String target, String formula, boolean enabled)
+	//setBinding("s.label",$battery_level,true);
+	//setBinding(String target, String formula, boolean enabled)
+	//Add or update a binding for this item.
+	//unsetBinding(String target)
+}
+
+/*
+0x64ffffff //grey (transparent white)
+0xff33b5e5 //blue
+0xffffffff //white
+0x00000000 //transparent black
+*/
+
+/*
+
+Container properties:
+Name	Type	Access	Admissible values
+newOnGrid	boolean	Read/Write	true/false
+allowDualPosition	boolean	Read/Write	true/false
+gridPColumnMode	string	Read/Write	AUTO|NUM|SIZE
+gridPColumnNum	int	Read/Write	>0
+gridPColumnSize	int	Read/Write	>0
+gridPRowMode	string	Read/Write	AUTO|NUM|SIZE
+gridPRowNum	int	Read/Write	>0
+gridPRowSize	int	Read/Write	>0
+gridLColumnMode	string	Read/Write	AUTO|NUM|SIZE
+gridLColumnNum	int	Read/Write	>0
+gridLColumnSize	int	Read/Write	>0
+gridLRowMode	string	Read/Write	AUTO|NUM|SIZE
+gridLRowNum	int	Read/Write	>0
+gridLRowSize	int	Read/Write	>0
+gridPL	boolean	Read/Write	true/false
+gridLayoutModeHorizontalLineColor	int	Read/Write	argb color
+gridLayoutModeHorizontalLineThickness	float	Read/Write	>=0
+gridLayoutModeVerticalLineColor	int	Read/Write	argb color
+gridLayoutModeVerticalLineThickness	float	Read/Write	>=0
+gridAbove	boolean	Read/Write	true/false
+bgSystemWPScroll	boolean	Read/Write	true/false
+bgSystemWPWidth	int	Read/Write	>0
+bgSystemWPHeight	int	Read/Write	>0
+bgColor	int	Read/Write	argb color
+statusBarHide	boolean	Read/Write	true/false
+statusBarColor	int	Read/Write	argb color
+navigationBarColor	int	Read/Write	argb color
+statusBarOverlap	boolean	Read/Write	true/false
+navigationBarOverlap	boolean	Read/Write	true/false
+screenOrientation	string	Read/Write	AUTO|PORTRAIT|LANDSCAPE|SYSTEM
+scrollingDirection	string	Read/Write	AUTO|X|Y|XY|NONE
+overScrollMode	string	Read/Write	DECELERATE|BOUNCE|NONE
+noDiagonalScrolling	boolean	Read/Write	true/false
+pinchZoomEnable	boolean	Read/Write	true/false
+snapToPages	boolean	Read/Write	true/false
+fitDesktopToItems	boolean	Read/Write	true/false
+autoExit	boolean	Read/Write	true/false
+rearrangeItems	boolean	Read/Write	true/false
+swapItems	boolean	Read/Write	true/false
+freeModeSnap	string	Read/Write	NONE|CENTER|EDGE|CENTER_EDGE
+useDesktopSize	boolean	Read/Write	true/false
+noScrollLimit	boolean	Read/Write	true/false
+wrapX	boolean	Read/Write	true/false
+wrapY	boolean	Read/Write	true/false
+iconPack	string	Read/Write	package name or null (see applyIconPack(boolean))
+lwpStdEvents	boolean	Read/Write	true/false
+Event handlers:
+homeKey	EventHandler	Read/Write
+menuKey	EventHandler	Read/Write
+longMenuKey	EventHandler	Read/Write
+backKey	EventHandler	Read/Write
+longBackKey	EventHandler	Read/Write
+searchKey	EventHandler	Read/Write
+bgTap	EventHandler	Read/Write
+bgDoubleTap	EventHandler	Read/Write
+bgLongTap	EventHandler	Read/Write
+swipeLeft	EventHandler	Read/Write
+swipeRight	EventHandler	Read/Write
+swipeUp	EventHandler	Read/Write
+swipeDown	EventHandler	Read/Write
+swipe2Left	EventHandler	Read/Write
+swipe2Right	EventHandler	Read/Write
+swipe2Up	EventHandler	Read/Write
+swipe2Down	EventHandler	Read/Write
+orientationPortrait	EventHandler	Read/Write
+orientationLandscape	EventHandler	Read/Write
+posChanged	EventHandler	Read/Write
+load	EventHandler	Read/Write
+paused	EventHandler	Read/Write
+resumed	EventHandler	Read/Write
+itemAdded	EventHandler	Read/Write
+itemRemoved	EventHandler	Read/Write
+menu	EventHandler	Read/Write
+App Drawer only:
+adHideActionBar	boolean	Read/Write	true/false
+adDisplayABOnScroll	boolean	Read/Write	true/false
+adDisplayedModes	int	Read/Write	bitfield
+adActionBarTextColor	int	Read/Write	argb color
+
+
+Item properties:
+Name	Type	Access	Admissible values
+i.box	Box	Read/Write through getBox(String)
+i.rotate	boolean	Read/Write	true/false
+i.selectionEffect	string	Read/Write	PLAIN|HOLO|MATERIAL
+i.selectionEffectMask	boolean	Read/Write	true/false
+i.enabled	boolean	Read/Write	true/false
+i.alpha	int	Read/Write	0..255
+i.pinMode	string	Read/Write	NONE|XY|X|Y
+i.filterTransformed	boolean	Read/Write	true/false
+i.onGrid	boolean	Read/Write	true/false
+i.hardwareAccelerated	boolean	Read/Write	true/false
+i.launchAnimation	string	Read/Write	NONE|FADE|SYSTEM|SLIDE_UP|SLIDE_DOWN|SLIDE_LEFT|SLIDE_RIGHT|SCALE_CENTER
+Event handlers:
+i.tap	EventHandler	Read/Write
+i.longTap	EventHandler	Read/Write
+i.swipeLeft	EventHandler	Read/Write
+i.swipeRight	EventHandler	Read/Write
+i.swipeUp	EventHandler	Read/Write
+i.swipeDown	EventHandler	Read/Write
+i.touch	EventHandler	Read/Write
+i.paused	EventHandler	Read/Write
+i.resumed	EventHandler	Read/Write
+i.menu	EventHandler	Read/Write
+
+Shortcut properties: STANDARD|REAL|FULL_SCALE
+Name	Type	Access	Admissible values
+s.labelVisibility	boolean	Read/Write	true/false
+s.labelFontColor	int	Read/Write	argb color
+s.selectionColorLabel	int	Read/Write	argb color
+s.focusColorLabel	int	Read/Write	argb color
+s.labelFontSize	float	Read/Write	>0
+s.labelFontTypeFace	string	Read/Write
+s.labelFontStyle	string	Read/Write	NORMAL|ITALIC|BOLD|BOLD_ITALIC
+s.labelMaxLines	int	Read/Write	>0
+s.iconVisibility	boolean	Read/Write
+s.iconSizeMode	string	Read/Write
+s.iconScale	float	Read/Write
+s.iconReflection	boolean	Read/Write	true/false
+s.iconReflectionOverlap	float	Read/Write
+s.iconReflectionSize	float	Read/Write
+s.iconReflectionScale	float	Read/Write
+s.iconFilter	boolean	Read/Write	true/false
+s.labelVsIconPosition	string	Read/Write	LEFT|TOP|RIGHT|BOTTOM
+s.labelVsIconMargin	int	Read/Write
+s.labelShadow	boolean	Read/Write	true/false
+s.labelShadowRadius	float	Read/Write	>=0
+s.labelShadowOffsetX	float	Read/Write
+s.labelShadowOffsetY	float	Read/Write
+s.labelShadowColor	int	Read/Write	argb color
+s.iconEffectScale	float	Read/Write
+s.iconColorFilter	int	Read/Write	argb color
+
+Folder properties:
+Name	Type	Access	Admissible values
+f.titleVisibility	boolean	Read/Write	true/false
+f.titleFontColor	int	Read/Write	argb color
+f.titleFontSize	float	Read/Write	>0
+f.animationIn	string	Read/Write	NONE|OPEN_CLOSE|SLIDE_FROM_LEFT|SLIDE_FROM_RIGHT|SLIDE_FROM_TOP|SLIDE_FROM_BOTTOM
+f.animationOut	string	Read/Write	NONE|OPEN_CLOSE|SLIDE_FROM_LEFT|SLIDE_FROM_RIGHT|SLIDE_FROM_TOP|SLIDE_FROM_BOTTOM
+f.animFade	boolean	Read/Write	true/false
+f.iconStyle	string	Read/Write	NORMAL|GRID_2_2|STACK
+f.autoClose	boolean	Read/Write	true/false
+f.closeOther	boolean	Read/Write	true/false
+f.wAH	string	Read/Write	LEFT|CENTER|RIGHT|CUSTOM
+f.wAV	string	Read/Write	TOP|CENTER|BOTTOM|CUSTOM
+f.wX	int	Read/Write
+f.wY	int	Read/Write
+f.wW	int	Read/Write
+f.wH	int	Read/Write
+f.box	Box	Read/Write through getBox(String)
+f.autoFindOrigin	boolean	Read/Write	true/false
+
+Page Indicator properties:
+Name	Type	Access	Admissible values
+p.style	string	Read/Write	DOTS|RAW|MINIMAP|LINE_X|LINE_Y
+p.rawFormat	string	Read/Write
+p.dotsMarginX	int	Read/Write
+p.dotsMarginY	int	Read/Write
+p.dotsOuterRadius	int	Read/Write	>=0
+p.dotsInnerRadius	int	Read/Write	>=0
+p.dotsOuterStrokeWidth	int	Read/Write	>=0
+p.dotsOuterColor	int	Read/Write	argb color
+p.dotsInnerColor	int	Read/Write	argb color
+p.miniMapOutStrokeColor	int	Read/Write	argb color
+p.miniMapOutFillColor	int	Read/Write	argb color
+p.miniMapOutStrokeWidth	int	Read/Write	>=0
+p.miniMapInStrokeColor	int	Read/Write	argb color
+p.miniMapInFillColor	int	Read/Write	argb color
+p.miniMapInStrokeWidth	int	Read/Write	>=0
+p.lineBgWidth	int	Read/Write	>=0
+p.lineBgColor	int	Read/Write	argb color
+p.lineFgWidth	int	Read/Write	>=0
+p.lineFgColor	int	Read/Write	argb color
+p.lineGravity	string	Read/Write	CENTER|LEFT_TOP|RIGHT_BOTTOM
+
+Custom view properties:
+Name	Type	Access	Admissible values
+v.onCreate	string	Read/Write	id/data, where /data is optional
+v.onDestroy	string	Read/Write	id/data, where /data is optional
+
+*/
+
+/*
+//local vars, used during the creation
+weather path icon	#
+weather temp icon	#
+weather temp hi icon	#
+weather temp low icon	#
+weather wind icon	#
+weather wind hi icon	#
+weather wind low icon	#
+weather wind dir icon	#
+weather rain icon	#
+weather snow icon	#
+weather humid icon	#
+
+//global vars
+weather path json	# local, used to get the other vars
+weather condition
+weather condition icon
+weather condition day
+weather temp hi
+weather temp low
+weather wind hi
+weather wind low
+weather wind dir
+weather wind dir txt
+weather rain
+weather snow
+weather humid
+*/
+

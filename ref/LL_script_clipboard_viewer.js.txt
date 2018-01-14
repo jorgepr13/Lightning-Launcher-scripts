@@ -1,0 +1,112 @@
+/*
+About the script
+Purpose : This is a small script that will show the content of the clipboard in an editable textbox.
+Author : TrianguloY
+Link: https://plus.google.com/u/1/105066926163073195690/posts/WMFpcbK2iJK (with video)
+How to use the script
+How to add the textbox: add a custom view and set this script in the create event, the resumed event and the paused event (I used a trick to detect the created event that maybe will be broken in the future. If so tell me to fix it)
+
+How to use the textbox: everything is shown in the video but here is the summary:
+
+When the textbox is resumed it takes the content of the clipboard, if it is text.
+When the textbox is paused:
+If the textbox didn't changed, do nothing
+If the textbox changed and the clipboard don't, the content of the textbox is copied into the clipboard
+If the content of the clipboard changed, even if the textbox changed too the clipboard keeps the text, and the textbox is discarded. This is done this way to be able to, for example, copy a part of the current clipboard easily.
+It doesn't use clipboard listeners. I know I can use them to update instantly the content, but in my opinion that's not necessary in this case. This way the battery impact, if any, should be the minimum.
+
+Note: you can change the color of the text in the first line of he script.﻿
+
+Script code
+*/
+var textColor=0xffffffff;//the color of the text from the textbox
+ 
+//tag
+var tag="clipboard";
+ 
+//classes
+LL.bindClass("android.widget.EditText");
+LL.bindClass("android.content.ClipData");
+ 
+ 
+//vars
+var cntx=LL.getContext();
+var clipboard = cntx.getSystemService(cntx.CLIPBOARD_SERVICE);
+ 
+//get clipboard text
+var cText=getCText();
+ 
+//is the script run from the create event of a custom view? (sort of a hack)
+try{typeof item}catch(e){
+ 
+item.setVerticalGrab(true);
+var v=new EditText(cntx);
+v.setTextColor(textColor);
+v.setGravity(80);//bottom
+setVText(v,cText);
+item.setTag(tag,cText);
+return v;
+ 
+}
+ 
+//more vars
+var source=LL.getEvent().getSource();
+var it=LL.getEvent().getItem();
+var itv=it.getView();
+ 
+//what to do
+switch(source){
+ 
+case "I_RESUMED":
+//sets the clipboard text in the textbox
+setVText(itv,cText);
+it.setTag(tag,cText);
+break;
+ 
+case "I_PAUSED":
+//if the clipboard didn't changed, sets the textbox text into the clipboard
+if(cText!=null&&it.getTag(tag)==cText&&cText!=getVText(itv))setCText(getVText(itv));
+it.setTag(tag,cText);
+break;
+}
+ 
+ 
+ 
+ 
+ 
+ 
+//sets the text of the v view to t (if not null)
+function setVText(v,t){
+if(t==null){
+v.setText(null);
+v.setHint("Clipboard contains no text");
+v.setFocusable(false);
+}else{
+v.setText(t);
+v.setHint("");
+v.setFocusableInTouchMode(true);
+}
+}
+ 
+//returns the text of the view v
+function getVText(v){
+var t=v.getText();
+return t;
+}
+ 
+//returns the text of the clipboard if it is text, otherwise returns null
+function getCText(){
+if(!clipboard.hasPrimaryClip()) return null
+if(!clipboard.getPrimaryClipDescription().hasMimeType("text/*"))return null;
+var t= clipboard.getPrimaryClip().getItemAt(0).getText();
+return t;
+}
+ 
+//sets 'text' as the clipboard text (with a custom description)
+function setCText(text){
+var clip = ClipData.newPlainText("LL clipboard editor",text);//custom description, remove if necessary
+clipboard.setPrimaryClip(clip);
+}
+
+//script_clipboard_viewer.txt · Last modified: 2015/06/28 13:06 by trianguloy
+

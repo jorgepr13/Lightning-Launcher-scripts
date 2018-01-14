@@ -1,0 +1,73 @@
+/* About the script
+ *  Purpose: Generic file or stream reader
+ *  Requires the Internet permission,
+    add it to the launcher through the installation of the plugin found at
+    http://www.pierrox.net/android/applications/lightning_launcher/permissions/
+ *  binds function readStream/readWebStream to .self
+ *  import as "f-ReadStream" to LL
+ *  in : [string] url, stream or file path
+ *  out: [string] url, stream or file contents
+
+ * Use:
+var json_str = self.readStream("","/sdcard/myFile.json");
+var json_str = self.readWebStream("http://api.wunderground.com/api/YOUR_API_KEY/conditions/forecast10day/q/47.0,-122.7.json");
+alert(json_str);
+ */
+
+//needed to allow to run the method in other scripts
+LL.bindClass("android.os.StrictMode");
+StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
+
+
+//import the classes
+LL.bindClass("java.io.BufferedReader");
+LL.bindClass("java.io.InputStreamReader");
+LL.bindClass("java.io.FileInputStream");
+LL.bindClass("java.lang.StringBuilder");
+
+function readStream (stream,path) {
+    if ((stream == null || stream == "" || stream == undefined) && (path == null || path == "" || path == undefined)) {return null;}
+    if (stream !== null && stream !== "" && stream !== undefined) {path = null;}
+
+    var reader = null;
+    try {
+        if (path !== null) {stream = new FileInputStream(path);}
+        reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+        var bld = new StringBuilder();
+        var line = "";
+        while ((line = reader.readLine()) !== null) {bld.append(line);}
+        return bld.toString();
+    } catch (e) {
+        Android.makeNewToast(e, true).show();
+        return null;
+    } finally {
+        if (reader !== null) {reader.close();}
+        if (path !== null) {stream.close();}
+    }
+}
+
+//import the classes
+LL.bindClass("java.net.URL");
+LL.bindClass("java.net.HttpURLConnection");
+LL.bindClass("java.io.BufferedInputStream");
+
+function readWebStream (my_url) {
+    if (my_url == null || my_url == undefined || my_url == "") {return null;}
+
+    var conn = null;
+    var conn_stream = null;
+    try {
+        conn = new URL(encodeURI(my_url)).openConnection();
+        conn.setConnectTimeout(10000); //ms
+        conn.setReadTimeout(15000); //ms
+        conn_stream = new BufferedInputStream(conn.getInputStream());
+        return readStream(conn_stream);
+    } catch (exception) {
+        Android.makeNewToast("No Internet or site connection!\n*If the error persist, check that you have the necessary permissions.*", false).show();
+        //alert("No Internet or site connection!\n"+my_url+"\n\n"+exception);
+        return null;
+    } finally {
+        if (conn_stream !== null) {conn_stream.close();}
+        if (conn !== null) {conn.disconnect();}
+    }
+}

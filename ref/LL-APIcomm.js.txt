@@ -1,0 +1,56 @@
+/* About the script
+ *  Purpose : Generic internet-API communication.
+ *  binds function APIcomm to .self
+ *  in : URL string
+ *  out: Json stringified
+ *  Author  : Jappie Toutenhoofd (https://plus.google.com/+JappieToutenhoofd)
+ *  Link    : https://plus.google.com/+JappieToutenhoofd/posts/
+ */
+
+LL.bindClass("android.os.StrictMode");
+var policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+StrictMode.setThreadPolicy(policy);
+
+LL.bindClass("java.net.URL");
+LL.bindClass("java.net.HttpURLConnection");
+LL.bindClass("java.io.BufferedInputStream");
+LL.bindClass("java.io.BufferedReader");
+LL.bindClass("java.io.InputStreamReader");
+LL.bindClass("java.lang.StringBuilder");
+
+self.APIcomm = function(myURL) {
+    var Conn = null;
+    var Cin = null;
+    try {
+        Conn = new URL(encodeURI(myURL)).openConnection();
+        Conn.setConnectTimeout(500);
+        Cin = new BufferedInputStream(Conn.getInputStream());
+        return readStream(Cin);
+
+    } catch (Exception) {
+
+        Android.makeNewToast("No Internet or site connection!", true).show();
+        return;
+    } finally {
+        if (Cin !== null) Cin.close();
+        if (Conn !== null) Conn.disconnect();
+    }
+};
+
+function readStream(ISin) {
+    var reader = null;
+    try {
+        reader = new BufferedReader(new InputStreamReader(ISin, "UTF-8"));
+        var bld = new StringBuilder();
+        var line = "";
+        while ((line = reader.readLine()) !== null) {
+            bld.append(line);
+        }
+        return bld.toString();
+    } catch (e) {
+        Android.makeNewToast(e, true).show();
+        return;
+    } finally {
+        if (reader !== null) reader.close();
+    }
+}

@@ -1,0 +1,51 @@
+/* About the script
+ *  Purpose : get colors extracted from the wallpaper
+ *  Author : Pierre Hébert
+ */
+LL.bindClass("android.app.WallpaperManager");
+
+var Ahalf = 155;
+var Atint = 55;
+
+self.quickColor = {};
+self.quickColor.LightMuted   = {};
+self.quickColor.DarkMuted    = {};
+self.quickColor.Vibrant      = {};
+self.quickColor.LightVibrant = {};
+
+try {
+    // extract the wallpaper bitmap
+    var wp = WallpaperManager.getInstance(LL.getContext()).getDrawable();
+    var bitmap = wp.getBitmap();
+
+    Palette.generateAsync(bitmap, {
+            onGenerated: function(palette) {
+
+            self.quickColor.LightMuted.solid   =  palette.getLightMutedColor(Color.BLACK);
+            self.quickColor.DarkMuted.solid    =  palette.getDarkMutedColor(Color.BLACK);
+            self.quickColor.Vibrant.solid      =  palette.getVibrantColor(Color.WHITE);
+            self.quickColor.LightVibrant.solid =  palette.getLightVibrantColor(Color.WHITE);
+
+            self.quickColor.LightMuted.half   = Aclr(Ahalf, palette.getLightMutedColor(Color.BLACK));
+            self.quickColor.DarkMuted.half    = Aclr(Ahalf, palette.getDarkMutedColor(Color.BLACK));
+            self.quickColor.Vibrant.half      = Aclr(Ahalf, palette.getVibrantColor(Color.WHITE));
+            self.quickColor.LightVibrant.half = Aclr(Ahalf, palette.getLightVibrantColor(Color.WHITE));
+
+            self.quickColor.LightMuted.tint   = Aclr(Atint, palette.getLightMutedColor(Color.BLACK));
+            self.quickColor.DarkMuted.tint    = Aclr(Atint, palette.getDarkMutedColor(Color.BLACK));
+            self.quickColor.Vibrant.tint      = Aclr(Atint, palette.getVibrantColor(Color.WHITE));
+            self.quickColor.LightVibrant.tint = Aclr(Atint, palette.getLightVibrantColor(Color.WHITE));
+           }
+        }).execute(null);
+} catch (e) {
+   alert(e);
+    // no bitmap or OOM
+}
+
+function Aclr(alfa, clr) {
+    var r = Color.red(clr);
+    var g = Color.green(clr);
+    var b = Color.blue(clr);
+    return Color.argb(alfa, r, g, b);
+}
+

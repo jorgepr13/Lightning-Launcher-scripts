@@ -1,0 +1,28 @@
+/* push Tag to ReSide-Go */
+
+var itemP = LL.getEvent().getItem().getTag();
+
+var desk = LL.getCurrentDesktop();
+var pos = 2 * itemP * desk.getHeight();
+var RSM = desk.getItemByLabel("RSM");
+
+var Mps = RSM.getContainer().getItems();
+
+var n = Mps.getLength(); 
+
+function pausecomp(ms) {ms += new Date().getTime();while (new Date() < ms){}};
+
+for(var i=0;i<n;++i){
+
+  if (Mps.getAt(i).getType() == "Panel")
+     {
+     Mps.getAt(i).getContainer().setPosition(0,0,1, true);
+     pausecomp(23);
+     }
+}
+
+//RSM.setPosition(0,0);
+//RSM.setSize(desk.getWidth()/2,desk.getHeight());
+RSM.getContainer().setPosition(0,0,1, true);
+
+desk.setPosition(0,pos, 1, false);

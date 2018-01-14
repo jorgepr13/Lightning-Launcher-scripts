@@ -1,0 +1,25 @@
+
+var jsonobj = { 
+name:"tutorialspoint.com", 
+year:2005,
+bluetooth:{
+	status:global('BLUE'),
+	connected:global('BLUE_CONNECTED')
+}
+};
+
+var jsonstr = JSON.stringify(jsonobj);
+
+//var jobj = JSON.parse(jsonstr);
+
+//var blue=jobj.bluetooth
+
+/*
+
+var clip = global( 'CLIP' );
+
+document.write("<h1>JSON with JavaScript example</h1>");
+document.write("<br>");
+document.write("<h3>Website Name = "+JSONObj.name+"</h3>");  
+document.write("<h3>Year = "+JSONObj.year+"</h3>");  
+*/

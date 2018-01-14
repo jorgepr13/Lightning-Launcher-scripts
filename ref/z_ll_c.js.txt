@@ -1,0 +1,3 @@
+this.test_c = function(){return "fc";}
+self.test_cb = function(){return "fcb";}
+this.test_cc = function(){return "fcc";}

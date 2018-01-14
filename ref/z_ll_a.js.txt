@@ -1,0 +1,116 @@
+//data = null if empty
+//Android.makeNewToast("Data:\n" + getEvent().getData(),false).show();
+
+/*
+//magic to make return and alert work:
+eval("function toEval(){\n"+script.getText()+"\n}"); 
+toEval();
+*/
+//the other script code gets inserted into this script 
+//duplicate functions or variables will be overwritten, 
+//ex. var x = 1; //external script | var x = 0; //main script 
+//x = 0 if the eval() is run before the declaration 
+//x = 1 if the eval() is run after the declaration 
+
+eval(getScriptByName("z_ll_b").getText());
+eval(getScriptByName("z_ll_c").getText());
+/*
+var screen = getActiveScreen();
+var script = getCurrentScript();
+var selfRun = script.getTag("selfRun");
+if (typeof selfRun == "undefined"){selfRun = false;}
+
+if(typeof test_b == "undefined") {getScriptByName("z_ll_b").run(screen,null);}
+if(typeof test_cc == "undefined") {getScriptByName("z_ll_c").run(screen,null);}
+if (typeof test_b == "undefined" || typeof test_c == "undefined") {
+  if(selfRun){
+    Android.makeNewToast("One of the required functions didn't loaded.\nPlease try again.",false).show();
+    return null;
+  } else {
+    Android.makeNewToast("Trying to import the functions again.",true).show();
+    script.setTag("selfRun",true);
+    return script.run(scn,getEvent().getData());
+  }
+}
+script.setTag("selfRun",false);
+*/
+
+this.test_a = function(x) {return "fa"+x;}
+test_cc = function() {return "faa";}
+
+var msg = "";
+msg += test_a(1) + "\n";
+msg += test_b() + "\n";
+msg += test_ba() + "\n";
+msg += self.test_c() + "\n";
+msg += self.test_cb() + "\n";
+msg += test_cc() + "\n";
+
+alert(msg);
+
+/*
+//initialize the self method
+var script_func = [];
+script_func.push(["z_ll_b","test_b"]);
+script_func.push(["z_ll_c","test_c"]);
+
+//try to import the other scripts into this, sometimes running it once don't add it, so we trybtobadd it 3 times
+for(var j=0;j<3;j++){
+  for(var i=0;i<script_func.length;i++){
+  try{
+  if(typeof eval(script_func[i][1]) == "undefined") {getScriptByName(script_func[i][0]).run(scn,null);}
+  }catch(e){getScriptByName(script_func[i][0]).run(scn,null);}}
+  }
+}
+//final check to decide if we continue with the script or not
+for(var i=0;i<script_func.length;i++){
+if(typeof eval(script_func[i][1]) == "undefined") {
+  Android.makeNewToast("One of the required functions didn't loaded.\nPlease try again.",false).show();
+  return null;
+}}
+*/
+/*
+if (typeof test_b == "undefined" || typeof test_c == "undefined") {
+  Android.makeNewToast("One of the required functions didn't loaded.\nPlease try again.",false).show();
+  return null;
+}
+*/
+
+/*
+
+public String getText ()
+Retrieve the script's text. 
+Experimental: it is possible to structure a script library using 
+eval(some_script.getText()), at the expense of execution speed. 
+Also the "evaled" script cannot include any direct suspension (alert or similar). 
+Use a function to encapsulate code: 
+
+     function doSomething() {
+         alert("hello");
+         ...
+     }
+ 
+And then use it this way: 
+     eval(LL.getScript("some_script"));
+     doSomething();
+ 
+
+*/
+/*
+var screen = getActiveScreen();
+var script = getCurrentScript();
+
+var selfRun = script.getTag("selfRun");
+if (typeof selfRun == "undefined"){selfRun = false;}
+script.setTag("selfRun",true);
+
+if(typeof test_b == "undefined") {getScriptByName("z_ll_b").run(screen,null);}
+if(typeof test_c == "undefined") {getScriptByName("z_ll_c").run(screen,null);}
+if (typeof test_b == "undefined" || typeof test_c == "undefined") {
+  Android.makeNewToast("One of the required functions didn't loaded.\nPlease try again.",false).show();
+  return null;//.run(scn,getEvent().getData());
+}
+*/
+//LL.runScript("z_ll_c", null);
+//LL.runScript("z_ll_c", "cba");
+//getScriptByName("z_ll_c").run(screen,"ccc");

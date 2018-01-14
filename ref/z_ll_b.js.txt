@@ -1,0 +1,6 @@
+var vx = LL.getEvent().getData() || "vb";
+
+this.test_b = function() {return "fb";}
+this.test_ba = function() {return "fba";}
+
+//return vx;

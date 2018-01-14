@@ -1,0 +1,46 @@
+//input: font data sent from tasker
+//echo "$element$sep$status$sep$i_color$sep$i_path$sep$icon$sep$i_size$sep$t_color$sep$t_path$sep$text$sep$t_size"
+
+
+var data=LL.getEvent().getData();
+if(data==null) {return;};
+
+var sep="#sep#";
+data=data.split(sep);
+
+var element=data[0];
+var status=data[1];
+var color=data[2];
+var path=data[3];
+var icon=data[4];
+
+//limitation (for now): just works for only one "toggle" container per desktop
+
+var desks=LL.getAllDesktops();
+for(var j=desks.getLength()-1;j>=0;--j){
+
+var conts=LL.getContainerById(desks.getAt(j)).getItems();
+for(var k=conts.getLength()-1;k>=0;--k){
+	var cont=conts.getAt(k);
+	if(cont.getName() == null || cont.getName() !== "toggles") {continue;};
+
+	var item=cont.getContainer().getItemByName(element);
+	if(item==null){continue;};
+
+	var ed=item.getProperties().edit();
+		ed.setFloat("s.labelFontSize",22);
+		ed.setString("s.label",icon);
+		ed.setString("s.labelFontTypeFace",path);
+		ed.setInteger("s.labelFontColor", 		color);
+	ed.commit();
+	};//next cont
+};//next desk
+
+return icon;
+/*
+	ed.setInteger("s.selectionColorLabel", 	0xffffffff);
+	ed.setInteger("s.focusColorLabel", 		0xffffffff);
+		ed.setBoolean("s.iconVisibility", false);
+	ed.setString("s.labelFontStyle","BOLD");
+"s.labelFontStyle","NORMAL|ITALIC|BOLD|BOLD_ITALIC"
+*/

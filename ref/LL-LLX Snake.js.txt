@@ -1,0 +1,185 @@
+/*
+LLXperiment
+Snake game
+made by TrianguloY
+*/
+
+
+var cont=LL.getEvent().getContainer();
+var click=LL.getEvent().getItem();
+
+if(click==null){
+	if(LL.getScriptTag()!=null){
+	//on positionchange event
+		var dir="";
+		if(cont.getPositionX()<0)dir="r";
+		else if(cont.getPositionX()>0)dir="l";
+		else if(cont.getPositionY()<0)dir="d";
+		else if(cont.getPositionY()>0)dir="u";
+		LL.setScriptTag(dir);
+	}
+	cont.setPosition(0,0,1,false);
+	return;
+}
+
+
+//onclick to stop
+if(LL.getScriptTag()!=null){
+	LL.setScriptTag(null);
+	//alert("stopped");
+	return;
+}
+
+if(click.getLabel()!="LLX Snake"){
+	click.launch();
+	return;
+}
+
+
+
+
+//Start game
+
+
+
+//vars
+var tick = 500;
+var n=1;
+var xs = [click.getCell().getLeft()];
+var ys = [click.getCell().getTop()];
+var xn=-1;
+var yn=-1;
+var hor = Math.floor(cont.getWidth()/cont.getCellWidth()+0.1);
+var ver = Math.floor(cont.getHeight()/cont.getCellHeight()+0.1);
+LL.setScriptTag("");
+var dir="";
+
+
+//items
+var items = cont.getItems();
+if(items.getLength()<n){alert("Place more items please");return;}
+var cells = [];
+
+var apple = [0,0];
+setapple();
+
+for(var i=items.getLength()-1;i>=0;--i){
+	//save cells
+	cells[i]=items.getAt(i).getCell();
+
+
+	//initial position
+	if(i<n)items.getAt(i).setCell(xs[i],ys[i],xs[i]+1,ys[i]+1);
+	else if(i==n)items.getAt(i).setCell(apple[0],apple[1],apple[0]+1,apple[1]+1);
+	else items.getAt(i).setCell(-1,-1,0,0);
+
+}
+
+//start iterations
+snakenext();
+
+
+
+
+
+//functions 
+
+
+function snakenext(){
+	var prev = dir;
+	dir= LL.getScriptTag();
+	if(dir==null){
+		//when stopped, restore cells
+		for(var i=items.getLength()-1;i>=0;--i){
+			items.getAt(i).setCell(cells[i].getLeft(),cells[i].getTop(), cells[i].getRight() ,cells[i].getBottom() );
+		}
+	return;
+	}
+
+	//forbidden directions
+	if(prev=="r"&&dir=="l")dir="r";
+	if(prev=="l"&&dir=="r")dir="l";
+	if(prev=="u"&&dir=="d")dir="u";
+	if(prev=="d"&&dir=="u")dir="d";
+
+	//direction
+	var dead=false;
+	xn=xs[0];
+	yn=ys[0];
+	switch(dir[0]){
+		case	'r': ++xn; if(xn>=hor)dead=true;  break;
+		case	'l': --xn; if(xn<0) dead=true ; break;
+		case	'd': ++yn; if(yn>=ver) dead=true ;  break;
+		case	'u': --yn; if(yn<0) dead=true ; break;
+	}
+	
+	if(dead) end("Screen walls, Ouch");
+
+
+	//apple?
+	if(xn==apple[0] && yn==apple[1]){
+		++n;
+		if(n>=items.getLength()||n>=hor*ver){
+			--n;
+			end("You win!");
+		}
+		
+		setapple();
+		items.getAt(n).setCell(apple[0],apple[1],apple[0]+1,apple[1]+1);
+
+		tick*=0.9;
+		
+	}
+
+
+	//me? (tail)
+	if(check(xn,yn)) end("Oops, you can't eat yourself");
+
+
+	//move the tail
+	for(var i=n-1;i>=1;--i){	
+		items.getAt(i).setCell(xs[i-1],ys[i-1],xs[i-1]+1,ys[i-1]+1);
+		xs[i]=xs[i-1];
+		ys[i]=ys[i-1];
+	}
+	
+	//move the head
+	items.getAt(0).setCell(xn,yn,xn+1,yn+1);
+	xs[0]=xn; ys[0]=yn;
+	
+	
+
+	//repeat...and repeat and repeat and so on
+	setTimeout(snakenext,tick);
+}
+
+
+
+
+function setapple(){
+	var flag = true;
+	while(flag){
+		apple[0]=Math.floor(Math.random()*hor);
+		apple[1]=Math.floor(Math.random()*ver);
+		
+		flag = check(apple[0],apple[1]) || (apple[0]==xn&&apple[1]==yn);
+	}
+}
+
+
+
+function check(x,y){
+	flag=false;
+	for(var i=0;i<n-1;++i)
+		if(x==xs[i] && y==ys[i]){
+		flag=true;
+		break;	
+		}
+	return flag;
+}
+
+
+function end(message){
+	LL.setScriptTag(null);
+	alert(message);
+}

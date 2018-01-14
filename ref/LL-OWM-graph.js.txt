@@ -1,0 +1,189 @@
+var owm_script = LL.getScriptByName("OWM-load");
+if (owm_script === null) {
+      alert("Also import script 'OWM-load'. \n This script depends on it.");
+      return;
+}
+var owm_tag = owm_script.getTag();
+if (owm_tag === null) {
+      LL.runScript('OWM-load', null);
+alert("runScript OWM-load ");
+      return;
+}else{
+      var owm = JSON.parse(owm_tag);
+}
+
+LL.bindClass("android.graphics.DashPathEffect");
+LL.bindClass("android.graphics.Path"); 
+
+var Evt = LL.getEvent();
+var Gbase = Evt.getItem();
+
+var maxT = 0;
+var minT = 199;
+var maxW = 0;
+var maxR = 0;
+
+var dt = new Date();
+var zonediff = dt.getTimezoneOffset() * 60;
+var SriseHr = new Date(1000 * owm.current.sys.sunrise).getHours();
+var SsetHr  = new Date(1000 * owm.current.sys.sunset).getHours();
+
+var lng = owm.hourly.list.length;
+for (var row = 0; row < lng; row++) {
+
+    var datum = new Date(1000 * (owm.hourly.list[row].dt + zonediff));
+    var Hr = datum.getHours();
+//    var Dtshow = owm.days[datum.getDay()] + "\n" + Hr;
+
+// T = Temp
+    var T = owm.hourly.list[row].main.temp;
+    if ( T > maxT){ maxT = T;}
+    if ( T < minT){ minT = T;}
+
+// M = Main
+    if (typeof owm.hourly.list[row].rain !== "undefined") {
+        var R = owm.hourly.list[row].rain["3h"];
+        if ( R > maxR){ maxR = R;}
+    }   
+
+// WR = Wind Rose (North 6)
+    var Wnd = owm.hourly.list[row].wind.speed;
+    if (Wnd > maxW) {maxW = Wnd;}
+}
+/* 
+var Gitem = WAc.addShortcut("", new Intent(), 0, 0);
+    Gitem.setCell(0, 0, myCols, myRows, true);
+    Gitem.setTag("QT", "notheme");
+    var ed = Gitem.getProperties().edit();
+    SetDefaults();
+    ed.commit();
+*/
+var gW = Gbase.getWidth(); 
+var gH = Gbase.getHeight();
+var cW = gW / lng;
+var p = new Paint(); 
+p.setAntiAlias(true); 
+p.setStyle(Paint.Style.FILL); 
+p.setColor(Color.rgb(0,155,255));
+
+// graph Clouds (wolk)
+var img = LL.createImage( gW,gH); 
+var c = img.draw(); 
+c.drawRect(0, 0, gW, gH, p); 
+
+for (var row = 0; row < lng; row++) {
+
+   p.setColor(Color.rgb(0,155,255));
+   datum = new Date(1000 * (owm.hourly.list[row].dt + zonediff));
+   Hr = datum.getHours();
+   if ((Hr < SriseHr)|| (Hr > SsetHr)) {
+      p.setColor(Color.rgb(0,15,155));
+      c.drawRect(row*cW, 0,(row+1)*cW, gH,p);      
+   }
+
+   wlk = owm.hourly.list[row].clouds["all"];
+   wlkC = 255 - wlk;
+   p.setColor(Color.rgb(wlkC,wlkC,wlkC));
+   wlkH = gH * (wlk / 100);
+   wlkO = gH - wlkH;
+   c.drawRect(row*cW, wlkO,(row+1)*cW, gH,p);
+}
+
+// graph Temperture
+p.setStrokeWidth(5);
+p.setColor(Color.rgb(250,119,25));
+
+var Td = maxT - minT;
+var Tscale = 0.8 * (gH/Td);
+var Tx1 = cW / 2;
+var T1 = owm.hourly.list[0].main.temp.toFixed(1); 
+var Ty1 = (Tscale * ( maxT - T1))+(0.1 * gH); 
+var Tx2 = 0;
+var T2  = 0;
+var Ty2 = 0;
+
+for (var row = 1; row < lng; row++) {
+   Tx2 = (row + 0.5) * cW;
+   T2 = owm.hourly.list[row].main.temp; 
+   Ty2 = Tscale * ( maxT - T2)+(0.05 * gH); 
+   c.drawLine(Tx1,Ty1,Tx2,Ty2,p);
+   Tx1 = Tx2;
+   Ty1 = Ty2;
+}
+
+// graph Wind
+p.setColor(Color.rgb(180,170,30));
+var Wscale = 0.2 * (gH/maxW);
+for (var row = 0; row < lng; row++) {
+   Wx = (row + 0.5) * cW;
+   Wnd = owm.hourly.list[row].wind.speed;
+   var Wy = gH-(Wscale * Wnd); 
+   c.drawLine(Wx,Wy,Wx,gH,p);
+}
+
+// graph Text
+p.setTextSize(23);
+p.setColor(Color.rgb(250,250,250));
+var Dtlast = "";
+for (var row = 0; row < lng; row++) {
+
+    Dx = (row + 0.5) * cW;
+    var datum = new Date(1000 * (owm.hourly.list[row].dt + zonediff));
+    var Dtshow = owm.days[datum.getDay()];
+    if (Dtshow != Dtlast) {
+        c.drawText(Dtshow,Dx, (gH/2), p);
+    }
+    Dtlast = Dtshow;
+
+}
+p.setTextSize(19);
+   Tx = (lng-2)*cW;
+   Ty = (Tscale * Td)+(0.1 * gH); 
+   c.drawText((1*minT).toFixed(0),0,Ty,p);
+   c.drawText((1*minT).toFixed(0),Tx/2,Ty,p);
+   c.drawText((1*minT).toFixed(0),Tx,Ty,p);
+   Ty = (Tscale * Td * 0.333)+(0.1 * gH);
+   var T13 = (1*maxT)-(Td*0.333); 
+   c.drawText(T13.toFixed(0),0,Ty,p);
+   c.drawText(T13.toFixed(0),Tx/2,Ty,p);
+   c.drawText(T13.toFixed(0),Tx,Ty,p);
+   Ty = (Tscale * Td * 0.667)+(0.1 * gH); 
+   var T23 = (1*maxT)-(Td*0.667); 
+   c.drawText(T23.toFixed(0),0,Ty,p);
+   c.drawText(T23.toFixed(0),Tx/2,Ty,p);
+   c.drawText(T23.toFixed(0),Tx,Ty,p);
+   Ty = 0.1 * gH; 
+   c.drawText((1*maxT).toFixed(0),0,Ty,p);
+   c.drawText((1*maxT).toFixed(0),Tx/2,Ty,p);
+   c.drawText((1*maxT).toFixed(0),Tx,Ty,p);
+
+// graph Rain
+var dash = [2,8];
+var DPEff = new DashPathEffect(dash, 0);
+p.setPathEffect(DPEff); 
+p.setStrokeWidth(6);
+p.setStrokeCap(Paint.Cap.ROUND);
+
+if (maxR < 2.0){maxR = 2.0;}
+var Rscale = 0.2 * (gH/maxR);
+for (var row = 0; row < lng; row++) {
+    Rx = (row + 0.5) * cW;
+    if (typeof owm.hourly.list[row].rain !== "undefined") {
+        var Rn = owm.hourly.list[row].rain["3h"];
+        var Ry = Rscale * Rn; 
+        c.drawLine(Rx,Ry,Rx,0,p);
+    }   
+}
+
+
+Gbase.setBoxBackground(img, "ns",true); 
+
+img.save();
+img.update();
+
+function SetDefaults() {
+    ed.setBoolean("s.iconVisibility", false);
+    ed.setBoolean("s.labelVisibility", true);
+    ed.setInteger("s.labelMaxLines", 4);
+    ed.setBoolean("i.enabled", false);
+}

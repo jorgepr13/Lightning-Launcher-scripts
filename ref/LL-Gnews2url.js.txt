@@ -1,0 +1,10 @@
+// Gnews go Url
+var nr = LL.getEvent().getData();
+
+var myUrl = self.gnews[nr].unescapedUrl;
+
+LL.bindClass("android.content.Intent");
+LL.bindClass("android.net.Uri");
+
+var myIntent =new Intent(Intent.ACTION_VIEW,Uri.parse(myUrl));
+LL.startActivity(myIntent);

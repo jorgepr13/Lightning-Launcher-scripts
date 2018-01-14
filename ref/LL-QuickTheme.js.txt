@@ -1,0 +1,138 @@
+/* About the script
+ *  Purpose : set the background color of an item with colors extracted from the wallpaper
+ *  Author : Pierre Hébert / Jappie Toutenhoofd
+ */
+
+LL.bindClass("android.app.WallpaperManager");
+
+var LonD = prompt("Light on Dark (Y/N)?","N");
+var aBG  = prompt("Item background (transp. [0..255] solid)",200);
+if (aBG < 0)   aBG = 0;
+if (aBG > 255) aBG = 255;
+
+var MyItem = LL.getEvent().getItem();
+var bgN = MyItem.getBoxBackground("n");
+var bgS = MyItem.getBoxBackground("s");
+var xe = MyItem.getProperties();
+var boxML = xe.getBox("i.box").getSize("ml"); 
+var boxBL = xe.getBox("i.box").getSize("bl"); 
+var boxPL = xe.getBox("i.box").getSize("pl");
+var boxMT = xe.getBox("i.box").getSize("mt"); 
+var boxBT = xe.getBox("i.box").getSize("bt"); 
+var boxPT = xe.getBox("i.box").getSize("pt");
+var boxMR = xe.getBox("i.box").getSize("mr"); 
+var boxBR = xe.getBox("i.box").getSize("br"); 
+var boxPR = xe.getBox("i.box").getSize("pr");
+var boxMB = xe.getBox("i.box").getSize("mb"); 
+var boxBB = xe.getBox("i.box").getSize("bb"); 
+var boxPB = xe.getBox("i.box").getSize("pb");
+
+var clrBR = xe.getBox("i.box").getColor("br", "n"); 
+var clrBB = xe.getBox("i.box").getColor("bb", "n");
+var clrBL = xe.getBox("i.box").getColor("bl", "n"); 
+var clrBT = xe.getBox("i.box").getColor("bt", "n");
+
+var labelsize = xe.getFloat("s.labelFontSize");
+var labelfont = xe.getString("s.labelFontTypeFace");
+var labelstyle = xe.getString("s.labelFontStyle");
+var labelshadow = xe.getBoolean("s.labelShadow");
+var shadowradius = xe.getFloat("s.labelShadowRadius");
+var offsetx = xe.getFloat("s.labelShadowOffsetX");
+var offsety = xe.getFloat("s.labelShadowOffsetY");
+var ff = 9; // ff: folder factor, bigger margins/borders
+
+try {
+    // extract the wallpaper bitmap
+    var wp = WallpaperManager.getInstance(LL.getContext()).getDrawable();
+    var bitmap = wp.getBitmap();
+
+    Palette.generateAsync(bitmap, {
+            onGenerated: function(palette) {
+                var container = LL.getEvent().getContainer();
+                var pca = palette.getMutedColor(0);
+                var pcb = palette.getDarkMutedColor(0);
+                var pcc = palette.getVibrantColor(0);
+                var pcd = palette.getLightVibrantColor(0);
+                if (LonD == "Y"||LonD == "y"){
+                   run(container, pcc, pcd, pcb, pca);
+                }else{
+                   run(container, pca, pcb, pcc, pcd);
+                }
+                Android.makeNewToast("Theming Done", true).show();
+            }
+        }).execute(null);
+} catch (e) {
+    e.printStackTrace();
+    // no bitmap or OOM
+}
+
+function Aclr(alfa, clr) {
+    var r = Color.red(clr);
+    var g = Color.green(clr);
+    var b = Color.blue(clr);
+    return Color.argb(alfa, r, g, b);
+}
+
+function run(cont, clr1, clr2, clr3, clr4) {
+
+    var items = cont.getItems();
+
+    for (var i = items.getLength() - 1; i >= 0; --i) {
+        var item = items.getAt(i);
+        if (item.getTag("QT") === null || item.getTag("QT") !== "notheme") {
+            var Pr = item.getProperties();
+            var ed = Pr.edit();
+
+            if (item.getType() != "PageIndicator") {
+               item.setBoxBackground(bgN, "n", true);
+               item.setBoxBackground(bgS, "s", true);
+                var box = ed.getBox("i.box");
+                box.setColor("c", "n", Aclr(aBG, clr1)); box.setColor("c", "s", Aclr(255, clr2));
+                box.setColor("bl", "ns", clrBL); box.setColor("bt", "ns", clrBT);
+                box.setColor("br", "ns", clrBR); box.setColor("bb", "ns", clrBB);
+                box.setSize("ml", boxML);  box.setSize("bl", boxBL); box.setSize("pl", boxPL);
+                box.setSize("mt", boxMT);  box.setSize("bt", boxBT); box.setSize("pt", boxPT);
+                box.setSize("mr", boxMR);  box.setSize("br", boxBR); box.setSize("pr", boxPR);
+                box.setSize("mb", boxMB);  box.setSize("bb", boxBB); box.setSize("pb", boxPB);
+                if (item.getType() == "Folder"){
+                  var box = ed.getBox("f.box");
+                  box.setColor("c", "n", Aclr(aBG, clr3)); box.setColor("c", "s", Aclr(aBG, clr4));
+                  box.setColor("bl", "ns", clrBL); box.setColor("bt", "ns", clrBT);
+                  box.setColor("br", "ns", clrBR); box.setColor("bb", "ns", clrBB);
+                  box.setSize("ml", ff * Math.abs(boxML));  box.setSize("bl", ff * Math.abs(boxBL)); box.setSize("pl", ff * Math.abs(boxPL));
+                  box.setSize("mt", ff * Math.abs(boxMT));  box.setSize("bt", ff * Math.abs(boxBT)); box.setSize("pt", ff * Math.abs(boxPT));
+                  box.setSize("mr", ff * Math.abs(boxMR));  box.setSize("br", ff * Math.abs(boxBR)); box.setSize("pr", ff * Math.abs(boxPR));
+                  box.setSize("mb", ff * Math.abs(boxMB));  box.setSize("bb", ff * Math.abs(boxBB)); box.setSize("pb", ff * Math.abs(boxPB));     
+                }
+            }else {
+                ed.setInteger("p.dotsInnerColor", Aclr(255, clr4));
+                ed.setInteger("p.dotsOuterColor", Aclr(255, clr3));
+                ed.setInteger("p.lineFgColor", Aclr(255, clr4));
+                ed.setInteger("p.lineBgColor", Aclr(255, clr3));
+                ed.setInteger("p.miniMapInFillColor", Aclr(255, clr4));
+                ed.setInteger("p.miniMapInStrokeColor", Aclr(255, clr3));
+                ed.setInteger("p.miniMapOutFillColor", Aclr(255, clr2));
+                ed.setInteger("p.miniMapOutStrokeColor", Aclr(255, clr1));
+                }
+            if (item.getType() == "Folder" || item.getType() == "Shortcut") {
+                ed.setInteger("s.labelFontColor", Aclr(255, clr3));
+                ed.setInteger("s.iconColorFilter", Aclr(50, clr3));
+//               ed.setFloat("s.labelFontSize", labelsize);
+//               ed.setString("s.labelFontTypeFace", labelfont);
+                ed.setString("s.labelFontStyle", labelstyle);
+                ed.setBoolean("s.labelShadow", labelshadow);
+                ed.setFloat("s.labelShadowRadius", shadowradius);
+                ed.setFloat("s.labelShadowOffsetX", offsetx);
+                ed.setFloat("s.labelShadowOffsetY", offsety);
+                ed.setInteger("s.labelShadowColor", Aclr(255, clr4));
+                if (item.getType() == "Folder"){
+                   ed.setInteger("f.titleFontColor", Aclr(255, clr2));
+            }   }
+            ed.commit();
+        }
+        if (item.getType() == "Folder" || item.getType() == "Panel") {
+            run(item.getContainer(), clr2, clr1, clr4, clr3);
+        }
+    }
+
+} // end-run

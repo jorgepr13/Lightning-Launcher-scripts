@@ -1,0 +1,48 @@
+
+var limit=20;
+var clip = global( 'CLIP' );
+readFile(a1);
+
+
+
+for i=0 to limit, i++
+if clip.lowercase == clips[i].lowercase {clips.splice(i,1);}
+
+loop
+
+clips.unshift(clip);
+
+while clips.length > limit 
+	clips.pop();
+loop
+
+setClip(text,false);
+var ok = setClip( str text, bool appendFlag )
+
+writeFile(a1,a2,a3);
+return true;
+
+exit();
+
+
+
+
+
+
+readFilevar contents = readFile( str path )
+
+Read the contents of a text file.
+
+
+
+
+writeFilevar ok = writeFile( str path, str text, bool append )
+
+Write text to file path.
+
+If append is specified, the text will be attached to the end of the existing file contents (if there are any).
+
+
+
+
+

@@ -1,0 +1,36 @@
+
+var itm=LL.getCurrentDesktop().getItemByName("weather_fol");
+var itm=LL.getCurrentDesktop().getItemByName("HS_weather_launch");
+var event=itm.getProperties().getEventHandler("i.tap");
+
+var msg=event;
+
+alert(msg);
+//Android.makeNewToast(msg,false).show();
+
+setEventHandler(String name, int action, String data)
+setEventHandler(String name, EventHandler eventHandler)
+
+
+var event=LL.getEvent();
+if (event.getItem() !== null) {
+	alert("Run from empty. \n Do NOT set 'item menu'. \n Only set 'Lightning menu' in script-editor.");
+	return;
+}
+
+var event_c=event.getContainer();
+if (event_c.getId() == 99) {
+	alert("Don't run from the app drawer.");
+	return;
+}
+
+
+event_c.getItemByName("weather_fol").getId();
+
+
+var ed=itm.getProperties().edit();
+ed.setBoolean("i.onGrid",false);
+ed.setEventHandler("i.tap", EventHandler.OPEN_FOLDER,event_c.getItemByName("weather_fol").getId());
+ed.setBoolean("s.labelVisibility",false);
+ed.setBoolean("i.enabled",true);
+ed.commit();

@@ -1,0 +1,63 @@
+//input: element name
+//usage: run script from elements in LL
+
+var event = LL.getEvent();
+var time = event.getDate();
+var cnt = event.getContainer();
+var itm = event.getItem();
+var name = itm.getName();
+var data=event.getData();
+
+if(data==null & name==null) {return;};
+
+if(data==null) {data=name;};
+data="action - tap - " + data;
+
+var task = "f Task find and launch";
+var i = new TaskerIntent(task);
+i.addParameter( data );
+//i.addVariable( "%name", "value" );
+LL.sendTaskerIntent(i, false);
+
+
+/*
+var task = "test LL";
+var i = new TaskerIntent(task);
+i.addParameter( "1" );
+//i.addVariable( "%name", "value" );
+LL.sendTaskerIntent(i, false);
+
+//LL.sendTaskerIntent(new TaskerIntent("MyTask"), false);
+*/
+
+/*
+var i = new TaskerIntent("Say");
+i.addAction(ActionCodes.SAY);
+i.addArg("hello");
+i.addArg("com.google.android.tts:en-gbr");
+i.addArg(0);
+i.addArg(5);
+i.addArg(5);
+i.addArg(true);
+i.addArg(false);
+i.addArg(false);
+LL.sendTaskerIntent(i, true);
+alert("done");
+
+
+
+public boolean sendTaskerIntent (TaskerIntent intent, boolean synchronous)
+
+Send a tasker intent, optionally waiting for its completion to return.
+
+Parameters: 
+intent
+an intent built with TaskerIntent (see http://tasker.dinglisch.net/invoketasks.html for samples)
+synchronous
+when true, Lightning will wait for Tasker task completion before to return, otherwise it will return immediately
+
+Returns:
+when synchronous is true, returns true if the intent has been sent successfully and Tasker reports a success too, 
+when synchronous is false, this method always returns true.
+
+*/

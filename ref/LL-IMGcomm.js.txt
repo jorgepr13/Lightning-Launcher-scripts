@@ -1,0 +1,65 @@
+LL.bindClass("java.net.URL");
+LL.bindClass("android.graphics.BitmapFactory");
+
+self.setIMG = function(itm, bmpUrl, bmpW, bmpH) {
+    var url = null;
+    var con = null;
+    var is  = null;
+    var img = null;
+    var bmp = null;
+    var pnt = null;
+    if (bmpW==0 || bmpH==0){
+        bmp = itm.getDefaultIcon().getBitmap();
+        bmpW = 128;
+        bmpH = 128;
+    }else{
+      try {
+        url = new URL(bmpUrl);
+        con = url.openConnection();
+        is  = con.getInputStream();
+        bmp = BitmapFactory.decodeStream(is);
+        
+      } catch (e) {
+        bmp = itm.getDefaultIcon().getBitmap();
+        bmpW = 128;
+        bmpH = 128;
+      } finally {
+        if (is  !== null) is.close();
+        if (con !== null) con.disconnect();
+    } }
+
+
+var itmW = itm.getWidth();
+var itmH = itm.getHeight();
+var itm_ratio = itmW / itmH;
+var bmp_ratio = bmpW / bmpH;
+if (itm_ratio > bmp_ratio)
+{ // image is higher
+  var imgH = bmpH;
+  var imgW = bmpH * itm_ratio;
+  var cntX = (imgW - bmpW)/2;
+  var cntY = 0;
+}else{ // image is wider
+  var imgW = bmpW;
+  var imgH = bmpW / itm_ratio;
+  var cntX = 0 
+  var cntY = (imgH - bmpH)/2;
+}
+
+    pnt = new Paint(Paint.ANTI_ALIAS_FLAG);
+    img = LL.createImage(imgW,imgH);
+    img.draw().drawBitmap(bmp,cntX,cntY,pnt);
+    img.save();
+    itm.setBoxBackground(img,"ns",true);
+
+
+    img = null;
+    bmp = null;
+    pnt = null;
+};
+
+/* USAGE:
+var item = LL.getEvent().getItem();
+var imgUrl = "http://lorempixel.com/200/200/"
+self.setIMG(item, imgUrl, 200, 200 );
+*/

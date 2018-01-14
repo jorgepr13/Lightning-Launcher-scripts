@@ -1,0 +1,47 @@
+var query = prompt("Gnews search:", "News");
+
+  var req  = "http://ajax.googleapis.com/ajax/"
+      req += "services/search/news?v=1.0&output=json";
+   if (query == "News"){
+      req += "&topic=w"; // h, w, s, n
+   }else{
+      req += "&hl=nl"; // en, fr language
+   }
+      req += "&rsz=large";
+      req += "&q=";
+
+  var repl = self.APIcomm(req + query.replace(/\s+/g, '+') );
+
+  if (repl === null|| typeof repl == "undefined") return;
+  var feed = JSON.parse(repl);
+
+  self.gnews = feed.responseData.results;
+  self.gnews.query = query;
+
+  LL.runScript('Gnews-binders', null);
+
+// Update Images 
+  var gButton = LL.getEvent().getItem();
+  var gWidget = gButton.getParent();
+  var gList   = gWidget.getItemByName("gnews-list").getContainer();
+  var gItem   = null;
+  var gFldr   = null;
+
+  for (var i = 0;i< 8;i++){
+     var imgUrl  = "";
+     var imgW    = 0;
+     var imgH    = 0;
+   
+     gItem  = gList.getItemByName("gn-tbn-"+i);
+     if (self.gnews[i].image){
+         imgUrl = self.gnews[i].image.tbUrl;
+         imgW   = self.gnews[i].image.tbWidth;
+         imgH   = self.gnews[i].image.tbHeight;
+     } 
+     self.setIMG(gItem, imgUrl, imgW, imgH);
+//gn-fld-tbn-0
+     gFldr  = gList.getItemByName("gn-fld-"+i).getContainer();
+     gItem  = gFldr.getItemByName("gn-fld-tbn-"+i);
+     self.setIMG(gItem, imgUrl, imgW, imgH);
+   }
+ 

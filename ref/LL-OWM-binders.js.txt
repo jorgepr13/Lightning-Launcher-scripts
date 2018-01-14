@@ -1,0 +1,141 @@
+var owm = JSON.parse(LL.getEvent().getData());
+var editor = LL.getVariables().edit();
+
+var c = owm.current.weather[0].id;
+var ofset = 60000;
+if (owm.current.dt < owm.current.sys.sunrise)
+{ofset += 1000 }
+if (owm.current.dt > owm.current.sys.sunset)
+{ofset += 1000 }
+var s=String.fromCharCode(ofset + c);
+
+editor.setString("owm_cur_icon", s);
+
+s = owm.current.main.temp.toFixed(1) +"°C";
+
+editor.setString("owm_cur_temp", s);
+
+ var c = new Date(1000 * owm.current.sys.sunrise);
+ var hh = c.getHours();
+ var mm = c.getMinutes();
+ if (mm < 10) {mm="0"+mm;}
+
+editor.setString("owm_cur_sunrise", hh+":"+mm);
+
+ var c = new Date(1000 * owm.current.sys.sunset);
+ var hh = c.getHours();
+ var mm = c.getMinutes();
+ if (mm < 10) {mm="0"+mm;}
+
+editor.setString("owm_cur_sunset", hh+":"+mm);
+
+ var c = new Date(1000 * owm.current.dt);
+ var hh = c.getHours();
+ var mm = c.getMinutes();
+ if (mm < 10) {mm="0"+mm;}
+ 
+ var s = owm.days[c.getDay()] + hh+":"+mm;
+
+editor.setString("owm_last", s);
+
+s = owm.current.name;
+
+editor.setString("owm_city", s);
+
+var c = owm.current.weather[0].id;
+var ofset = 60000;
+if (owm.current.dt < owm.current.sys.sunrise)
+{ofset += 1000 }
+if (owm.current.dt > owm.current.sys.sunset)
+{ofset += 1000 }
+var s=String.fromCharCode(ofset + c);
+
+editor.setString("owm_cur_icon", s);
+
+var future = owm.forcast.list.length;
+for (var i = 0; i < future; i++) {
+
+// icon
+    var ofset = 60000;
+    var c = owm.forcast.list[i].weather[0].id;
+    var s = String.fromCharCode(ofset + c);
+// temp
+    var T = owm.forcast.list[i].temp.max.toFixed(1) + "°C";
+    T += "\n";
+    T += owm.forcast.list[i].temp.min.toFixed(1) + "°C";
+// W = Wind Rose (North 6.4 m/s)
+    var W = owm.rose[0];
+    var Rose = owm.forcast.list[i].deg;
+    if (Rose > 23) W = owm.rose[1];
+    if (Rose > 68) W = owm.rose[2];
+    if (Rose > 113) W = owm.rose[3];
+    if (Rose > 158) W = owm.rose[4];
+    if (Rose > 203) W = owm.rose[5];
+    if (Rose > 248) W = owm.rose[6];
+    if (Rose > 293) W = owm.rose[7];
+    if (Rose > 338) W = owm.rose[0];
+    W += " " + owm.forcast.list[i].speed.toFixed(1) +"m/s";
+
+// M = Main (clouds 804 and rain 955)	
+    sm = String.fromCharCode(ofset + 804);
+    var M = sm + owm.forcast.list[i].clouds + "%";
+        M += " " + W;
+    if (owm.forcast.list[i].rain) {
+        sm = String.fromCharCode(ofset + 956);
+        M += "\n";
+        M += sm + owm.forcast.list[i].rain.toFixed(1) + "mm";
+    }
+
+    if (i === 0) {
+   editor.setString("owm_forcast_0_icon", s);
+   editor.setString("owm_forcast_0_temp", T);
+   editor.setString("owm_forcast_0_main", M);
+}
+    if (i === 1) {
+   editor.setString("owm_forcast_1_icon", s);
+   editor.setString("owm_forcast_1_temp", T);
+   editor.setString("owm_forcast_1_main", M);
+}
+    if (i === 2) {
+   editor.setString("owm_forcast_2_icon", s);
+   editor.setString("owm_forcast_2_temp", T);
+   editor.setString("owm_forcast_2_main", M);
+}
+    if (i === 3) {
+   editor.setString("owm_forcast_3_icon", s);
+   editor.setString("owm_forcast_3_temp", T);
+   editor.setString("owm_forcast_3_main", M);
+}
+    if (i === 4) {
+   editor.setString("owm_forcast_4_icon", s);
+   editor.setString("owm_forcast_4_temp", T);
+   editor.setString("owm_forcast_4_main", M);
+}
+    if (i === 5) {
+   editor.setString("owm_forcast_5_icon", s);
+   editor.setString("owm_forcast_5_temp", T);
+   editor.setString("owm_forcast_5_main", M);
+}
+    if (i === 6) {
+   editor.setString("owm_forcast_6_icon", s);
+   editor.setString("owm_forcast_6_temp", T);
+   editor.setString("owm_forcast_6_main", M);
+}
+    if (i === 7) {
+   editor.setString("owm_forcast_7_icon", s);
+   editor.setString("owm_forcast_7_temp", T);
+   editor.setString("owm_forcast_7_main", M);
+}
+    if (i === 8) {
+   editor.setString("owm_forcast_8_icon", s);
+   editor.setString("owm_forcast_8_temp", T);
+   editor.setString("owm_forcast_8_main", M);
+}
+    if (i === 9) {
+   editor.setString("owm_forcast_9_icon", s);
+   editor.setString("owm_forcast_9_temp", T);
+   editor.setString("owm_forcast_9_main", M);
+}
+}
+
+editor.commit();

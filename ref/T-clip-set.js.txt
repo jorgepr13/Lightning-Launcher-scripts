@@ -1,0 +1,8 @@
+
+var text="";
+setClip(text,false);
+return true;
+setClipvar ok = setClip( str text, bool appendFlag )
+
+var clip = global( 'CLIP' );
+

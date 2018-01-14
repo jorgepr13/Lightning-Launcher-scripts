@@ -1,0 +1,12 @@
+var desk   = LL.getCurrentDesktop();
+var items = desk.getItems();
+var n = items.getLength();
+
+if (self.TAT.lastPressed < 0)
+    { self.TAT.lastPressed = (n - 1);
+    }
+if (self.TAT.lastPressed >= n)
+    { self.TAT.lastPressed = 0;
+    }
+
+LL.runScript("T2-anim", null );

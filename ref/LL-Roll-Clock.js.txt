@@ -1,0 +1,73 @@
+/* About the script
+ *  Purpose : Rolling Clock Widget (swipe for date)
+ *  Author : Jappie Toutenhoofd (https://plus.google.com/+JappieToutenhoofd)
+ *  Link: https://plus.google.com/+JappieToutenhoofd/posts/
+ */
+
+var Period = 3500;
+var evnt = LL.getEvent();
+var item = evnt.getItem();
+var aktie = evnt.getSource();
+var dgt0 = item.getParent().getItemByName("dgt0").getContainer();
+var dgt1 = item.getParent().getItemByName("dgt1").getContainer();
+var dgt2 = item.getParent().getItemByName("dgt2").getContainer();
+var dgt3 = item.getParent().getItemByName("dgt3").getContainer();
+var dgt4 = item.getParent().getItemByName("dgt4").getContainer();
+var Hgt = dgt2.getCellHeight();
+var curSt = dgt2.getPositionY();
+var newSt = 0;
+
+TimerCancel();
+
+if (aktie == "I_PAUSED")     { return;}
+if (aktie == "I_RESUMED")    { refresh();}
+if (aktie == "I_CLICK")      { switchState();}
+if (aktie == "I_SWIPE_UP")   { curSt = 0; switchState();}
+if (aktie == "I_SWIPE_DOWN") { curSt = 1; switchState();}
+
+function refresh() {
+    newSt = 0;
+    setPos();
+    // reseting the timer is in setPos-function.
+}
+
+function TimerCancel() {
+    var id = item.getTag();
+    if (id !== null) {
+        clearTimeout(id);
+    }
+}
+
+function switchState() {
+    if (curSt === 0) { newSt = 1;
+    } else {           newSt = 0;
+    }
+    setPos();
+}
+
+function setPos()
+// get current Date and Time
+{
+    var dt = new Date();
+    if (newSt === 0) {
+        dt01 = dt.getHours().toString().split("");
+        dt34 = dt.getMinutes().toString().split("");
+    } else {
+        dt01 = dt.getDate().toString().split("");
+        dt34 = (1 + dt.getMonth()).toString().split("");
+    }
+    if (dt01.length == 1) { dt01.unshift(0);}
+    if (dt34.length == 1) { dt34.unshift(0);}
+
+    // move all containers to their position.
+    Hgt = dgt2.getCellHeight();
+
+    dgt0.setPosition(0, (dt01[0] * Hgt), 1, true);
+    dgt1.setPosition(0, (dt01[1] * Hgt), 1, true);
+    dgt2.setPosition(0, (newSt   * Hgt), 1, true);
+    dgt3.setPosition(0, (dt34[0] * Hgt), 1, true);
+    dgt4.setPosition(0, (dt34[1] * Hgt), 1, true);
+
+    // set the timer again
+    item.setTag(setTimeout(refresh, Period));
+}

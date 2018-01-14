@@ -1,0 +1,235 @@
+https://toddmotto.com/understanding-javascript-types-and-reliable-type-checking/
+
+Todd Motto
+Todd Motto
+Owner, Ultimate Angular
+
+ Blogs
+ About
+ Speaking events
+ Online courses
+Todd Motto on Twitter
+Todd Motto on GitHub
+Todd Motto on YouTube
+Todd Motto on Facebook
+© 2017
+
+Search posts
+  Let's go!
+Angular Pro is here! My latest, advanced, Angular course.
+Tired of wrestling incomplete documentation, old videos and tutorials?
+Join me over at Ultimate Angular to learn everything you'll need to have confidence in your work.
+Categories:
+All Angular articles Angular All AngularJS articles AngularJS All RxJS articles RxJS All JavaScript articles JavaScript
+Understanding JavaScript types and reliable type checking
+Jun 2, 2014
+4 mins read
+
+Edit post
+Type checking in JavaScript can often be a pain, especially for new JS developers. I want to show you how to reliably check types in JS and understand them a little more. This post digs through Objects, Primitives, shadow objects/coercion, the typeof operator and how we can reliably get a “real” JavaScript type.
+
+Table of contents
+
+Objects versus Primitives
+Typeof operator
+True Object types
+Objects versus Primitives
+
+“Everything in JavaScript is an Object”. Remember it, then forget it. It’s not true. JavaScript makes the subject very difficult to understand though - it presents everything as some form of “object” if we dive into their Prototypes (later). For now, let’s look at types.
+
+To understand JavaScript types, we need a top level view of them:
+
+Number
+String
+Boolean
+Object
+Null
+Undefined
+We have Number, String, Boolean - these are Primitives (not Objects!). This means their values are unable to be changed because they are merely values, they have no properties. The Primitive types are wrapped by their Object counterparts when called, JavaScript will dive between the Number/String/Boolean to an Object when needed (coercion). Underneath, it will infact construct an Object, use it, then return the result (all the instance will be shipped out for garbage collection).
+
+For example using 'someString'.trim(); will spin up an Object underneath and call the .trim() method on it.
+
+Null and undefined are weird (both Primitives too), and distinguish between no value or an unknown value (null is unknown value, undefined is totally not known or even declared). There is also an Error object.
+
+Object’s however are a different story. You’ll notice I’ve not mentioned Array or RegExp, these are types of Object, let’s investigate. Under the Object tree we have:
+
+Object
+Function
+Array
+Date
+RegExp
+Having broken it down, things seem a little simpler, we have Objects versus Primitives. That’s it, right? No, JavaScript decided it wanted to complicate everything you’d assume logical from above.
+
+Typeof operator
+
+From MDN: “The typeof operator returns a string indicating the type of the unevaluated operand”.
+
+Based on our newly acquired knowledge from the above, you wouldn’t expect this to happen:
+
+typeof []; // object
+typeof {}; // object
+typeof ''; // string
+typeof new Date() // object
+typeof 1; // number
+typeof function () {}; // function
+typeof /test/i; // object
+typeof true; // boolean
+typeof null; // object
+typeof undefined; // undefined
+Whyyyyyy?! Function is an Object, but tells us it’s a function, Array is an Object and says it is. null is an Object, and so is our RegExp. What happened?
+
+The typeof operator is a bit strange. Unless you know how to really use it, simply avoid it to avoid headaches. We wouldn’t want something like this to happen:
+
+// EXPECTATION
+var person = {
+  getName: function () {
+    return 'Todd';
+  };
+};
+if (typeof person === 'object') {
+  person.getName();
+}
+
+// THIS GETS LET THROUGH...
+// because I stupidly refactored some code changing the names
+// but the `if` still lets through `person`
+var person = [];
+var myPerson = {
+  getName: function () {
+    return 'Todd';
+  }
+};
+if (typeof person === 'object') {
+  person.getName(); // Uncaught TypeError: undefined is not a function 
+}
+typeof let us down here, what we really wanted to know was that person was a plain Object.
+
+True Object types
+
+There’s a really simple way, though to look at it looks like a hack:
+
+Object.prototype.toString.call();
+The .toString() method is accessed using Object.prototype because every object descending from Object prototypically inherits it. By default, we get [object Object] when calling {}.toString() (an Object).
+
+We can use .call() to change the this context (as it converts its argument to a value of type) and, for example, if we use .call(/test/i) (a Regular Expression) then [object Object] becomes [object RegExp].
+
+Which means if we run our test again using all JS types:
+
+Object.prototype.toString.call([]); // [object Array]
+Object.prototype.toString.call({}); // [object Object]
+Object.prototype.toString.call(''); // [object String]
+Object.prototype.toString.call(new Date()); // [object Date]
+Object.prototype.toString.call(1); // [object Number]
+Object.prototype.toString.call(function () {}); // [object Function]
+Object.prototype.toString.call(/test/i); // [object RegExp]
+Object.prototype.toString.call(true); // [object Boolean]
+Object.prototype.toString.call(null); // [object Null]
+Object.prototype.toString.call(); // [object Undefined]
+We can then push this into a function and more reliably validate our previous function:
+
+var getType = function (elem) {
+  return Object.prototype.toString.call(elem);
+};
+if (getType(person) === '[object Object]') {
+  person.getName();
+}
+To keep things DRY and save writing === '[object Object]' or whatever out each time, we can create methods to simply reference. I’ve used .slice(8, -1); inside the getType function to remove the unnecessary [object and ] parts of the String:
+
+var getType = function (elem) {
+  return Object.prototype.toString.call(elem).slice(8, -1);
+};
+var isObject = function (elem) {
+  return getType(elem) === 'Object';
+};
+if (isObject(person)) {
+  person.getName();
+}
+Snazzy.
+
+I put together all the above methods into a micro-library called Axis.js which you can use:
+
+axis.isArray([]); // true
+axis.isObject({}); // true
+axis.isString(''); // true
+axis.isDate(new Date()); // true
+axis.isRegExp(/test/i); // true
+axis.isFunction(function () {}); // true
+axis.isBoolean(true); // true
+axis.isNumber(1); // true
+axis.isNull(null); // true
+axis.isUndefined(); // true
+The code powering that does some cool stuff for those interested:
+
+/*! axis v1.1.0 | (c) 2014 @toddmotto | github.com/toddmotto/axis */
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory;
+  } else {
+    root.axis = factory();
+  }
+})(this, function () {
+
+  'use strict';
+
+  var exports = {};
+
+  var types = 'Array Object String Date RegExp Function Boolean Number Null Undefined'.split(' ');
+
+  var type = function () {
+    return Object.prototype.toString.call(this).slice(8, -1);
+  };
+
+  for (var i = types.length; i--;) {
+    exports['is' + types[i]] = (function (self) {
+      return function (elem) {
+        return type.call(elem) === self;
+      };
+    })(types[i]);
+  }
+
+  return exports;
+
+});
+
+Download Fork on GitHub
+LATEST COURSE
+Angular Pro
+ Angular Pro online course
+Angular v4+ award-winning courses, learn at your own pace online with me.
+Free preview
+
+An e-commerce solution that adapts to the size and seasonality of your business.
+ADS VIA CARBON
+
+Join 10,000+ other developers
+Latest blogs, resources, exclusive course discounts and more delivered to your inbox.
+
+
+Email address
+ 
+Get updates
+Enjoy this post? Share it!
+Lots of time and effort goes into all my blogs, resources and demos, I'd love if you'd spare a moment to share them!
+
+FacebookTwitterPinterestLinkedInMore40
+ Explore courses
+Strengthen your Angular knowledge
+ Learn step by step with me to fully master what Angular has to offer
+May 28, 2014
+Everything about custom filters in AngularJS
+
+Angular filters are one of the toughest concepts to work with. They’re a little misunderstood...
+Jun 3, 2014
+What (function (window, document, undefined) {})(window, document); really means
+
+In this post, we’re going to explore what the title suggests, and offer explanations as...
+
+Join 10,000+ other developers
+Latest blogs, resources, exclusive course discounts and more delivered to your inbox.
+
+
+Email address
+ 
+Get updates

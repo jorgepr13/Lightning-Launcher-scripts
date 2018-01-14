@@ -1,0 +1,36 @@
+LL.bindClass("android.os.HandlerThread");
+LL.bindClass("android.os.Handler");
+LL.bindClass("java.lang.Runnable");
+
+var myThread = new HandlerThread("RunOffUI", 1); // 1 for low prio.
+    myThread.start();
+var myHandler = Handler(myThread.getLooper());
+
+self.runOnce = function(myFu) {
+    var myTask = new Runnable({
+            run: function() {
+                try {
+                    myFu();
+                } catch (e) {
+                    Android.makeNewToast("Once.Err: " + e, true).show();                  
+                }
+            }
+        });
+    myHandler.post(myTask);
+};
+
+self.runEvery = function(myFu, iEvery) {
+    var myTask = new Runnable({
+            run: function() {
+                try {
+                    myFu();
+                } catch (e) {
+                    Android.makeNewToast("Every.Err: " + e, true).show();                  
+                } finally {
+                    myHandler.postDelayed(this, iEvery);
+                }
+            }
+        });
+    myHandler.post(myTask);
+};
+

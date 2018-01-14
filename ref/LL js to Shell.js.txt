@@ -1,0 +1,44 @@
+LL.bindClass("java.lang.Runtime");
+LL.bindClass("java.io.BufferedReader");
+LL.bindClass("java.io.InputStreamReader");
+
+var data = "1 gps";
+var shcmd = "sh /sdcard/_Backup/Fonts/fonts_return.sh " + data;
+
+try {
+var p_exit=null;
+var err="";
+var process = Runtime.getRuntime().exec(shcmd);
+
+var stdin = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+//var stderr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//process.getErrorStream()
+//process.exitValue()
+//process.getOutputStream()
+
+// read the output from the command 
+ var read="";
+ var stdout="";
+while ((read = stdin.readLine()) != null) {
+ stdout=stdout + read;
+ }
+
+ // read any errors from the attempted command 
+  read ="";
+  var error = "";
+ /*
+while ((read = stderr.readLine()) != null) { 
+ error=error + read;
+ }
+ */
+ stdin.close();
+ //stderr.close();
+ 
+  // Waits for the command to finish.
+ process.waitFor();
+		p_exit=process.exitValue();
+} catch (e) { err = e.toString(); }
+
+alert ("stdout-"+ stdout +"-\nerror-"+ error +"-\nerr-"+err+"-\nexit-"+p_exit+"-");
+

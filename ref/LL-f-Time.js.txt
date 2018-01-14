@@ -1,0 +1,191 @@
+/* About the script
+ *  Purpose: Generic time functions
+ *  binds function readStream/readWebStream to .self
+ *  import as "f-Time" to LL
+ *  in : [number/string] date in ms, "yyy,mm,dd", etc.
+ *  out: [string] JSON string: {"years":0,"months":0,"days":5,"hours":7,"minutes":49,"seconds":41,"milliseconds":564}
+
+ * Use:
+var json_str = self.timeElapsed(1483988390*1000,"2017,01,14");
+alert(json_str);
+ */
+
+//needed to allow to run the method in other scripts
+LL.bindClass("android.os.StrictMode");
+StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
+//var policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//StrictMode.setThreadPolicy(policy);
+
+
+//console.log(timeElapsed(1483988390*1000,"2017,01,14"));
+//console.log(timeElapsed(1483988390*1000));
+//var time_in=1483988390*1000;
+//var time_in=new Date().getTime()-60*122*1000;
+
+//console.log(getTimeAgo(time_in));
+//alert(getTimeAgo(time_in);
+
+
+function doubleDigits(num) {
+	//function checks
+	if (isNaN(num) || num === null || num === undefined) {
+    //alert("doubleDigits Error: Wrong number received.");
+		console.log("doubleDigits Error: Wrong number received.");
+    return;
+  }
+
+	//return a double digits number
+	if (num < 10) {
+    return "0"+num;
+  } else {
+  	return num;
+  }
+}
+
+self.getDateMMDD = function(time_a) {
+//function getDateMMDD(time_a) {
+	//function checks
+	if (time_a === null || time_a === undefined) {
+		//alert("timeElapsed Error: No time was received.");
+		console.log("timeElapsed Error: No time was received.");
+		return;
+	}
+	var time=new Date(time_a);
+	return doubleDigits(time.getMonth()+1) +"/"+ doubleDigits(time.getDate());
+}
+
+self.getTimeAgo = function(time_a) {
+//function getTimeAgo(time_a) {
+	//function checks
+	if (time_a === null || time_a === undefined) {
+		//alert("timeElapsed Error: No time was received.");
+		console.log("timeElapsed Error: No time was received.");
+		return;
+	}
+	var time=timeElapsed(time_a);
+	if (time !== null || time !== undefined) {
+		time=JSON.parse(time);
+		if (typeof time.years == "undefined") {return;} //no object
+	} else {
+		//no data received
+		return;
+	}
+
+	var time_txt="";
+	if (time.years > 0 || time.months > 0 || time.days > 0 || time.hours > 6) {
+		time=new Date(time_a);
+		time_txt=doubleDigits(time.getMonth()+1) +"/"+ doubleDigits(time.getDate()) +" "+ doubleDigits(time.getHours()) +":"+  doubleDigits(time.getMinutes());
+	} else {
+		if (time.hours > 0) {time_txt=time.hours+"h ";}
+		time_txt+=time.minutes+"m ago";
+	}
+	return time_txt;
+}
+
+self.timeElapsed = function(time_a,time_b) {
+//function timeElapsed(time_a,time_b) {
+  //function checks
+	if (time_a === null || time_a === undefined) {
+    alert("timeElapsed Error: No time was received.");
+		//console.log("timeElapsed Error: No time was received.");
+    return;
+  }
+  if (time_b === null || time_b === undefined) {
+    var time_b=new Date().getTime();
+  } else {
+    time_b=new Date(time_b).getTime();
+  }
+  time_a=new Date(time_a).getTime();
+  //set both times in the same format, ms
+
+	//check that numbers were passed and no error occurred
+	if (isNaN(time_a) || isNaN(time_b)) {
+    alert("timeElapsed Error: Wrong numbers were received.");
+		//console.log("timeElapsed Error: Wrong numbers were received.");
+    return;
+  }
+
+  //initialize the time difference and do a positive number substraction
+  var time_difference=0;
+	if (time_a > time_b) {
+    time_difference=time_a-time_b;
+  } else {
+    time_difference=time_b-time_a;
+  }
+
+	//console.log("a:"+time_a+", b:"+time_b+", d:"+time_difference);
+
+  //create and initialize the return object
+	var time={};
+	time.years=0;
+	time.months=0;
+  time.days=0;
+  time.hours=0;
+  time.minutes=0;
+	time.seconds=0;
+  time.milliseconds=0;
+
+  //separate the time
+  while (time_difference >= 1000) {
+    if (time_difference >= 365*24*60*60*1000) {
+      time_difference-=365*24*60*60*1000;
+      time.years++
+    } else if (time_difference >= 30*24*60*60*1000) {
+      time_difference-=30*24*60*60*1000;
+      time.months++
+    } else if (time_difference >= 24*60*60*1000) {
+      time_difference-=24*60*60*1000;
+      time.days++
+    } else if (time_difference >= 60*60*1000) {
+      time_difference-=60*60*1000;
+      time.hours++
+    } else if (time_difference >= 60*1000) {
+      time_difference-=60*1000;
+      time.minutes++
+    } else if (time_difference >= 1000) {
+      time_difference-=1000;
+      time.seconds++
+    }
+  }
+  time.milliseconds=time_difference;
+
+  return JSON.stringify(time);
+}
+
+/*
+weather_date_name_f		getMonth()+1 / getDate()=day #
+	var d = new Date();
+	var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	days[d.getDay()];
+
+getDate()	Returns the day of the month (from 1-31)
+getDay()	Returns the day of the week (from 0-6)
+getFullYear()	Returns the year
+getHours()	Returns the hour (from 0-23)
+getMinutes()	Returns the minutes (from 0-59)
+getMonth()	Returns the month (from 0-11)
+getMilliseconds()   Returns the milliseconds in the specified date according to local time.
+getTime()   Returns the numeric value of the specified date as the number of milliseconds since January 1, 1970, 00:00:00 UTC.
+
+
+
+Date.prototype.monthDays= function(){
+    var d= new Date(this.getFullYear(), this.getMonth()+1, 0);
+    return d.getDate();
+}
+
+//Month is 1 based
+function daysInMonth(month,year) {
+    return new Date(year, month, 0).getDate();
+}
+
+//July
+daysInMonth(7,2009); //31
+//February
+daysInMonth(2,2009); //28
+daysInMonth(2,2008); //29
+
+
+
+*/

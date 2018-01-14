@@ -1,0 +1,71 @@
+//var json_str=/sdcard/Download/SeriesGuide/sg-shows-export.json;
+//var show="once upon a time";
+show=show.toLowerCase();
+//flash(show +"\n"+ json_str);
+var json_obj = JSON.parse(json_str);
+
+for (var key in json_obj) {
+	var show_title=json_obj[key].title;
+	show_title=show_title.toLowerCase();
+	var find=show_title.search(show)
+	
+//	flash(key+": "+find+", "+show +"\n"+show_title);
+	
+	if (find != -1) {
+		show_title=json_obj[key].title;
+		var show_id=json_obj[key].tvdb_id;
+		var last_episode_id=json_obj[key].last_watched_episode;
+		last_episode_id=last_episode_id +1;
+		flash(show_title);
+		break;
+	}
+}
+
+
+
+/*
+
+var show_title=[];
+var show_id=[];
+var episode_id=[];
+var json_obj = JSON.parse(json_str);
+
+for (var key in json_obj) {
+//flash(key);
+show_title.push(json_obj[key].title);
+show_id.push(json_obj[key].tvdb_id);
+episode_id.push(json_obj[key].last_watched_episode);
+
+//if (key <2) {flash(key);}
+	//setLocal(show_title + (key+1),JSON.stringify(json_obj[key].title));
+	//setLocal(show_id + (key+1),JSON.stringify(json_obj[key].tvdb_id));
+	//setLocal(last_episode_id + (key+1),JSON.stringify(json_obj[key].last_watched_episode));
+}
+
+
+var fruits = ["Banana", "Orange", "Apple", "Mango"];
+fruits.length;
+
+
+var fruits = ["Banana", "Orange", "Apple", "Mango"];
+fruits.push("Kiwi");
+The result of fruits will be:
+Banana,Orange,Apple,Mango,Kiwi
+
+arr.splice(index, 0, item); will insert item into arr at the specified index (deleting 0 items first, that is, it's just an insert).
+
+
+
+for (key = 0; key < json_obj.length; key++) {
+	var show_title=json_obj[key].title;
+	flash(show_title);
+	show_title=show_title.toLowerCase();
+	if (show_title == show) {
+		var show_id=json_obj[key].tvdb_id;
+		var episode_id=json_obj[key].last_watched_episode;
+		episode_id=episode_id +1;
+		flash(show_title);
+		break;
+	}
+}
+*/
