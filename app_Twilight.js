@@ -1,7 +1,7 @@
 // app Twilight
 
-try{eval(getScriptByName("Tasker_Functions").getText());}
-catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
+//needed to set the Tasker variable
+try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
 
 //data = "on","off","toggle"[default]; no data (null) will resolve to "toggle"
 var data = getEvent().getData() || "toggle";
