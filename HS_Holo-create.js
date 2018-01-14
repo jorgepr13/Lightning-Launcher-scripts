@@ -3,8 +3,6 @@ Creates a Home screen - Holo
 1st panel=R4xC2, will hold the
 2nd panel=RxC1, will hold the
 
-
-
 */
 
 var event=LL.getEvent();
