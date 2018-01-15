@@ -21,8 +21,8 @@ if (screenFilter === undefined){screenFilter = 0;}
 //set the action to perform
 var action = "";
 if (screenFilter === 0){action = "on";} else {action = "off";}
-if (event_src == "I_LONG_CLICK"){action == "off"}
-if (event_dat == "off"){action == "off"}
+if (event_src == "I_LONG_CLICK"){action = "off"}
+if (event_dat == "off"){action = "off"}
 
 //prepare the action
 var extra = "";
