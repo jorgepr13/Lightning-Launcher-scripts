@@ -1,68 +1,50 @@
+// Sleep as Android
+//event_dat = "start","stop","pause"
 
-var eventt = getEvent();
-var event_src = eventt.getSource //"I_CLICK", "I_LONG_CLICK", "C_LONG_CLICK", "MENU_ITEM"
-//var event_dat = eventt.getData();
-//var event_itm = eventt.getItem();
-
-if (event_src == "I_CLICK") {}
-if (event_src == "I_LONG_CLICK") {}
-
-
-
-
-
-// app Twilight
-
-//needed to set the Tasker variable
+//import Tasker functions
 try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
 
+//set main script variables
 var eventt = getEvent();
-var event_src = eventt.getSource();
-//event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
-var event_dat = eventt.getData() || "toggle";
+var event_src = eventt.getSource(); //"I_CLICK", "I_LONG_CLICK", "C_LONG_CLICK", "MENU_ITEM"
+var event_dat = eventt.getData() || "start";
 var cscreen = getActiveScreen();
 var cscript = getCurrentScript();
 var context = cscreen.getContext();//var context = LL.getContext();
-var screenFilter = 0;
-//if (event_src == "I_CLICK" && event_dat == "toggle") {event_dat == "toggle"}
-if (event_src == "I_LONG_CLICK"  && event_dat == "toggle") {event_dat == "off"}
 event_dat = event_dat.toString().toLowerCase();
 
-if(event_dat == "toggle"){
-  screenFilter = getTaskerVariable("%SLEEP_TRACK");
-  if(screenFilter === null){screenFilter = cscript.getTag("SLEEP_TRACK");}
-  if(screenFilter === undefined){screenFilter = 0;}
-  if(screenFilter !== 0){event_dat = "off";} else {event_dat = "on";}
-}
+//get the current status
+var sleepTrack = getTaskerVariable("%SLEEP_TRACK");
+if (sleepTrack === null){sleepTrack = cscript.getTag("SLEEP_TRACK");}
+if (sleepTrack === undefined){sleepTrack = 0;}
 
-var extra = "";
-if(event_dat == "on"){
-  extra = "start";screenFilter = 1;
+//set the action to perform
+var action = "";
+if (sleepTrack === 0){action = "start";} else {action = "pause";}
+if (event_src == "I_LONG_CLICK"){action = "stop";}
+if (event_dat == "stop"){action = "stop";}
+
+//execute the action
+if (action == "pause"){
+  context.sendBroadcast(new Intent("com.urbandroid.sleep.ACTION_PAUSE_TRACKING"));
+} else if (action == "stop") {
+  context.sendBroadcast(new Intent("com.urbandroid.sleep.alarmclock.STOP_SLEEP_TRACK"));
+  sleepTrack = 0;
 } else {
-  extra = "stop";screenFilter = 0;
+  context.sendBroadcast(new Intent("com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK"));
+  sleepTrack = 1;
 }
 
-var intentt = new Intent();
-intentt.setClassName("com.urbandroid.lux", "com.urbandroid.lux.TwilightService");
-intentt.putExtra(extra, extra);
-getActiveScreen().getContext().startService(intentt);
-//getActiveScreen().getContext().startActivity(intentt);
-
-//var intent = new Intent("com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK");
-//var intent = new Intent("com.urbandroid.sleep.alarmclock.STOP_SLEEP_TRACK");
-var intent = new Intent("com.urbandroid.sleep.ACTION_PAUSE_TRACKING");
-//intent.setClassName("com.urbandroid.sleep", "com.urbandroid.lux.TwilightService");
-//intent.putExtra("start", "");
-getActiveScreen().getContext().sendBroadcast(intent);
+//update the tag and variable
+if (action != "pause"){
+  cscript.setTag("SLEEP_TRACK",sleepTrack);
+  setTaskerVariable("%SLEEP_TRACK",sleepTrack);
+}
+/*
+//getActiveScreen().getContext().sendBroadcast(intent);
 //getActiveScreen().getContext().startService(intent);
 //getActiveScreen().getContext().startActivity(intent);
 
-cscript.setTag("SLEEP_TRACK",screenFilter);
-setTaskerVariable("%SLEEP_TRACK",screenFilter);
-
-SLEEP_TRACK = 0/1
-
-/*
 Actions:
 Sleep tracking start intent (Broadcast)
 com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK
