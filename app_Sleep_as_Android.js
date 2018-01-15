@@ -27,8 +27,7 @@ if (event_dat == "stop"){action == "stop"}
 //execute the action
 if (action == "pause"){
   context.sendBroadcast(new Intent("com.urbandroid.sleep.ACTION_PAUSE_TRACKING"));
-  sleepTrack = 1;
-} else if (action == "stop") {
+  } else if (action == "stop") {
   context.sendBroadcast(new Intent("com.urbandroid.sleep.alarmclock.STOP_SLEEP_TRACK"));
   sleepTrack = 0;
 } else {
@@ -37,9 +36,10 @@ if (action == "pause"){
 }
 
 //update the tag and variable
-cscript.setTag("SLEEP_TRACK",sleepTrack);
-setTaskerVariable("%SLEEP_TRACK",sleepTrack);
-
+if (action != "pause"){
+  cscript.setTag("SLEEP_TRACK",sleepTrack);
+  setTaskerVariable("%SLEEP_TRACK",sleepTrack);
+}
 /*
 //getActiveScreen().getContext().sendBroadcast(intent);
 //getActiveScreen().getContext().startService(intent);
