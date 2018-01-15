@@ -1,44 +1,52 @@
-// app Twilight
+// Twilight
+//event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
 
-//needed to set the Tasker variable
+//import Tasker functions
 try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
 
+//set main script variables
 var eventt = getEvent();
 var event_src = eventt.getSource();
-//event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
 var event_dat = eventt.getData() || "toggle";
 var cscreen = getActiveScreen();
 var cscript = getCurrentScript();
 var context = cscreen.getContext();//var context = LL.getContext();
-var screenFilter = 0;
-//if (event_src == "I_CLICK" && event_dat == "toggle") {event_dat == "toggle"}
-if (event_src == "I_LONG_CLICK"  && event_dat == "toggle") {event_dat == "off"}
 event_dat = event_dat.toString().toLowerCase();
 
-if(event_dat == "toggle"){
-  screenFilter = getTaskerVariable("%SCREEN_FILTER");
-  if(screenFilter === null){screenFilter = cscript.getTag("SCREEN_FILTER");}
-  if(screenFilter === undefined){screenFilter = 0;}
-  if(screenFilter !== 0){event_dat = "off";} else {event_dat = "on";}
-}
+//get the current status
+var screenFilter = getTaskerVariable("%SCREEN_FILTER");
+if (screenFilter === null){screenFilter = cscript.getTag("SCREEN_FILTER");}
+if (screenFilter === undefined){screenFilter = 0;}
 
+//set the action to perform
+var action = "";
+if (screenFilter === 0){action = "on";} else {action = "off";}
+if (event_src == "I_LONG_CLICK"){action == "off"}
+if (event_dat == "off"){action == "off"}
+
+//prepare the action
 var extra = "";
-if(event_dat == "on"){
-  extra = "start";screenFilter = 1;
+if (action == "on"){
+  extra = "start"; screenFilter = 1;
 } else {
-  extra = "stop";screenFilter = 0;
+  extra = "stop"; screenFilter = 0;
 }
 
+//execute the action
 var intentt = new Intent();
 intentt.setClassName("com.urbandroid.lux", "com.urbandroid.lux.TwilightService");
 intentt.putExtra(extra, extra);
-getActiveScreen().getContext().startService(intentt);
-//getActiveScreen().getContext().startActivity(intentt);
+context.startService(intentt);
 
-cscript.setTag("SCREEN_FILTER",screenFilter);
-setTaskerVariable("%SCREEN_FILTER",screenFilter);
+//update the tag and variable
+cscript.setTag("SCREEN_FILTER", screenFilter);
+setTaskerVariable("%SCREEN_FILTER", screenFilter);
 
 /*
+//getActiveScreen().getContext().sendBroadcast(intent);
+//getActiveScreen().getContext().startService(intent);
+//getActiveScreen().getContext().startActivity(intent);
+
 The intents must be addressed as target Service to the
 service class com.urbandroid.lux.TwilightService in the
 package com.urbandroid.lux.
