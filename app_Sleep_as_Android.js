@@ -1,23 +1,161 @@
 
-var eventt = LL.getEvent();
+var eventt = getEvent();
+var event_src = eventt.getSource //"I_CLICK", "I_LONG_CLICK", "C_LONG_CLICK", "MENU_ITEM"
 //var event_dat = eventt.getData();
+//var event_itm = eventt.getItem();
+
+if (event_src == "I_CLICK") {}
+if (event_src == "I_LONG_CLICK") {}
+
+
+
+
+
+// app Twilight
+
+//needed to set the Tasker variable
+try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
+
+var eventt = getEvent();
 var event_src = eventt.getSource();
-var event_itm = eventt.getItem();
-//LL.getEvent().getSource() = "MENU_ITEM" //"I_LONG_CLICK", "C_LONG_CLICK"
+//event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
+var event_dat = eventt.getData() || "toggle";
+var cscreen = getActiveScreen();
+var cscript = getCurrentScript();
+var context = cscreen.getContext();//var context = LL.getContext();
+var screenFilter = 0;
+//if (event_src == "I_CLICK" && event_dat == "toggle") {event_dat == "toggle"}
+if (event_src == "I_LONG_CLICK"  && event_dat == "toggle") {event_dat == "off"}
+event_dat = event_dat.toString().toLowerCase();
 
-
-if (event_s == "I_CLICK" || event_s == "I_LONG_CLICK") {
-  //msgUpdating();
-  if (event_s == "I_LONG_CLICK") {json_str = getWeatherData();}
-  else {
-    var time_a = new Date().getTime();
-    var time_b = 0;
-    var wx_old = LL.getVariables().getString("weather");
-    if (wx_old === null || wx_old === undefined || wx_old === "") {time_b = time_a + refresh_interval + 1000;}
-    else {var wx = JSON.parse(wx_old);time_b = wx.upd.time_ms;}
-    var time_difference = getTimeDifference(time_a,time_b);
-    if (time_difference > refresh_interval) {json_str = getWeatherData();} 
-    else {msgShow("Unable to update at this time. \nThe next update will be available in " + Math.floor(Math.abs(time_difference - refresh_interval) / 60000) + " min.");return null;}
-  }
-  //else {json_str = wx_old;} //fails, unable to parse
+if(event_dat == "toggle"){
+  screenFilter = getTaskerVariable("%SLEEP_TRACK");
+  if(screenFilter === null){screenFilter = cscript.getTag("SLEEP_TRACK");}
+  if(screenFilter === undefined){screenFilter = 0;}
+  if(screenFilter !== 0){event_dat = "off";} else {event_dat = "on";}
 }
+
+var extra = "";
+if(event_dat == "on"){
+  extra = "start";screenFilter = 1;
+} else {
+  extra = "stop";screenFilter = 0;
+}
+
+var intentt = new Intent();
+intentt.setClassName("com.urbandroid.lux", "com.urbandroid.lux.TwilightService");
+intentt.putExtra(extra, extra);
+getActiveScreen().getContext().startService(intentt);
+//getActiveScreen().getContext().startActivity(intentt);
+
+//var intent = new Intent("com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK");
+//var intent = new Intent("com.urbandroid.sleep.alarmclock.STOP_SLEEP_TRACK");
+var intent = new Intent("com.urbandroid.sleep.ACTION_PAUSE_TRACKING");
+//intent.setClassName("com.urbandroid.sleep", "com.urbandroid.lux.TwilightService");
+//intent.putExtra("start", "");
+getActiveScreen().getContext().sendBroadcast(intent);
+//getActiveScreen().getContext().startService(intent);
+//getActiveScreen().getContext().startActivity(intent);
+
+cscript.setTag("SLEEP_TRACK",screenFilter);
+setTaskerVariable("%SLEEP_TRACK",screenFilter);
+
+SLEEP_TRACK = 0/1
+
+/*
+Actions:
+Sleep tracking start intent (Broadcast)
+com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK
+
+Optional EXTRA to start in battery saving mode: START_IN_BATTERY_SAVING_MODE = true
+
+Sleep tracking start + set an alarm for ideal sleep length(Broadcast)
+com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK_WITH_IDEAL_ALARM_ACTION
+
+Sleep tracking stop intent (Broadcast)
+com.urbandroid.sleep.alarmclock.STOP_SLEEP_TRACK
+
+Sleep tracking 5 minute pause intent (Broadcast)
+com.urbandroid.sleep.ACTION_PAUSE_TRACKING
+
+Snooze Alarm (Broadcast)
+com.urbandroid.sleep.alarmclock.ALARM_SNOOZE
+ 
+Dismiss Alarm (Broadcast)
+com.urbandroid.sleep.alarmclock.ALARM_DISMISS_CAPTCHA
+
+Lullaby Stop (Broadcast)
+com.urbandroid.sleep.ACTION_LULLABY_STOP_PLAYBACK
+ 
+Lullaby start (Service)
+start a Service with
+package: “com.urbandroid.sleep”
+class: “com.urbandroid.sleep.media.lullaby.LullabyService”
+EXTRA: extra_lullaby = “lullaby name”
+
+Lullaby names:
+NONE, WHALE, STORM, STREAM, CAVE, FIREPLACE, SEA, WIND, CLOCK, TIBER, NIGHT, FROGS, HORSE, SHEEP, CHIMES, OM, BELLS, FLUTE, PIANO, CAT, TRAIN, MARCH, MUSICBOX, BABY, GIRL, SUB, NASA, LAVA, JUNGLE, TIBET, BABY, SCIFI, CHOR, BREATH…
+
+Request Backup (Broadcast)
+“com.urbandroid.sleep.REQUEST_SYNC” will start the backup sync – export a CSV file, backup to Sleepcloud, Dropbox and Google Drive if connected
+
+
+Events:
+Sleep tracking started 
+com.urbandroid.sleep.alarmclock.SLEEP_TRACKING_STARTED
+ 
+Sleep tracking stopped
+com.urbandroid.sleep.alarmclock.SLEEP_TRACKING_STOPPED
+
+Snoozed by user
+com.urbandroid.sleep.alarmclock.ALARM_SNOOZE_CLICKED_ACTION
+ 
+Time to bed notification
+com.urbandroid.sleep.alarmclock.TIME_TO_BED_ALARM_ALERT
+ 
+Alarm triggered
+com.urbandroid.sleep.alarmclock.ALARM_ALERT_START
+
+Alarm dismissed
+com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS
+
+Lullaby started
+com.urbandroid.sleep.ACTION_LULLABY_START_PLAYBACK
+
+Lullaby stopped
+com.urbandroid.sleep.ACTION_LULLABY_STOPPED_PLAYBACK
+
+Lucid dreaming cue:
+com.urbandroid.sleep.LUCID_CUE_ACTION
+NOTE: enable settings-lucid dreaming
+ 
+Antisnoring sound:
+com.urbandroid.sleep.ANTISNORING_ACTION
+ 
+45 minutes before smart period:
+com.urbandroid.sleep.alarmclock.AUTO_START_SLEEP_TRACK
+
+Using Tasker with Sleep as Android
+React on Sleep as Android events in Tasker
+Event -> System -> Intent (previously Misc -> Intent received) and add one of the Intents described above.
+For example you can start you weather app when alarm is dismissed, by listening for the com.urbandroid.sleep.alarmclock.ALARM_ALERT_DISMISS intent.
+ 
+Start an Sleep as Android action from Tasker
+Event -> System -> Intent (previously Misc -> Intent send)
+For example, create a new task, click + and choose “Action Intent” from the Misc category and there you fill in com.urbandroid.sleep.alarmclock.START_SLEEP_TRACK into the action text field. So you can start sleep tracking when you plug your phone to charger for example.
+
+Adding alarm
+android.intent.action.SET_ALARM
+EXTRA_MESSAGE = “android.intent.extra.alarm.MESSAGE”;
+EXTRA_HOUR = “android.intent.extra.alarm.HOUR”;
+EXTRA_MINUTES = “android.intent.extra.alarm.MINUTES”;
+EXTRA_SKIP_UI = “android.intent.extra.alarm.SKIP_UI”;
+
+Enabling/disabling alarm by label
+com.urbandroid.sleep.alarmclock.ALARM_STATE_CHANGE
+Extras:
+“alarm_label”: String representing a label of alarm to be changed. If there are more such alarms, only one of them is going to be changed (no guarantees which).
+“alarm_enabled”: Boolean saying whether alarm should be enabled or disabled.
+
+Tip: use Reactor to handle Sleep as Android Intents.
+*/

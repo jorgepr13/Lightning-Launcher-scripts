@@ -1,40 +1,52 @@
 
-/*Tasker Variable Request
+/*Tasker Functions
 About the script
-Purpose: This is a tool script to request Tasker variables without creating bindings.
+Purpose: This is a script with useful Tasker functions.
 Author: jorgepr13
 
- * References *
-http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
-https://groups.google.com/forum/m/#!topic/tasker/FjOpMXN4wf0
-http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
-https://forum.xda-developers.com/showthread.php?t=2489449
-
 How to use it:
-1. Change the configuration variables with the variables/values you need
-2. Create a Tasker task described below, (optional if you are able to run the send intent from LL) 
-3. Launch the script
+1. Single variables
+change %My_Var with the varaible that you need, and the value with the value that you need
+setTaskerVariable("%My_Var", value);
+getTaskerVariable("%My_Var");
 
- * Configuration Info *
-taskerVar, the tasker variable to request
-intent, can be sent to any unique name, and must not contain any space
-taskerTask, used in the workaround to call a previously defined task that sends the variable/s value/s
-key, auto-generated, can be set to any name, but different from the other keys, and must not contain any space
-value, the requested Tasker variable value, or null by default
+2. Multiple variables
+getTaskerVariable(["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"]);
+
+3. Optional
+You can have your Tasker "class" as an individual script and "import" it with the following code.
+try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
+Where "Tasker_Functions" is the name of the script.
+
+Additional
+runTaskerTask(name,wait)
+Where:
+"name" is the task name
+"wait" is the boolean to wait for the task completion
+
+* References *
+http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
+http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
 */
-
+//typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
 Object.prototype.typeoff = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+function emptyVariable(myVar){return myVar == null || myVar == undefined || myVar == "";}
 
 var context = getActiveScreen().getContext();//var context = LL.getContext();
 var taskerStatus = TaskerIntent.testStatus(context);
 
-//var taskerVar = LL.getEvent().getData() || null;
-//if(taskerVar == null || taskerVar == undefined || taskerVar == "") {return [null];}
-
-function emptyVariable(myVar){return myVar == null || myVar == undefined || myVar == "";} 
+function runTaskerTask(name,wait){
+  if(taskerStatus != "OK") {
+    Android.makeNewToast("Tasker status: " + taskerStatus,false).show();
+  } else {
+    if(emptyVariable(name)) {return;}
+    if(emptyVariable(wait)) {wait = true;}
+    if(typeoff(wait) != "boolean") {wait = true;}
+    LL.sendTaskerIntent(new TaskerIntent(name), wait);
+  }
+}
 
 //setTaskerVariable("%SCREEN_FILTER",1);
-
 function setTaskerVariable(name,value){
   if(taskerStatus != "OK") {
     Android.makeNewToast("Tasker status: " + taskerStatus,false).show();
@@ -76,10 +88,10 @@ function getTaskerVariable(taskerVar){
   var intent     = ["net.tasker.SHARE_VAR"];
   var taskerTask = "Tasker Share Variable";
   // End Configuration
-  
+
   //"value" is set to null and "key" is set to "var_0", "var_1",... matching the taskerVar length
   var key = [];var value = [];for(var i=0;i<taskerVar.length;i++){key.push("var_"+i);value.push(null);}
-  
+
   //Tasker Status is check, no need to perform any Tasker process if Tasker is not enabled
   //--for some reason "TaskerIntent.Status.OK" don't works for me, but the string check does
   //if(TaskerIntent.testStatus(context).equals(TaskerIntent.Status.OK)){}
@@ -87,11 +99,11 @@ function getTaskerVariable(taskerVar){
     Android.makeNewToast("Tasker status: " + taskerStatus,true).show();
   } else {
     //Android.makeNewToast(taskerStatus + " | " + "enabled",true).show();
-  
+
     //bind the classes
     LL.bindClass("android.content.IntentFilter");
     LL.bindClass("android.content.BroadcastReceiver");
-    
+
     //The Broadcast Receiver is set, based on the intent/s provided
     //--more than one intent can be set to be received, but we are only sending the first one, and expecting to receive the same back
     //Once the intent is received, the keys are checked and the value is retrieved
@@ -115,7 +127,7 @@ function getTaskerVariable(taskerVar){
     for(var i=0;i<intent.length;i++){f.addAction(intent[i]);}
     context.registerReceiver(receiver,f);
     */
-    
+
     //The key:value pairs are combined and stored in the extra array
     //Since Tasker can send only 3 extras at a time, the length of the taskerVar is checked against a multiple of 3, and the extra array gets filled with a key and no variable request
     //--filling the extras is done to prevent calling an undeclared index, when we use extra[j+1], extra[j+2]
@@ -123,9 +135,9 @@ function getTaskerVariable(taskerVar){
     var len = Math.min(key.length,taskerVar.length);
     for(var i=0;i<len;i++){extra.push(key[i]+":"+taskerVar[i]);}
     for(var i=0;i<(2-(len-1)%3);i++){extra.push("abc_"+i);}
-    
+
     for(var j=0;j<key.length;j+=3){
-      //The "on the fly" code contains a different task name to prevent Tasker ignoring the next task sent and therefore not getting the requested variables 
+      //The "on the fly" code contains a different task name to prevent Tasker ignoring the next task sent and therefore not getting the requested variables
       //It also contains a wait action, needed to allow the Broadcast Receiver get the intent and process it
       //--I tried to do a setTimeout and LL froze every time
       /*
@@ -155,11 +167,11 @@ function getTaskerVariable(taskerVar){
       //*
       //workaround
       //A perform task is attempted "on the fly"
-      //--this requires a task to be made in Tasker containing: 
+      //--this requires a task to be made in Tasker containing:
       //1. Stop, if %par1 and %par2 aren't set
       //2. Set variable "extra" to %par2
       //3. Variable split %extra with "=:=" splitter
-      //   --the splitter can be changed, but it must match the extra joiner, using a comma is not recommended because of some Tasker variables return CSV 
+      //   --the splitter can be changed, but it must match the extra joiner, using a comma is not recommended because of some Tasker variables return CSV
       //4. Send intent, action=%par1, extras=%extra(1),%extra(2),%extra(3), target=Broadcast Receiver
       var i = new TaskerIntent("share_variable_value"+j);
       i.addAction(ActionCodes.RUN_TASK);//130
@@ -179,17 +191,11 @@ function getTaskerVariable(taskerVar){
       extra.splice(0,3);//remove the sent requests
       //*/
     }//end for - 3 var at a time
-    //LL.sendTaskerIntent(new TaskerIntent(taskerTask), true);
-    
+
     //Try to stop the receiver again, if for some reason the intent wasn't received and was not stopped at that time
     try {if (receiver != null){context.unregisterReceiver(receiver);}} catch(e){}
   }//end if - Tasker status check
-  /*
-  //Show the results
-  var msg = "";
-  for(var i=0;i<value.length;i++){msg += taskerVar[i] + ": " + value[i] + "\n";}
-  alert(msg);//Android.makeNewToast(msg,true).show();
-  */
+
   if(typeStr){return value[0];}
   return value;
 }//end func getTaskerVariable
