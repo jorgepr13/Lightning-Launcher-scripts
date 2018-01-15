@@ -11,11 +11,11 @@ var context = screen.getContext();//var context = LL.getContext();
 var screenFilter = 0;
 data = data.toString().toLowerCase();
 
-if(data == "toggle"){  
+if(data == "toggle"){
   screenFilter = getTaskerVariable("%SCREEN_FILTER");
-  if(screenFilter == null){screenFilter = script.getTag("SCREEN_FILTER");}
-  if(screenFilter == undefined){screenFilter = 0;}
-  if(screenFilter != 0){data = "off";} else {data = "on";}
+  if(screenFilter === null){screenFilter = script.getTag("SCREEN_FILTER");}
+  if(screenFilter === undefined){screenFilter = 0;}
+  if(screenFilter !== 0){data = "off";} else {data = "on";}
 }
 
 var extra = "";

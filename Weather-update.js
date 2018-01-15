@@ -3,10 +3,10 @@ var weather_api_key = "e000fb1333b830be";
 //var weather_loc = "47.0332559,-122.7967021";
 //var weather_loc = $location_gps;
 var weather_loc = LL.getVariables().getString("location_net");
-var event = LL.getEvent();
-//var event_d = event.getData();
-var event_s = event.getSource();
-var event_i = event.getItem();
+var eventt = LL.getEvent();
+//var event_d = eventt.getData();
+var event_s = eventt.getSource();
+var event_i = eventt.getItem();
 //LL.getEvent().getSource() = "MENU_ITEM" //"I_LONG_CLICK", "C_LONG_CLICK"
 //http://www.lightninglauncher.com/scripting/reference/api/reference/net/pierrox/lightning_launcher/script/api/Event.html
 
@@ -40,9 +40,9 @@ otherwise, get the variable and refresh it, just in case that it was manually mo
 // ^can be done changing the cur variable
 // ^checking the current time vs the hourly time and doing the halfs hour changes; ex curr time 11:30, data will change to 12:00, until curr time gets to 12:30
 function msgShow(msg,flag){
-    if (msg == null || msg == undefined || msg == "") {return 1;}
-    if (flag == null || flag == undefined || flag == "" || isNaN(flag)) {var flag = false;}
-    if (flag == 1) {var flag = true;}
+    if (msg === null || msg === undefined || msg === "") {return 1;}
+    if (flag === null || flag === undefined || flag === "" || isNaN(flag)) {flag = false;}
+    if (flag === 1) {flag = true;}
     if (typeoff(flag) == "boolean") {
     Android.makeNewToast(msg,flag).show();
     //var duration = Toast.LENGTH_SHORT; //Toast.LENGTH_LONG
@@ -74,10 +74,10 @@ if (event_s == "I_CLICK" || event_s == "I_LONG_CLICK") {
   //msgUpdating();
   if (event_s == "I_LONG_CLICK") {json_str = getWeatherData();}
   else {
-    var time_a = new Date().getTime()
+    var time_a = new Date().getTime();
     var time_b = 0;
     var wx_old = LL.getVariables().getString("weather");
-    if (wx_old == null || wx_old == undefined || wx_old == "") {time_b = time_a + refresh_interval + 1000;}
+    if (wx_old === null || wx_old === undefined || wx_old === "") {time_b = time_a + refresh_interval + 1000;}
     else {var wx = JSON.parse(wx_old);time_b = wx.upd.time_ms;}
     var time_difference = getTimeDifference(time_a,time_b);
     if (time_difference > refresh_interval) {json_str = getWeatherData();} 
@@ -86,7 +86,7 @@ if (event_s == "I_CLICK" || event_s == "I_LONG_CLICK") {
   //else {json_str = wx_old;} //fails, unable to parse
 }
 
-if (json_str == null || json_str == undefined) {msgUpdateFailed();return null;}
+if (json_str === null || json_str === undefined) {msgUpdateFailed();return null;}
 
 //check the weather data object
 json_obj = JSON.parse(json_str);
@@ -97,7 +97,7 @@ try {var time = json_obj.current_observation.observation_epoch;}
 catch (e) {msgUpdateFailed();return null;}
 
 //check the value
-if (time == null || time == undefined) {msgUpdateFailed();return null;}
+if (time === null || time === undefined) {msgUpdateFailed();return null;}
 
 
 //0 = current
@@ -105,7 +105,7 @@ if (time == null || time == undefined) {msgUpdateFailed();return null;}
 
 //define weather structure, default for current weather
 var wx = {};
-wx.upd = {}
+wx.upd = {};
 wx.upd.time = "";
 wx.upd.time_ms = 0;
 wx.loc = "";
