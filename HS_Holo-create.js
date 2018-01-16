@@ -4,14 +4,28 @@ Creates a Home screen - Holo
 2nd panel=RxC1, will hold the
 
 */
+//set main script variables
+var eventt = getEvent();
+var event_cnt = eventt.getContainer();
+var event_scn = eventt.getScreen();
+//var event_dat = eventt.getData() || "toggle";
+//var event_src = eventt.getSource();
+//var event_itm = eventt.getItem();
+//var event_time = eventt.getDate();
+//var event_scn_x = eventt.getTouchScreenX();
+//var event_scn_y = eventt.getTouchScreen();
+//var event_cnt_x = eventt.getTouchX();
+//var event_cnt_y = eventt.getTouchY();
+//var cscreen = getActiveScreen();
+var cscript = getCurrentScript();
+var context = event_scn.getContext();//var context = cscreen.getContext();
+event_dat = event_dat.toString().toLowerCase();
 
-var event=LL.getEvent();
-var event_c=event.getContainer();
 
 if (event_c.getId() == 99) {
 	alert("Don't run from the app drawer.");
 	return;
-} else if (event_c.getId() !== LL.getCurrentDesktop().getId()) {
+} else if (event_c.getId() !== cscreen.getCurrentDesktop().getId()) {
 	alert("Run from the desktop. \n Do NOT set 'item menu'. \n Only set 'Lightning menu' in script-editor.");
 	return;
 }
