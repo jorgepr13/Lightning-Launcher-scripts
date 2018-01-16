@@ -4,27 +4,28 @@ bindClass("android.app.AlertDialog");
 bindClass("android.content.DialogInterface");
 bindClass("android.graphics.drawable.ColorDrawable");
 bindClass("android.view.Gravity");
+bindClass("android.widget.LinearLayout");
+bindClass("android.widget.TextView");
+bindClass("android.widget.EditText");
+bindClass("android.text.InputType");
+bindClass("android.R");
+bindClass("android.content.res.ColorStateList");
+bindClass("android.graphics.PorterDuff.Mode");
+bindClass("android.graphics.drawable.Drawable");
+bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
+//bindClass("android.widget.Adapter");
+//bindClass("android.widget.ArrayAdapter");
+//bindClass("android.widget.ListView");
+//bindClass("android.widget.AdapterView");
+//bindClass("android.R.layout");
 //bindClass("android.R.color");
 //bindClass("android.graphics.Color");
 //bindClass("android.app.Activity");
 //bindClass("android.view.Window");
 //bindClass("android.view.WindowManager");
 //bindClass("android.view.ViewGroup.LayoutParams");
-bindClass("android.view.ViewGroup.MarginLayoutParams");
-bindClass("android.widget.LinearLayout");
-bindClass("android.widget.TextView");
-bindClass("android.widget.EditText");
-bindClass("android.text.InputType");
-//bindClass("android.widget.Adapter");
-bindClass("android.widget.ArrayAdapter");
-bindClass("android.widget.ListView");
-bindClass("android.widget.AdapterView");
-//bindClass("android.R.layout");
-bindClass("android.R");
-bindClass("android.content.res.ColorStateList");
-bindClass("android.graphics.PorterDuff.Mode");
-bindClass("android.graphics.drawable.Drawable");
-bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
+//bindClass("android.view.ViewGroup.MarginLayoutParams");
+
 var context = getActiveScreen().getContext();
 
 //typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
@@ -34,8 +35,8 @@ function showToast(myMsg) {if (!emptyVariable(myMsg)) {Toast.makeText(context, m
 
 var colorBg = 0xbb454545;
 
-var itemsMenu = ["Message", "List", "Checkbox List", "Text Input"];
-var itemsMenuDialog = [dialogMessageShow, dialogListShow, dialogCheckboxShow, dialogTextInputShow];
+//var itemsMenu = ["Message", "List", "Checkbox List", "Text Input"];
+//var itemsMenuDialog = [dialogMessageShow, dialogListShow, dialogCheckboxShow, dialogTextInputShow];
 
 //var myItemsState = [];
 var myItems = ["Easy","Medium","Hard","Very Hard"];
@@ -79,10 +80,11 @@ function myText(text) {
 function dialogMenuShow() {
   var ds = {};//dialog settings
   //int_dialog_bg_color,
-  ds.ac_color = 0xff2233ff;
-  ds.bg_color = 0xbb454545;
+  ds.ac_color  = 0xff2233ff;
+  ds.bg_color  = 0xdd222222;
+  ds.itm_color = 0x88333333;
   ds.txt_color = 0xddffffff;
-  ds.txt_size = 18;
+  ds.txt_size  = 18;
   //str_title_txt, int_title_txt_size, int_title_color
   ds.title_txt = "Select the Dialog to show:";
   ds.title_txt_color = ds.txt_color;
@@ -90,7 +92,7 @@ function dialogMenuShow() {
   //arr_items, int_items_txt_color, int_items_txt_size, int_items_bg_color, int_items_div_color, int_items_div_size
   ds.items_txt = ["Message", "List", "Checkbox List", "Text Input"];
   ds.items_act = [dialogMessageShow, dialogListShow, dialogCheckboxShow, dialogTextInputShow];
-  ds.items_bg_color = ds.bg_color;
+  ds.items_bg_color = ds.itm_color;
   ds.items_txt_color = ds.txt_color;
   ds.items_txt_size = ds.txt_size;
   ds.items_div_color = ds.ac_color;
@@ -99,17 +101,17 @@ function dialogMenuShow() {
   ds.btn_pos_txt = "OK";
   ds.btn_pos_txt_color = ds.txt_color;
   ds.btn_pos_txt_size = ds.txt_size;
-  ds.btn_pos_bg_color = ds.bg_color;
+  ds.btn_pos_bg_color = ds.itm_color;
 
   ds.btn_neg_txt = "Close";
   ds.btn_neg_txt_color = ds.txt_color;
   ds.btn_neg_txt_size = ds.txt_size;
-  ds.btn_neg_bg_color = ds.bg_color;
+  ds.btn_neg_bg_color = ds.itm_color;
 
   ds.btn_neu_txt = "Test";
   ds.btn_neu_txt_color = ds.txt_color;
   ds.btn_neu_txt_size = ds.txt_size;
-  ds.btn_neu_bg_color = ds.bg_color;
+  ds.btn_neu_bg_color = ds.itm_color;
 
   var dialogExit = false;
   var builder = new AlertDialog.Builder(context);
@@ -119,7 +121,7 @@ function dialogMenuShow() {
   myTV.setTextColor(ds.title_txt_color);
   myTV.setTextSize(ds.title_txt_size);
   myTV.setBackgroundColor(ds.ac_color);
-  //myTV.setPadding(10, 10, 10, 10);//setPadding(int left, int top, int right, int bottom)
+  myTV.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
   myTV.setGravity(Gravity.CENTER);
   //myTV.setBackgroundResource(R.drawable.gradient);
 
@@ -182,8 +184,10 @@ function dialogMenuShow() {
   btn.getLayoutParams().setMargins(10, 10, 10, 10);
   btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
   btn.setTextSize(ds.btn_neg_txt_size); btn.setTextColor(ds.btn_neg_txt_color); btn.setBackgroundColor(ds.btn_neg_bg_color); btn.setPadding(10, 10, 10, 10);
+  btn.getLayoutParams().setMargins(10, 10, 10, 10);
   btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
   btn.setTextSize(ds.btn_neu_txt_size); btn.setTextColor(ds.btn_neu_txt_color); btn.setBackgroundColor(ds.btn_neu_bg_color); btn.setPadding(10, 10, 10, 10);
+  btn.getLayoutParams().setMargins(10, 10, 10, 10);
   //btn.setText("Cancel");
 
   var lv = dialog.getListView();
