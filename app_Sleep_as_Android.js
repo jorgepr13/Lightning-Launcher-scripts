@@ -2,7 +2,8 @@
 //event_dat = "start","stop","pause"
 
 //import Tasker functions
-try {eval(getScriptByName("Tasker_Functions").getText());} catch(e) {Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show(); return;}
+bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
+try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 
 //set main script variables
 var eventt = getEvent();

@@ -15,7 +15,7 @@ getTaskerVariable(["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"]);
 
 3. Optional
 You can have your Tasker "class" as an individual script and "import" it with the following code.
-try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {Toast.makeText(context, "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 Where "Tasker_Functions" is the name of the script.
 
 Additional
@@ -28,17 +28,19 @@ Where:
 http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
 http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
 */
-//typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
-function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
-function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
 
 bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
 var context = getActiveScreen().getContext();
 var taskerStatus = TaskerIntent.testStatus(context);
 
+//typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
+function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
+function showToast(myMsg) {if (!emptyVariable(myMsg)) {Toast.makeText(context, myMsg, Toast.LENGTH_SHORT).show();}}
+
 function runTaskerTask(name, wait) {
   if (taskerStatus != "OK") {
-    Toast.makeText(context, "Tasker status: " + taskerStatus, Toast.LENGTH_SHORT).show(); return null;
+    showToast("Tasker status: " + taskerStatus); return null;
   } else {
     if (emptyVariable(name)) {return null;}
     if (emptyVariable(wait)) {wait = true;}
@@ -50,7 +52,7 @@ function runTaskerTask(name, wait) {
 //setTaskerVariable("%SCREEN_FILTER", 1);
 function setTaskerVariable(name, value){
   if (taskerStatus != "OK") {
-    Toast.makeText(context, "Tasker status: " + taskerStatus, Toast.LENGTH_SHORT).show(); return null;
+    showToast("Tasker status: " + taskerStatus); return null;
   } else {
     if (emptyVariable(name)) {return null;}
     if (emptyVariable(value) && value != "") {return null;}
@@ -77,7 +79,7 @@ var value = getTaskerVariable(tVar);
 var msg = "";
 if (typeoff(tVar) == "string") {var tVar = [tVar];}
 for (var i = 0; i < value.length; i++) {msg += tVar[i] + ": " + value[i] + "\n";}
-alert(msg);//Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+alert(msg);//showToast(msg);
 */
 function getTaskerVariable(taskerVar) {
   var typeStr = false;
@@ -96,11 +98,9 @@ function getTaskerVariable(taskerVar) {
   //--for some reason "TaskerIntent.Status.OK" don't works for me, but the string check does
   //if(TaskerIntent.testStatus(context).equals(TaskerIntent.Status.OK)){}
   if (taskerStatus != "OK") {
-    Toast.makeText(context, "Tasker status: " + taskerStatus, Toast.LENGTH_SHORT).show();
+    showToast("Tasker status: " + taskerStatus);
     if (typeStr) {return value[0];} else {return value;}
   } else {
-    //Android.makeNewToast(taskerStatus + " | " + "enabled",true).show();
-
     //bind the classes
     bindClass("android.content.IntentFilter");
     bindClass("android.content.BroadcastReceiver");
@@ -125,8 +125,8 @@ function getTaskerVariable(taskerVar) {
     context.registerReceiver(receiver, new IntentFilter(intent[0]));
     /*//Code to register multiple intents
     var f = new IntentFilter();
-    for(var i=0;i<intent.length;i++){f.addAction(intent[i]);}
-    context.registerReceiver(receiver,f);
+    for (var i = 0; i < intent.length; i++) {f.addAction(intent[i]);}
+    context.registerReceiver(receiver, f);
     */
 
     //The key:value pairs are combined and stored in the extra array
