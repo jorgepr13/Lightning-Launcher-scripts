@@ -10,10 +10,7 @@ bindClass("android.view.Gravity");
 //bindClass("android.view.Window");
 //bindClass("android.view.WindowManager");
 //bindClass("android.view.ViewGroup.LayoutParams");
-<<<<<<< HEAD
 bindClass("android.view.ViewGroup.MarginLayoutParams");
-=======
->>>>>>> bb8e67b185da651d58bc67b3b57a4e28ba3eb834
 bindClass("android.widget.LinearLayout");
 bindClass("android.widget.TextView");
 bindClass("android.widget.EditText");
@@ -82,11 +79,7 @@ function myText(text) {
 function dialogMenuShow() {
   var ds = {};//dialog settings
   //int_dialog_bg_color,
-<<<<<<< HEAD
   ds.ac_color = 0xff2233ff;
-=======
-  ds.ac_color = 0xbb454545;
->>>>>>> bb8e67b185da651d58bc67b3b57a4e28ba3eb834
   ds.bg_color = 0xbb454545;
   ds.txt_color = 0xddffffff;
   ds.txt_size = 18;
@@ -125,14 +118,9 @@ function dialogMenuShow() {
   myTV.setText(ds.title_txt);
   myTV.setTextColor(ds.title_txt_color);
   myTV.setTextSize(ds.title_txt_size);
-<<<<<<< HEAD
   myTV.setBackgroundColor(ds.ac_color);
   //myTV.setPadding(10, 10, 10, 10);//setPadding(int left, int top, int right, int bottom)
   myTV.setGravity(Gravity.CENTER);
-=======
-  //myTV.setPadding(10, 10, 10, 10);//setPadding(int left, int top, int right, int bottom)
-  //myTV.setGravity(Gravity.CENTER);
->>>>>>> bb8e67b185da651d58bc67b3b57a4e28ba3eb834
   //myTV.setBackgroundResource(R.drawable.gradient);
 
   builder.setCustomTitle(myTV);
@@ -190,20 +178,12 @@ function dialogMenuShow() {
   dialog.show();
 
   var btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
-<<<<<<< HEAD
   btn.setTextSize(ds.btn_pos_txt_size); btn.setTextColor(ds.btn_pos_txt_color); btn.setBackgroundColor(ds.btn_pos_bg_color); btn.setPadding(10, 10, 10, 10);
   btn.getLayoutParams().setMargins(10, 10, 10, 10);
   btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
   btn.setTextSize(ds.btn_neg_txt_size); btn.setTextColor(ds.btn_neg_txt_color); btn.setBackgroundColor(ds.btn_neg_bg_color); btn.setPadding(10, 10, 10, 10);
   btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
   btn.setTextSize(ds.btn_neu_txt_size); btn.setTextColor(ds.btn_neu_txt_color); btn.setBackgroundColor(ds.btn_neu_bg_color); btn.setPadding(10, 10, 10, 10);
-=======
-  btn.setTextSize(ds.btn_pos_txt_size); btn.setTextColor(ds.btn_pos_txt_color); btn.setBackgroundColor(ds.btn_pos_bg_color);
-  btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-  btn.setTextSize(ds.btn_neg_txt_size); btn.setTextColor(ds.btn_neg_txt_color); btn.setBackgroundColor(ds.btn_neg_bg_color);
-  btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
-  btn.setTextSize(ds.btn_neu_txt_size); btn.setTextColor(ds.btn_neu_txt_color); btn.setBackgroundColor(ds.btn_neu_bg_color);
->>>>>>> bb8e67b185da651d58bc67b3b57a4e28ba3eb834
   //btn.setText("Cancel");
 
   var lv = dialog.getListView();
