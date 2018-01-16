@@ -30,29 +30,29 @@ http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-
 */
 //typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
 Object.prototype.typeoff = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
-function emptyVariable(myVar){return myVar == null || myVar == undefined || myVar == "";}
+function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
 
 var context = getActiveScreen().getContext();//var context = LL.getContext();
 var taskerStatus = TaskerIntent.testStatus(context);
 
-function runTaskerTask(name,wait){
-  if(taskerStatus != "OK") {
-    Android.makeNewToast("Tasker status: " + taskerStatus,false).show();
+function runTaskerTask(name, wait) {
+  if (taskerStatus != "OK") {
+    Android.makeNewToast("Tasker status: " + taskerStatus, false).show(); return null;
   } else {
-    if(emptyVariable(name)) {return;}
-    if(emptyVariable(wait)) {wait = true;}
-    if(typeoff(wait) != "boolean") {wait = true;}
+    if (emptyVariable(name)) {return null;}
+    if (emptyVariable(wait)) {wait = true;}
+    if (typeoff(wait) != "boolean") {wait = true;}
     LL.sendTaskerIntent(new TaskerIntent(name), wait);
   }
 }
 
-//setTaskerVariable("%SCREEN_FILTER",1);
-function setTaskerVariable(name,value){
-  if(taskerStatus != "OK") {
-    Android.makeNewToast("Tasker status: " + taskerStatus,false).show();
+//setTaskerVariable("%SCREEN_FILTER", 1);
+function setTaskerVariable(name, value){
+  if (taskerStatus != "OK") {
+    Android.makeNewToast("Tasker status: " + taskerStatus, false).show(); return null;
   } else {
-    if(emptyVariable(name)) {return;}
-    if(emptyVariable(value) && value != "") {return;}
+    if (emptyVariable(name)) {return null;}
+    if (emptyVariable(value) && value != "") {return null;}
     value = value.toString();
 
     var i = new TaskerIntent("Set_Var");
@@ -62,7 +62,7 @@ function setTaskerVariable(name,value){
     i.addArg(false);//"Recurse Variables"
     i.addArg(false);//"Do Maths"
     i.addArg(false);//"Append"
-    sendTaskerIntent(i, true);//true=wait for task completion
+    sendTaskerIntent(i, true);//true = wait for task completion
   }
 }
 
@@ -74,15 +74,15 @@ var value = getTaskerVariable(tVar);
 
 //Show the results
 var msg = "";
-if(typeoff(tVar) == "string") {var tVar = [tVar];}
-for(var i=0;i<value.length;i++){msg += tVar[i] + ": " + value[i] + "\n";}
-alert(msg);//Android.makeNewToast(msg,true).show();
+if (typeoff(tVar) == "string") {var tVar = [tVar];}
+for (var i = 0; i < value.length; i++) {msg += tVar[i] + ": " + value[i] + "\n";}
+alert(msg);//Android.makeNewToast(msg, true).show();
 */
-function getTaskerVariable(taskerVar){
+function getTaskerVariable(taskerVar) {
   var typeStr = false;
-  if(emptyVariable(taskerVar)) {return null;}
-  if(typeoff(taskerVar) != "array" && typeoff(taskerVar) != "string") {return null;}
-  if(typeoff(taskerVar) == "string") {var taskerVar = [taskerVar];typeStr = true;}
+  if (emptyVariable(taskerVar)) {return null;}
+  if (typeoff(taskerVar) != "array" && typeoff(taskerVar) != "string") {return null;}
+  if (typeoff(taskerVar) == "string") {var taskerVar = [taskerVar]; typeStr = true;}
   // Configuration
   //var taskerVar  = ["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"];
   var intent     = ["net.tasker.SHARE_VAR"];
@@ -90,13 +90,14 @@ function getTaskerVariable(taskerVar){
   // End Configuration
 
   //"value" is set to null and "key" is set to "var_0", "var_1",... matching the taskerVar length
-  var key = [];var value = [];for(var i=0;i<taskerVar.length;i++){key.push("var_"+i);value.push(null);}
+  var key = []; var value = []; for (var i = 0; i < taskerVar.length; i++) {key.push("var_" + i); value.push(null);}
 
   //Tasker Status is check, no need to perform any Tasker process if Tasker is not enabled
   //--for some reason "TaskerIntent.Status.OK" don't works for me, but the string check does
   //if(TaskerIntent.testStatus(context).equals(TaskerIntent.Status.OK)){}
-  if(taskerStatus != "OK") {
-    Android.makeNewToast("Tasker status: " + taskerStatus,true).show();
+  if (taskerStatus != "OK") {
+    Android.makeNewToast("Tasker status: " + taskerStatus, true).show();
+    if (typeStr) {return value[0];} else {return value;}
   } else {
     //Android.makeNewToast(taskerStatus + " | " + "enabled",true).show();
 
@@ -109,16 +110,16 @@ function getTaskerVariable(taskerVar){
     //Once the intent is received, the keys are checked and the value is retrieved
     //--if the value retrieved matches the literal variable (%LOCN was asked and %LOCN was received, instead of a lat,lon), then the value gets reset to the default (null)
     //--the receiver gets closed when the lastKey is matched
-    var receiver = new JavaAdapter(BroadcastReceiver,{
-      onReceive:function(c,i){ //context, intent //android.content.ContextWrapper
+    var receiver = new JavaAdapter(BroadcastReceiver, {
+      onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
         var lastKey = 0;
         var e = i.getExtras();
-        for(var i=0;i<key.length;i++){
-          if(e.containsKey(key[i])){value[i] = e.get(key[i]);lastKey=i;}
-          if(value[i] == taskerVar[i]){value[i] = null;}
+        for (var i = 0; i < key.length; i++) {
+          if (e.containsKey(key[i])) {value[i] = e.get(key[i]); lastKey = i;}
+          if (value[i] == taskerVar[i]) {value[i] = null;}
         }
         lastKey++;
-        if(lastKey == key.length){try {if(receiver != null){context.unregisterReceiver(receiver);}} catch(e){}}
+        if (lastKey == key.length) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch(e) {}}
       }
     });
     context.registerReceiver(receiver, new IntentFilter(intent[0]));
@@ -173,7 +174,7 @@ function getTaskerVariable(taskerVar){
       //3. Variable split %extra with "=:=" splitter
       //   --the splitter can be changed, but it must match the extra joiner, using a comma is not recommended because of some Tasker variables return CSV
       //4. Send intent, action=%par1, extras=%extra(1),%extra(2),%extra(3), target=Broadcast Receiver
-      var i = new TaskerIntent("share_variable_value"+j);
+      var i = new TaskerIntent("share_variable_value" + j);
       i.addAction(ActionCodes.RUN_TASK);//130
       i.addArg(taskerTask);//"Name"
       i.addArg(150);//"Priority"
@@ -193,9 +194,8 @@ function getTaskerVariable(taskerVar){
     }//end for - 3 var at a time
 
     //Try to stop the receiver again, if for some reason the intent wasn't received and was not stopped at that time
-    try {if (receiver != null){context.unregisterReceiver(receiver);}} catch(e){}
+    try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch(e) {}
   }//end if - Tasker status check
 
-  if(typeStr){return value[0];}
-  return value;
+  if (typeStr) {return value[0];} else {return value;}
 }//end func getTaskerVariable

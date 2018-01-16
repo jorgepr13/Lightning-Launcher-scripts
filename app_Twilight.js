@@ -2,7 +2,7 @@
 //event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
 
 //import Tasker functions
-try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
+try {eval(getScriptByName("Tasker_Functions").getText());} catch(e) {Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show(); return;}
 
 //set main script variables
 var eventt = getEvent();
@@ -15,18 +15,18 @@ event_dat = event_dat.toString().toLowerCase();
 
 //get the current status
 var screenFilter = getTaskerVariable("%SCREEN_FILTER");
-if (screenFilter === null){screenFilter = cscript.getTag("SCREEN_FILTER");}
-if (screenFilter === undefined){screenFilter = 0;}
+if (screenFilter == null) {screenFilter = cscript.getTag("SCREEN_FILTER");}
+if (screenFilter == undefined) {screenFilter = 0;}
 
 //set the action to perform
 var action = "";
-if (screenFilter === 0){action = "on";} else {action = "off";}
-if (event_src == "I_LONG_CLICK"){action = "off"}
-if (event_dat == "off"){action = "off"}
+if (screenFilter == 0) {action = "on";} else {action = "off";}
+if (event_src == "I_LONG_CLICK") {action = "off";}
+if (event_dat == "off") {action = "off";}
 
 //prepare the action
 var extra = "";
-if (action == "on"){
+if (action == "on") {
   extra = "start"; screenFilter = 1;
 } else {
   extra = "stop"; screenFilter = 0;

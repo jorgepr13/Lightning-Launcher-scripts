@@ -2,7 +2,7 @@
 //event_dat = "start","stop","pause"
 
 //import Tasker functions
-try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
+try {eval(getScriptByName("Tasker_Functions").getText());} catch(e) {Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show(); return;}
 
 //set main script variables
 var eventt = getEvent();
@@ -15,19 +15,19 @@ event_dat = event_dat.toString().toLowerCase();
 
 //get the current status
 var sleepTrack = getTaskerVariable("%SLEEP_TRACK");
-if (sleepTrack === null){sleepTrack = cscript.getTag("SLEEP_TRACK");}
-if (sleepTrack === undefined){sleepTrack = 0;}
+if (sleepTrack == null) {sleepTrack = cscript.getTag("SLEEP_TRACK");}
+if (sleepTrack == undefined){sleepTrack = 0;}
 
 //set the action to perform
 var action = "";
-if (sleepTrack === 0){action = "start";} else {action = "pause";}
-if (event_src == "I_LONG_CLICK"){action = "stop"}
-if (event_dat == "stop"){action = "stop"}
+if (sleepTrack == 0) {action = "start";} else {action = "pause";}
+if (event_src == "I_LONG_CLICK") {action = "stop";}
+if (event_dat == "stop") {action = "stop";}
 
 //execute the action
-if (action == "pause"){
+if (action == "pause") {
   context.sendBroadcast(new Intent("com.urbandroid.sleep.ACTION_PAUSE_TRACKING"));
-  } else if (action == "stop") {
+} else if (action == "stop") {
   context.sendBroadcast(new Intent("com.urbandroid.sleep.alarmclock.STOP_SLEEP_TRACK"));
   sleepTrack = 0;
 } else {
@@ -36,9 +36,9 @@ if (action == "pause"){
 }
 
 //update the tag and variable
-if (action != "pause"){
-  cscript.setTag("SLEEP_TRACK",sleepTrack);
-  setTaskerVariable("%SLEEP_TRACK",sleepTrack);
+if (action != "pause") {
+  cscript.setTag("SLEEP_TRACK", sleepTrack);
+  setTaskerVariable("%SLEEP_TRACK", sleepTrack);
 }
 /*
 //getActiveScreen().getContext().sendBroadcast(intent);
