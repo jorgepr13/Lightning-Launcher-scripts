@@ -15,11 +15,11 @@ getTaskerVariable(["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"]);
 
 3. Optional
 You can have your Tasker "class" as an individual script and "import" it with the following code.
-try{eval(getScriptByName("Tasker_Functions").getText());} catch(e){Android.makeNewToast("One of the required scripts couldn't be loaded.\nPlease try again.\n\n"+e,false).show();return;}
+try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {Toast.makeText(context, "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 Where "Tasker_Functions" is the name of the script.
 
 Additional
-runTaskerTask(name,wait)
+runTaskerTask(name, wait)
 Where:
 "name" is the task name
 "wait" is the boolean to wait for the task completion
@@ -29,27 +29,28 @@ http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
 http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
 */
 //typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
-Object.prototype.typeoff = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
 function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
 
-var context = getActiveScreen().getContext();//var context = LL.getContext();
+bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
+var context = getActiveScreen().getContext();
 var taskerStatus = TaskerIntent.testStatus(context);
 
 function runTaskerTask(name, wait) {
   if (taskerStatus != "OK") {
-    Android.makeNewToast("Tasker status: " + taskerStatus, false).show(); return null;
+    Toast.makeText(context, "Tasker status: " + taskerStatus, Toast.LENGTH_SHORT).show(); return null;
   } else {
     if (emptyVariable(name)) {return null;}
     if (emptyVariable(wait)) {wait = true;}
     if (typeoff(wait) != "boolean") {wait = true;}
-    LL.sendTaskerIntent(new TaskerIntent(name), wait);
+    sendTaskerIntent(new TaskerIntent(name), wait);
   }
 }
 
 //setTaskerVariable("%SCREEN_FILTER", 1);
 function setTaskerVariable(name, value){
   if (taskerStatus != "OK") {
-    Android.makeNewToast("Tasker status: " + taskerStatus, false).show(); return null;
+    Toast.makeText(context, "Tasker status: " + taskerStatus, Toast.LENGTH_SHORT).show(); return null;
   } else {
     if (emptyVariable(name)) {return null;}
     if (emptyVariable(value) && value != "") {return null;}
@@ -76,15 +77,14 @@ var value = getTaskerVariable(tVar);
 var msg = "";
 if (typeoff(tVar) == "string") {var tVar = [tVar];}
 for (var i = 0; i < value.length; i++) {msg += tVar[i] + ": " + value[i] + "\n";}
-alert(msg);//Android.makeNewToast(msg, true).show();
+alert(msg);//Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 */
 function getTaskerVariable(taskerVar) {
   var typeStr = false;
   if (emptyVariable(taskerVar)) {return null;}
   if (typeoff(taskerVar) != "array" && typeoff(taskerVar) != "string") {return null;}
-  if (typeoff(taskerVar) == "string") {var taskerVar = [taskerVar]; typeStr = true;}
+  if (typeoff(taskerVar) == "string") {taskerVar = [taskerVar]; typeStr = true;}
   // Configuration
-  //var taskerVar  = ["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"];
   var intent     = ["net.tasker.SHARE_VAR"];
   var taskerTask = "Tasker Share Variable";
   // End Configuration
@@ -96,14 +96,14 @@ function getTaskerVariable(taskerVar) {
   //--for some reason "TaskerIntent.Status.OK" don't works for me, but the string check does
   //if(TaskerIntent.testStatus(context).equals(TaskerIntent.Status.OK)){}
   if (taskerStatus != "OK") {
-    Android.makeNewToast("Tasker status: " + taskerStatus, true).show();
+    Toast.makeText(context, "Tasker status: " + taskerStatus, Toast.LENGTH_SHORT).show();
     if (typeStr) {return value[0];} else {return value;}
   } else {
     //Android.makeNewToast(taskerStatus + " | " + "enabled",true).show();
 
     //bind the classes
-    LL.bindClass("android.content.IntentFilter");
-    LL.bindClass("android.content.BroadcastReceiver");
+    bindClass("android.content.IntentFilter");
+    bindClass("android.content.BroadcastReceiver");
 
     //The Broadcast Receiver is set, based on the intent/s provided
     //--more than one intent can be set to be received, but we are only sending the first one, and expecting to receive the same back
@@ -119,7 +119,7 @@ function getTaskerVariable(taskerVar) {
           if (value[i] == taskerVar[i]) {value[i] = null;}
         }
         lastKey++;
-        if (lastKey == key.length) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch(e) {}}
+        if (lastKey == key.length) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}}
       }
     });
     context.registerReceiver(receiver, new IntentFilter(intent[0]));
@@ -133,11 +133,11 @@ function getTaskerVariable(taskerVar) {
     //Since Tasker can send only 3 extras at a time, the length of the taskerVar is checked against a multiple of 3, and the extra array gets filled with a key and no variable request
     //--filling the extras is done to prevent calling an undeclared index, when we use extra[j+1], extra[j+2]
     var extra = [];
-    var len = Math.min(key.length,taskerVar.length);
-    for(var i=0;i<len;i++){extra.push(key[i]+":"+taskerVar[i]);}
-    for(var i=0;i<(2-(len-1)%3);i++){extra.push("abc_"+i);}
+    var len = Math.min(key.length, taskerVar.length);
+    for (var i = 0; i < len; i++) {extra.push(key[i] + ":" + taskerVar[i]);}
+    for (var i = 0; i < (2-(len-1)%3); i++) {extra.push("abc_" + i);}
 
-    for(var j=0;j<key.length;j+=3){
+    for (var j = 0; j < key.length; j+=3) {
       //The "on the fly" code contains a different task name to prevent Tasker ignoring the next task sent and therefore not getting the requested variables
       //It also contains a wait action, needed to allow the Broadcast Receiver get the intent and process it
       //--I tried to do a setTimeout and LL froze every time
@@ -151,9 +151,9 @@ function getTaskerVariable(taskerVar) {
       i.addArg(0);//"Cat": 0="None", 1="Default", 2="Alt", 3="Browsable", 4="Car Dock", 5="Desk Dock", 6="Home", 7="Info", 8="Launcher", 9="Preference", 10="Selected Alt", 11="Tab", 12="Test", 13="Cardboard"
       i.addArg("");//"Mime Type"
       i.addArg("");//"Data"
-      i.addArg(extra[j]);//"Extra1"
-      i.addArg(extra[j+1]);//"Extra2"
-      i.addArg(extra[j+2]);//"Extra"
+      i.addArg(extra[j + 0]);//"Extra1"
+      i.addArg(extra[j + 1]);//"Extra2"
+      i.addArg(extra[j + 2]);//"Extra"
       i.addArg("");//"Package"
       i.addArg("");//"Class"
       i.addArg(0);//"Target"0="Broadcast Receiver", 1="Activity", 2="Service"
@@ -163,17 +163,17 @@ function getTaskerVariable(taskerVar) {
       i.addArg(0);//"Minutes"
       i.addArg(0);//"Hours"
       i.addArg(0);//"Days"
-      LL.sendTaskerIntent(i, true);//true=wait for task completion
+      sendTaskerIntent(i, true);//true=wait for task completion
       */
       //*
       //workaround
       //A perform task is attempted "on the fly"
-      //--this requires a task to be made in Tasker containing:
+      //--this requires a task to be made in Tasker, containing:
       //1. Stop, if %par1 and %par2 aren't set
       //2. Set variable "extra" to %par2
       //3. Variable split %extra with "=:=" splitter
       //   --the splitter can be changed, but it must match the extra joiner, using a comma is not recommended because of some Tasker variables return CSV
-      //4. Send intent, action=%par1, extras=%extra(1),%extra(2),%extra(3), target=Broadcast Receiver
+      //4. Send intent, action = %par1, extras = %extra(1), %extra(2), %extra(3), target = Broadcast Receiver
       var i = new TaskerIntent("share_variable_value" + j);
       i.addAction(ActionCodes.RUN_TASK);//130
       i.addArg(taskerTask);//"Name"
@@ -188,13 +188,13 @@ function getTaskerVariable(taskerVar) {
       i.addArg(0);//"Minutes"
       i.addArg(0);//"Hours"
       i.addArg(0);//"Days"
-      LL.sendTaskerIntent(i, true);//true=wait for task completion
-      extra.splice(0,3);//remove the sent requests
+      sendTaskerIntent(i, true);//true=wait for task completion
+      extra.splice(0, 3);//remove the sent requests
       //*/
     }//end for - 3 var at a time
 
     //Try to stop the receiver again, if for some reason the intent wasn't received and was not stopped at that time
-    try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch(e) {}
+    try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
   }//end if - Tasker status check
 
   if (typeStr) {return value[0];} else {return value;}
