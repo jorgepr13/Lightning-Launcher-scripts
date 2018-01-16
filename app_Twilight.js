@@ -2,8 +2,7 @@
 //event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
 
 //import Tasker functions
-bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
-try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 
 //set main script variables
 var eventt = getEvent();
