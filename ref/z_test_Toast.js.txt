@@ -26,7 +26,7 @@ bindClass("android.view.Gravity");
 
 var duration = Toast.LENGTH_SHORT; //Toast.LENGTH_LONG
 //var duration = Toast.LENGTH_LONG;
-//var toast = Toast.makeText(context, text, duration)
+//var toast = Toast.makeText(context, text, duration);
 //Toast.makeText(context, text, duration).setGravity().show();
 //setGravity(int_Gravity_constant, int_x_offset, int_y_offset);
 //toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);//Gravity.CENTER_VERTICAL
@@ -89,7 +89,3 @@ t.show();
 t=Toast.makeText(context, "default", duration);
 //t.setGravity(Gravity.CENTER_VERTICAL,0,0);
 t.show();
-
-
-
-
