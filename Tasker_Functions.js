@@ -29,14 +29,15 @@ http://www.lightninglauncher.com/wiki/doku.php?id=script_music_metadata
 http://mobileorchard.com/android-app-development-using-intents-to-pass-data-and-return-results-between-activities/
 */
 
-bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LONG
+bindClass("android.widget.Toast");
 var context = getActiveScreen().getContext();
-var taskerStatus = TaskerIntent.testStatus(context);
-
 //typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
 function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
 function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
-function showToast(myMsg) {if (!emptyVariable(myMsg)) {Toast.makeText(context, myMsg, Toast.LENGTH_SHORT).show();}}
+function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
+
+var taskerStatus = TaskerIntent.testStatus(context);
+
 
 function runTaskerTask(name, wait) {
   if (taskerStatus != "OK") {
@@ -135,7 +136,7 @@ function getTaskerVariable(taskerVar) {
     var extra = [];
     var len = Math.min(key.length, taskerVar.length);
     for (var i = 0; i < len; i++) {extra.push(key[i] + ":" + taskerVar[i]);}
-    for (var i = 0; i < (2-(len-1)%3); i++) {extra.push("abc_" + i);}
+    for (var i = 0; i < (2-(len-1)%3); i++) {extra.push("abc_" + i + ":abc");}
 
     for (var j = 0; j < key.length; j+=3) {
       //The "on the fly" code contains a different task name to prevent Tasker ignoring the next task sent and therefore not getting the requested variables

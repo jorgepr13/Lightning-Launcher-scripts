@@ -28,9 +28,13 @@ bindClass("java.io.FileReader");
 bindClass("java.io.BufferedReader");
 bindClass("java.io.File");
 bindClass("java.lang.StringBuilder");
-bindClass("android.widget.Toast");
 
+bindClass("android.widget.Toast");
 var context = getActiveScreen().getContext();
+//typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
+function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
+function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
 
 function read(filePath){
   try {
@@ -56,7 +60,7 @@ function updateScripts(folder){
       var script = getScriptByName(name);
       //var script = getScriptByPathAndName(path, name);
       if (script == null){
-        Toast.makeText(context, "Creating new script: " + name, Toast.LENGTH_SHORT).show();
+        showToast("Creating new script: " + name);
         script = createScript(path, name,"",0);
         var tagdate = 0;
       } else {
@@ -77,9 +81,9 @@ var updatedScripts = [];
 var folder = new File(scriptFolder);
 updateScripts(folder);
  
-if (updatedScripts.length > 0) {Toast.makeText(context, "Updated scripts: " + updatedScripts.join(", "), Toast.LENGTH_LONG).show();}
+if (updatedScripts.length > 0) {showToast("Updated scripts: " + updatedScripts.join(", "), true);}
 
-//Toast.makeText(context, "Importing scripts complete.", Toast.LENGTH_LONG).show();
+//showToast("Importing scripts complete.", true);
 
 /*
 script_external_editor_script_importer.txt · Last modified: 2017/07/06 15:15 by cdfa

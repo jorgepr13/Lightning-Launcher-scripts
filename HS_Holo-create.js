@@ -227,7 +227,37 @@ function draw_circle(itm){
 	itm.setBoxBackground(img, "ns", true);
 }
 */
+/*
+Item
+public Image getBoxBackground (String state)
+  Retrieve the image currently displayed as the box background. This image can be shared amongst several items.
+Parameters
+  state	one of "n" (normal), "s" (selected) or "f" (focused)
+Returns
+  an image, or null if this is a nine patch or if there is no image
 
+Shortcut
+public Image getCustomIcon ()
+  Retrieve the custom icon file associated with this shortcut. The custom icon overrides the default icon but the default icon is kept so that the shortcut can be reverted to its original state.
+Returns
+  an icon, or null if no icon is defined
+
+public Image getDefaultIcon ()
+  Retrieve the default icon file associated to this shortcut. For an app this is the original icon defined by the package.
+
+Image	getImage()
+  Retrieves the live image for this shortcut as displayed on a given screen This is the image which results in compositing the default or custom icon with various options, such as reflection
+
+void	setCustomIcon(Image image)
+  Set a new custom icon for this item.
+
+void	setDefaultIcon(Image image)
+  Set a new icon for this item.
+
+void	setImage(Image image)
+  Replaces the current live image on a given screen.
+
+*/
 /*
 function draw_semicircle(itm){
 	var itm_w = itm.getWidth();

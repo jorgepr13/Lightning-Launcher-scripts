@@ -60,7 +60,7 @@ var hasItem = (getEvent().getItem() != null);
 
 //define Strings to display
 var title = "What do you want to do?";
-var items = []
+var items = [];
 var info = ["Information", []];
 info[1].push("Event");
 info[1].push("Container");
@@ -95,14 +95,14 @@ function mainOnClick(groupPosition, childPosition) {
                     eventData();
                     break;
                 case 1: //container related
-                    containerData()
+                    containerData();
                     break;
                 case 2: //item related
                     itemData();
                     break;
                 case 3: //intent
                     intentData();
-                    break;﻿
+                    break;
                 case 4: //icon
                     iconData();
                     break;
@@ -171,8 +171,9 @@ function containerData() {
     var s = read(getActiveScreen().getContext().getFilesDir().getPath() + "/pages/" + c.getId() + "/conf");
     var data = JSON.parse(s);
     var tags = "Default: " + c.getTag();
-    for (property in data.tags)
+    for (property in data.tags) {
         tags += "\n" + property + ": " + data.tags[property];
+    }
     text("Type: " + t
     + "\nName/Label: " + (t == "Desktop" ? c.getName() : c.getOpener().getLabel())
     + "\nID: " + c.getId()
@@ -187,9 +188,9 @@ function containerData() {
 
 function itemData() {
     var i = getEvent().getItem();
-    if (i == null) //check if event contains item
+    if (i == null) {//check if event contains item
         text("no item found", "Error 5");
-
+    }
     //read tags from launcher file
     var s = read(getActiveScreen().getContext().getFilesDir().getPath() + "/pages/" + LL.getEvent().getContainer().getId() + "/items");
     var all = JSON.parse(s).i;
@@ -551,7 +552,7 @@ function expandableList(items, onClickFunction, title) {
             dialog.cancel();
         }
     });
-    dialog = builder.create();﻿
+    dialog = builder.create();
     dialog.show();
 }
 
@@ -658,7 +659,7 @@ function center(item) {
     var w = item.getWidth() * item.getScaleX();
     var h = item.getHeight() * item.getScaleY();
     return [item.getPositionX() + (w * cos + h * sin) * 0.5, item.getPositionY() + (h * cos + w * sin) * 0.5];﻿
-}﻿
+}
 
 //helper function for sorting labels
 function noCaseSort(a, b) {

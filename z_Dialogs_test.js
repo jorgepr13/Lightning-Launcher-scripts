@@ -13,7 +13,6 @@ bindClass("android.widget.LinearLayout");
 bindClass("android.widget.ArrayAdapter");
 bindClass("android.widget.AdapterView");
 bindClass("android.widget.ListView");
-bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LON
 
 //bindClass("android.graphics.PorterDuff.Mode");
 //bindClass("android.graphics.drawable.Drawable");
@@ -28,12 +27,12 @@ bindClass("android.widget.Toast");//Toast.LENGTH_SHORT; Toast.LENGTH_LON
 //bindClass("android.view.ViewGroup.LayoutParams");
 //bindClass("android.view.ViewGroup.MarginLayoutParams");
 
+bindClass("android.widget.Toast");
 var context = getActiveScreen().getContext();
-
 //typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
 function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
 function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
-function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false}; if (longDuration) {mDuration = Toast.LENGTH_LONG;}; Toast.makeText(context, myMsg, mDuration).show();}}
+function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
 
 
 var myItems = ["Easy","Medium","Hard","Very Hard"];
@@ -762,6 +761,23 @@ function dialogTextInputShow(message, text){
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
 }
+
+/*
+http://www.lightninglauncher.com/wiki/doku.php?id=script_app_drawer
+
+LL.bindClass("android.app.ProgressDialog");
+var progress = new ProgressDialog(LL.getContext());
+progress.setTitle("Initializing App Drawer")
+progress.setMessage("Please wait...");
+progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+progress.show();
+//program code
+if (typeof progress !== 'undefined') {progress.dismiss();}
+}
+
+
+*/
+
 
 //setTimeout(dialogListShow(),0);//shows the list again. On a timeout so the startActivity() is correctly launched before
 
