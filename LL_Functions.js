@@ -26,24 +26,21 @@ bindClass("android.widget.Toast");
 function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
 function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
 function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
-
-
-
 /*
-var items = [
-    [size,"call","Phone","Contacts +","com.contapps.android"],
-    [size,"cal","Calendar","label sys (for search)","com.appgenix.bizcal"],
-    [size,"txt","Txt","Contacts +","com.contapps.android"],
-    [size,"txt_b","Txt","Messages",""]
-];
-
 item class
 container class
 shortcut class
 panel class
 folder class
-
 */
+
+/* //colors
+0x64ffffff //grey (transparent white)
+0xff33b5e5 //blue
+0xffffffff //white
+0x00000000 //transparent black
+*/
+
 var apps;
 var pm = context.getPackageManager();
 
@@ -72,8 +69,116 @@ LLItem.prototype.setItemProperties = function() {
   //this.item.setCell(this.position[0], this.position[1], this.position[0] + this.size[0], this.position[1] + this.size[1], true);
   this.item.setPosition(this.position[0], this.position[1]);
   this.item.setSize(this.size[0], this.size[1]);
+
+/*
+
+//item
+var ed=itm.getProperties().edit();
+ed.setBoolean("s.iconVisibility",false);
+ed.setBoolean("s.labelVisibility",true);
+ed.setFloat("s.labelFontSize",f_sz);
+ed.setBoolean("i.enabled",false);
+//itm.getProperties().edit().setString("s.labelFontTypeFace", "font_path").commit();
+ed.setString("s.labelFontStyle","BOLD"); //NORMAL|ITALIC|BOLD|BOLD_ITALIC
+//ed.setInteger("s.labelFontColor",		0x64ffffff);
+//ed.setInteger("s.selectionColorLabel",	0xffffffff);
+//ed.setInteger("s.focusColorLabel",		0xffffffff);
+//ed.setInteger("s.labelMaxLines",2);
+ed.setBoolean("i.enabled",true);
+ed.setEventHandler("i.tap",		EventHandler.RUN_SCRIPT,my_script.getId());
+//ed.setEventHandler("i.resumed",	EventHandler.RUN_SCRIPT,my_script.getId());
+//ed.setEventHandler("i.paused",	EventHandler.RUN_SCRIPT,my_script.getId());
+ed.setEventHandler("i.longTap",	EventHandler.RUN_SCRIPT,my_script.getId()+"/long");
+/itm.setBinding("s.label",'$weather_day_name_f0',true);
+itm.setBinding("s.label",'var wx_str = $weather;\n' + 'var wx = JSON.parse(wx_str);\n' + 'var wx_fc = wx.fc[' + '0' + '];\n' + 'return wx_fc.date.day;', true);
+
+var box=ed.getBox("i.box");
+box.setAlignment(al_x,al_y);
+ed.commit();
+//setAlignment(String h,String v)
+//h: LEFT,CENTER,RIGHT
+//v: TOP,MIDDLE,BOTTOM
+
+
+//panel
+itm.getProperties().edit().setBoolean("i.onGrid", false).commit();
+var ed = itm.getProperties().edit();
+var box = ed.getBox("i.box");
+box.setSize("bl,br,bt,bb",0);
+box.setSize("bl,br,bt,bb",1);
+box.setSize("pl,pr,pt,pb,ml,mr,mt,mb",0);
+box.setAlignment("CENTER","MIDDLE");
+ed.commit();
+
+var ed=itm.getProperties().edit();
+var box=ed.getBox("i.box");
+box.setColor("bt,bl,br,bb","ns",0x00000000);
+//box.setColor("bl,br,bb","ns",0xff33b5e5);
+box.setSize("bt",10);
+box.setSize("bl,br,bb",10);
+ed.commit();
+
+//folder
+var fol_i = event_c.addFolder("Weather", 0, 0);
+fol_i.setName("weather_fol");
+fol_i.setCell(c,r,c+1,r+1,true);
+var fol_c = fol_i.getContainer();
+set_panel_defaults(fol_i,3,5);
+var ed = fol_i.getProperties().edit();
+ed.setBoolean("s.iconVisibility",false);
+ed.setInteger("f.wW",Math.min(event_c.getWidth(),event_c.getCellHeight()*4));
+ed.setInteger("f.wH",event_c.getCellHeight()*4);
+//ed.setInteger("f.wH",Math.max(event_c.getWidth(),event_c.getCellHeight()*4));
+ed.setString("f.wAH","CENTER");	//LEFT|*CENTER*|RIGHT|CUSTOM  //Horizontal alignment
+ed.setString("f.wAV","TOP");	//TOP|*CENTER*|BOTTOM|CUSTOM //Vertical alignment
+ed.setBoolean("f.titleVisibility",true);
+
+f.wX	int	Read/Write	Position X - Needs alignment set to custom - 0 = defeault
+f.wY	int	Read/Write	Position y - Needs alignment set to custom - 0 = defeault
+f.wW	int	Read/Write	Size X - 0 = defeault
+f.wH	int	Read/Write	Size Y - 0 = defeault
+
+//var box=ed.getBox("f.box");
+//box.setColor("c","ns",0xDD000000);
+ed.getBox("f.box").setColor("c","ns",0xDD000000);
+
+ed.commit();
+//fol_c.getProperties().edit().setInteger("bgColor",0xFF000000).commit();
+
+fol_i.open();
+
+
+*/
 }
 
+/*//container
+
+var cnt = itm.getContainer();
+cnt.getProperties().edit().setString("gridPColumnMode","SIZE").setString("gridPRowMode","SIZE").commit();
+cnt.getProperties().edit().setInteger("gridPColumnSize",w).setInteger("gridPRowSize",w).commit();
+//cnt.getProperties().edit().setInteger("gridPColumnNum", 1).setInteger("gridPRowNum", 5).commit();
+
+var itm_c=itm.getContainer();
+var ed=itm_c.getProperties().edit();
+ed.setBoolean("newOnGrid",true);
+ed.setBoolean("allowDualPosition",false);
+ed.setBoolean("useDesktopSize",false);
+ed.setString("scrollingDirection","NONE");
+ed.setString("gridPColumnMode","NUM");
+ed.setString("gridLColumnMode","NUM");
+ed.setString("gridPRowMode","NUM");
+ed.setString("gridLRowMode","NUM");
+ed.setInteger("gridPColumnNum",col);
+ed.setInteger("gridLColumnNum",col);
+ed.setInteger("gridPRowNum",row);
+ed.setInteger("gridLRowNum",row);
+ed.setBoolean("swapItems",true);
+ed.commit();
+
+var weather_c = weather_i.getContainer();
+weather_c.getProperties().edit().setBoolean("i.enabled", false).commit();
+
+*/
 
 
 function LLShortcut() {
@@ -83,7 +188,7 @@ function LLShortcut() {
   this.label_color = 0x64ffffff;
   this.font_name   = "";
   this.font_path   = "";
-  this.font_style  = "";
+  this.font_style  = ""; //NORMAL|ITALIC|BOLD|BOLD_ITALIC
   this.icon        = null;
   this.pkg         = "";
   this.pkg_label   = "";
@@ -101,7 +206,7 @@ LLShortcut.prototype.getInfo = function() {
     msg += "lbl cl:  " + this.label_color + "\n";
     msg += "pkg:     " + this.pkg + "\n";
     msg += "pkg lbl: " + this.pkg_label + "\n";
-    
+
     alert(msg);
 }
 
@@ -128,17 +233,18 @@ LLShortcut.prototype.create = function() {this.getAppInfo(); this.makeShortcut()
 //shortcut_make_mod(null,this.name,this.size,this.label,this.pkg_label,this.pkg,this.intent);
 
 LLShortcut.prototype.getAppInfo = function() {
-  if (emptyVariable(this.pkg) && emptyVariable(this.pkg_label)) {showToast("getAppInfo  Error: Not enough data to find the app.", true); return;}
+  //if (emptyVariable(this.pkg) && emptyVariable(this.pkg_label)) {showToast("getAppInfo  Error: Not enough data to find the app.", true); return;}
+  if (emptyVariable(this.pkg) && emptyVariable(this.pkg_label)) {return;}
   if (this.container.getItemByName(this.name) != null) {return;}
   var myIntent = null;
   //var pm = context.getPackageManager();
   if (!emptyVariable(this.pkg)) {
     try {myIntent = pm.getLaunchIntentForPackage(this.pkg);} catch (e) {myIntent = null;}
-  } 
+  }
   if (!emptyVariable(this.pkg_label) && myIntent == null) {
     var labelLow = this.pkg_label.toLowerCase();
     var pkg_name = [];
-    
+
     var intent = new Intent(Intent.ACTION_MAIN);
     intent.addCategory(Intent.CATEGORY_LAUNCHER);
     if (emptyVariable(apps)) {apps = pm.queryIntentActivities(intent, 0);}
@@ -176,15 +282,16 @@ LLShortcut.prototype.makeShortcut = function() {
 
 LLShortcut.prototype.setProperties = function() {
   if (emptyVariable(this.item)) {this.makeShortcut();}
-  if (emptyVariable(this.item)) {showToast("set Prop Error: Unable to find the item.", true); return null;}
+  if (emptyVariable(this.item)) {showToast("set Prop Error: Unable to find the item.", true); return;}
   this.setItemProperties();
-  //this.item.setLabel(this.label, true);
+  if (emptyVariable(this.label)) {this.item.setLabel(this.pkg_label, true);}
   //this.item.setIntent(this.intent);
   this.item.setDefaultIcon(this.icon);
-  
+
   var ed = this.item.getProperties().edit();
   //ed.setBoolean("s.iconVisibility", 	     false);
   ed.setBoolean("s.iconVisibility", 	     true);
+  ed.setBoolean("s.labelVisibility", 	     true);
   ed.setFloat(  "s.labelFontSize",		       this.label_size);
   ed.setString( "s.labelFontStyle",	     "NORMAL");
   ed.setInteger("s.labelFontColor", 	     this.label_color);
@@ -198,21 +305,11 @@ LLShortcut.prototype.setProperties = function() {
 //########################
 //########################
 function LLPanel() {
-  this.item_cnt    = null;
-  this.label       = "";
-  this.label_size  = 20;
-  this.label_color = 0x64ffffff;
-  this.font_name   = "";
-  this.font_path   = "";
-  this.font_style  = "";
-  this.icon        = null;
-  this.pkg         = "";
-  this.pkg_label   = "";
+  this.pcontainer    = null;
 }
 LLPanel.prototype = new LLItem();
-
-LLPanel.prototype.getContainer = function() {return this.item_cnt;}
-LLPanel.prototype.setContainer = function(cnt) {if (!emptyVariable(cnt)) {this.item_cnt = cnt;}}
+LLPanel.prototype.getContainer = function() {return this.pcontainer;}
+//LLPanel.prototype.setContainer = function(cnt) {if (!emptyVariable(cnt)) {this.pcontainer = cnt;}}
 
 LLPanel.prototype.makePanel = function() {
   if (emptyVariable(this.container) || emptyVariable(this.name)) {showToast("makeShortcut Error: No container or name were set."); return;}
@@ -221,7 +318,7 @@ LLPanel.prototype.makePanel = function() {
     this.item = this.container.addPanel(this.position[0], this.position[1], this.size[0], this.size[1]);
     this.item.setName(this.name);
   }
-  if (this.item != null) {this.item_cnt = this.item.getContainer();}
+  if (this.item != null) {this.pcontainer = this.item.getContainer();}
 }
 
 
@@ -297,7 +394,6 @@ save();
 var fb = new LLShortcut(); fb.setContainer(soc.getContainer()); fb.setName("fb_test"); fb.setLabel("FBx"); fb.setPosition(0, 0); fb.setPkgLabel("Facebook"); //fb.setPkg(""); //fb.getInfo();
 fb.setLabelSize(30); fb.create();
 
-//var sc = new LLShortcut(); sc.setName("sc_test"); sc.setLabel("SCx"); sc.setPosition(8, 2); sc.setPkgLabel("Snapchat"); //sc.setPkg(""); //sc.getInfo();
 var sc = new LLShortcut(); sc.setContainer(soc.getContainer()); sc.setName("sc_test"); sc.setLabel("SCx"); sc.setPosition(0, 1); sc.setPkgLabel("Snapchat"); //sc.setPkg(""); //sc.getInfo();
 sc.setLabelSize(20); sc.create();
 
@@ -309,4 +405,120 @@ bindClass("java.lang.System");
 //restart the launcher
 System.runFinalization();
 System.exit(0);
+*/
+
+/*
+function draw_circle(itm){
+	var drawing = {
+		draw: function(context) {
+			var canvas = context.getCanvas();
+			var itm_w = context.getWidth();
+			var itm_h = context.getHeight();
+			var itm_sz = Math.min(itm_w,itm_h);
+			var stk_w=6;
+			var color_end=0x00000000;
+			var color_start=0xFF33B5E5;
+			canvas.save();
+
+			//var tile_mode=Shader.TileMode.MIRROR;
+			//var tile_mode=Shader.TileMode.REPEAT;
+			var tile_mode=Shader.TileMode.CLAMP;
+
+      // create a paint object
+			var p = new Paint(Paint.ANTI_ALIAS_FLAG);
+			p.setStyle(Paint.Style.STROKE);
+			p.setStrokeWidth(stk_w);
+
+			//p.setShader(new LinearGradient(0, 0, 0, itm_sz/2, color_end, color_start, tile_mode));
+			p.setShader(new LinearGradient(0, 0, 0, itm_sz, color_end, color_start, tile_mode));
+
+			canvas.drawCircle(itm_sz/2,itm_sz/2,(itm_sz-stk_w)/2,p);
+
+/*
+//arc code
+
+//p.setShader(new LinearGradient(0, (itm_sz-stk_w)/2, 0, 2*itm_sz/3, color_start, color_end, tile_mode));
+//canvas.drawArc(new RectF(stk_w, itm_h/3,(itm_w-stk_w), itm_h), -180, 180, true, p);
+//canvas.drawOval(new RectF(stk_w, itm_h/2,(itm_w-stk_w), itm_h * 1.5), p);
+
+p.setShader(new LinearGradient(0, (itm_sz-stk_w)*(2/3), 0, itm_sz, color_start, color_end, tile_mode));
+canvas.drawOval(new RectF(stk_w, itm_h *(2/3),(itm_w-stk_w), itm_h *(1+2/3)), p);
+
+//p.setShader(new LinearGradient(0, (itm_sz-stk_w)/2, 0, itm_sz, color_start, color_end, tile_mode));
+//canvas.drawCircle(itm_w/2,itm_sz *1.5,(itm_sz-stk_w),p);
+
+var myvars = LL.getVariables();
+var mytxt = myvars.getString("ll_day_name") + ", " + myvars.getString("ll_month_name") + " " + myvars.getInteger("ll_day");
+//var mytxt = myvars.getString("ll_day_name") + ", " + myvars.getString("ll_month_name") + " " + myvars.getInteger("ll_day") + " " + myvars.getInteger("ll_second");
+//var mytxt = "Wednesday, September 30";
+var myarc = new Path();
+myarc.addArc(new RectF(stk_w, itm_h/6,(itm_w-stk_w), itm_h), -180, 180);
+pt = new Paint(Paint.ANTI_ALIAS_FLAG);
+pt.setStyle(Paint.Style.FILL_AND_STROKE);
+pt.setColor(Color.WHITE);
+pt.setTextSize(68);
+pt.setTextAlign(Paint.Align.CENTER); //LEFT, RIGHT
+pt.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+//canvas.drawTextOnPath(mytxt.toUpperCase(), myarc, 0, itm_h/4, pt);
+canvas.drawTextOnPath(mytxt.toUpperCase(), myarc, 0, itm_h*(7/16), pt);
+
+
+*/
+/*
+			canvas.restore();
+		}
+	};
+
+	var img = LL.createImage(drawing, -1, -1);
+	itm.setBoxBackground(img, "ns", true);
+}
+*/
+/*
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+
+import android.graphics.RectF;
+import android.view.View;
+
+*/
+
+
+
+/*
+facebook         - com.facebook.katana
+messenger         - com.facebook.orca
+google+             - com.google.android.apps.plus
+hangouts         - com.google.android.talk
+instagram         - com.instagram.android
+kakao             - com.kakao.talk
+kik                 - kik.android
+line             - jp.naver.line.android
+oovoo             - com.oovoo
+skype             - com.skype.raider
+snapchat         - com.snapchat.android
+tango             - com.sgiggle.production
+twitter             - com.twitter.android
+whatsapp         - com.whatsapp
+maildroid         - com.maildroid.pro
+gmail             - com.google.android.gm
+
+Business Calendar     - com.appgenix.bizcal
+Contacts +         - com.contapps.android
+
+3C Toolbox         - ccc71.at
+chrome             - com.android.chrome
+F-Stop Media Gallery - com.fstop.photo
+Locus Map         - menion.android.locus.pro
+Maps             - com.google.android.apps.maps
+Sleep as Android - com.urbandroid.sleep
+gentle alarm     - com.mobitobi.android.gentlealarm
+
+
+Popup Widget     - com.ss.popupWidget
+Tasker             - net.dinglisch.android.taskerm
+Zooper Widget     - org.zooper.zwpro
 */
