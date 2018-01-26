@@ -137,11 +137,11 @@ dialogSettings.prototype.setButtonNeutralBgColor = function(num) {if (!emptyVari
 function dialogButtonHandler(button) {
   var msg = "";
   switch (button) {
-    case Dialog.BUTTON_POSITIVE: msg = "positive"; 
+    case Dialog.BUTTON_POSITIVE: msg = "positive";
       break;
-    case Dialog.BUTTON_NEGATIVE: msg = "negative"; 
+    case Dialog.BUTTON_NEGATIVE: msg = "negative";
       break;
-    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";  
+    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";
       break;
   }
   msg = button + " | " + msg + " " + "\n" + "Running again";
@@ -156,7 +156,7 @@ function dialogMenuShow() {
   this.btn_pos_show = false; //this.btn_pos_txt = "OK";
   this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
   this.btn_neu_show = false; //this.btn_neu_txt = "Test";
-  
+
   var dialogExit = false;
   var builder = new AlertDialog.Builder(context);
 
@@ -242,19 +242,19 @@ function dialogMenuShow() {
   if (this.btn_pos_show) {
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neg_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neu_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
 }
@@ -274,135 +274,10 @@ function dialogMenuHandler(position, action){
   }
 }
 
-//
-//####################
-//
-
-function dialogShowAgain(obj) {
-  var diag = obj;
-  diag.show();
-}
-
-function dialogMessage(message) {
-  if (emptyVariable(message)) {message = "";}
-  //this = new dialogSettings();
-  //new dialogSettings();
-  this.item_txt = message;
-  this.show = dialogMessageShow;
-}
-dialogMessage.prototype = new dialogSettings();
-//dialogMessage.prototype.show = function() {
-
-function dialogMessageShow() {
-/*
-function dialogMessageShow(message) {
-  if (emptyVariable(message)) {message = "";}
-  
-  var this.= dialogSettings();
-  this.item_txt = message;
-  this.title_show   = true;  this.title_txt = "Message Dialog";
-  this.btn_pos_show = true;  //this.btn_pos_txt = "OK";
-  this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
-  this.btn_neu_show = false; //this.btn_neu_txt = "Test";
-*/
-  var dialogExit = false;
-  var builder = new AlertDialog.Builder(context);
-
-  if (this.title_show) {
-    var myTVtitle = new TextView(context);
-    myTVtitle.setText(this.title_txt);
-    myTVtitle.setTextColor(this.title_txt_color);
-    myTVtitle.setTextSize(this.title_txt_size);
-    myTVtitle.setBackgroundColor(this.title_bg_color);
-    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
-    //myTVtitle.setBackgroundResource(R.drawable.gradient);
-    builder.setCustomTitle(myTVtitle);
-    //builder.setTitle(this.title_txt);
-  }
-
-  if (this.item_txt != "") {
-    var myTVitem = new TextView(context);
-    myTVitem.setText(this.item_txt);
-    myTVitem.setTextColor(this.item_txt_color);
-    myTVitem.setTextSize(this.item_txt_size);
-    myTVitem.setBackgroundColor(this.item_bg_color);
-    myTVitem.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVitem.setGravity(Gravity.CENTER);
-    //myTVitem.setBackgroundResource(R.drawable.gradient);
-    builder.setView(myTVitem);
-    //builder.setMessage(this.item_txt);
-  }
-
-  if (this.btn_pos_show) {
-    builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  if (this.btn_neg_show) {
-    builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialog.cancel();}
-    });
-  }
-  if (this.btn_neu_show) {
-    builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-    onCancel:function(dialog) {dialogExit = true;}
-  });
-
-  //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-    onDismiss:function(dialog) {
-      //if (dialogExit) {dialogMenuShow();} else {dialogMessageShow(this.item_txt);}
-      if (!dialogExit) {return this.show();} //else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {dialogShowAgain(this);} //else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {dialogMessage(this.item_txt).show();} //else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {msg.show();} //else {dialogMessageShow(this.item_txt);}
-    }
-  });
-
-  var dialog = builder.create();
-  //dialog.setCancelable(true); //dialog.setCancelable(false);
-  //dialog.setCanceledOnTouchOutside(false); //default = true
-
-  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
-
-  var window = dialog.getWindow();
-  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
-  //window.setGravity(Gravity.FILL_VERTICAL); //window.setGravity(Gravity.CENTER);
-
-  dialog.show();
-  
-  myTVitem.getLayoutParams().setMargins(20, 20, 20, 20);
-  
-  var btn;
-  if (this.btn_pos_show) {
-    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
-    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neg_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neu_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
-    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-}
-
 
 function dialogListShow(items){
   if (emptyVariable(items)) {return null;}
-  
+
   //var this.= dialogSettings();
   this.item_txt = items;
   this.title_show   = true;  this.title_txt = "List Dialog";
@@ -489,7 +364,7 @@ function dialogListShow(items){
   //lv.setHeaderDividersEnabled(false);
   //lv.setFooterDividersEnabled(false);
   //lv.setCacheColorHint(0xaa00aa00);
-  
+
   dialog.show();
 
   lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
@@ -498,19 +373,19 @@ function dialogListShow(items){
   if (this.btn_pos_show) {
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neg_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neu_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
 }
@@ -519,7 +394,7 @@ function dialogListShow(items){
 function dialogCheckboxShow(items, itemsState) {
   if (emptyVariable(items)) {return;}
   if (emptyVariable(itemsState)) {itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);}}
-  
+
   //var this.= dialogSettings();
   this.item_txt = items;
   this.title_show   = true;  this.title_txt = "Select The Difficulty Level - Checkbox";
@@ -535,7 +410,7 @@ function dialogCheckboxShow(items, itemsState) {
 
   var dialogExit = false;
   var builder = new AlertDialog.Builder(context);
-  
+
   if (this.title_show) {
     var myTVtitle = new TextView(context);
     myTVtitle.setText(this.title_txt);
@@ -548,7 +423,7 @@ function dialogCheckboxShow(items, itemsState) {
     builder.setCustomTitle(myTVtitle);
     //builder.setTitle(this.title_txt);
   }
-  
+
   var adapter = new JavaAdapter(ArrayAdapter, {
     getView:function(position, convertView, parent) {
       var view = this.super$getView(position, convertView, parent);
@@ -633,7 +508,7 @@ function dialogCheckboxShow(items, itemsState) {
       //view is a checkedTextView
     }
   });
-  
+
   dialog.show();
 
   lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
@@ -644,19 +519,19 @@ function dialogCheckboxShow(items, itemsState) {
   if (this.btn_pos_show) {
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neg_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neu_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10); 
+    //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
 }
@@ -665,7 +540,7 @@ function dialogCheckboxShow(items, itemsState) {
 function dialogTextInputShow(message, text){
   if (emptyVariable(message)) {message = "";}
   if (emptyVariable(text)) {text = "";}
-  
+
   //var this.= dialogSettings();
   this.item_txt = message;
   this.title_show   = true;  this.title_txt = "Input Text Dialog";
@@ -806,7 +681,7 @@ function dialogTextInputShow(message, text){
   var window = dialog.getWindow();
   window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
   //window.setGravity(Gravity.FILL_VERTICAL);//window.setGravity(Gravity.CENTER);
-  
+
   dialog.show();
 
   myLL.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
@@ -815,19 +690,19 @@ function dialogTextInputShow(message, text){
   if (this.btn_pos_show) {
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 0, 10, 0); 
+    //btn.setPadding(10, 0, 10, 0);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neg_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 0, 10, 0); 
+    //btn.setPadding(10, 0, 10, 0);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
   if (this.btn_neu_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 0, 10, 0); 
+    //btn.setPadding(10, 0, 10, 0);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
   }
 }
@@ -851,35 +726,136 @@ if (typeof progress !== 'undefined') {progress.dismiss();}
 
 //setTimeout(dialogListShow(),0);//shows the list again. On a timeout so the startActivity() is correctly launched before
 
-/*
-function setCursorDrawableColor(editText, color){
-  try {
-    //var fCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
-    var fCursorDrawableRes = TextView.getDeclaredField("mCursorDrawableRes");
-    //var fCursorDrawableRes = TextView.getClass().getDeclaredField("mCursorDrawableRes");
-    //var fCursorDrawableRes = editText.getClass().getDeclaredField("mCursorDrawableRes");
-    //var fCursorDrawableRes = editText.getClass().getDeclaredFielthis.);
-    //alert(fCursorDrawableRes.toString());
-    fCursorDrawableRes.setAccessible(true);
-    var mCursorDrawableRes = fCursorDrawableRes.getInt(editText);
-    //var fEditor = TextView.class.getDeclaredField("mEditor");
-    //var fEditor = TextView.getClass().getDeclaredField("mEditor");
-    var fEditor = editText.getClass().getDeclaredField("mEditor");
-    fEditor.setAccessible(true);
-    var editor = fEditor.get(editText);
-    var clazz = editor.getClass();
-    var fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
-    fCursorDrawable.setAccessible(true);
-    var drawables = new Drawable[2];
-    drawables[0] = editText.getContext().getResources().getDrawable(mCursorDrawableRes);
-    drawables[1] = editText.getContext().getResources().getDrawable(mCursorDrawableRes);
-    drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-    drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-    fCursorDrawable.set(editor, drawables);
-  } catch (ignored) {Android.makeNewToast(ignored,true).show();alert(ignored.toString());}
+
+//
+//####################
+//
+
+function dialogShowAgain(obj) {
+  var diag = obj;
+  diag.show();
 }
+
+function dialogMessage(message) {
+  if (emptyVariable(message)) {message = "";}
+  //this = new dialogSettings();
+  //new dialogSettings();
+  this.item_txt = message;
+  this.show = dialogMessageShow;
+}
+dialogMessage.prototype = new dialogSettings();
+//dialogMessage.prototype.show = function() {
+
+function dialogMessageShow() {
+/*
+function dialogMessageShow(message) {
+  if (emptyVariable(message)) {message = "";}
+
+  var this.= dialogSettings();
+  this.item_txt = message;
+  this.title_show   = true;  this.title_txt = "Message Dialog";
+  this.btn_pos_show = true;  //this.btn_pos_txt = "OK";
+  this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
+  this.btn_neu_show = false; //this.btn_neu_txt = "Test";
 */
+  var dialogExit = false;
+  var builder = new AlertDialog.Builder(context);
+
+  if (this.title_show) {
+    var myTVtitle = new TextView(context);
+    myTVtitle.setText(this.title_txt);
+    myTVtitle.setTextColor(this.title_txt_color);
+    myTVtitle.setTextSize(this.title_txt_size);
+    myTVtitle.setBackgroundColor(this.title_bg_color);
+    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+    myTVtitle.setGravity(Gravity.CENTER);
+    //myTVtitle.setBackgroundResource(R.drawable.gradient);
+    builder.setCustomTitle(myTVtitle);
+    //builder.setTitle(this.title_txt);
+  }
+
+  if (this.item_txt != "") {
+    var myTVitem = new TextView(context);
+    myTVitem.setText(this.item_txt);
+    myTVitem.setTextColor(this.item_txt_color);
+    myTVitem.setTextSize(this.item_txt_size);
+    myTVitem.setBackgroundColor(this.item_bg_color);
+    myTVitem.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+    myTVitem.setGravity(Gravity.CENTER);
+    //myTVitem.setBackgroundResource(R.drawable.gradient);
+    builder.setView(myTVitem);
+    //builder.setMessage(this.item_txt);
+  }
+
+  if (this.btn_pos_show) {
+    builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {
+      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
+    });
+  }
+  if (this.btn_neg_show) {
+    builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {
+      onClick:function(dialog, buttonId) {dialog.cancel();}
+    });
+  }
+  if (this.btn_neu_show) {
+    builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {
+      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
+    });
+  }
+  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+    onCancel:function(dialog) {dialogExit = true;}
+  });
+
+  //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+    onDismiss:function(dialog) {
+      //if (dialogExit) {dialogMenuShow();} else {dialogMessageShow(this.item_txt);}
+      //if (!dialogExit) {return this.show();} //else {dialogMessageShow(this.item_txt);}
+      //if (!dialogExit) {dialogShowAgain(this);} //else {dialogMessageShow(this.item_txt);}
+      //if (!dialogExit) {dialogMessage(this.item_txt).show();} //else {dialogMessageShow(this.item_txt);}
+      //if (!dialogExit) {msg.show();} //else {dialogMessageShow(this.item_txt);}
+      if (!dialogExit) {setTimeout(this.show(), 10);} //else {dialogMessageShow(this.item_txt);}
+    }
+  });
+
+  var dialog = builder.create();
+  //dialog.setCancelable(true); //dialog.setCancelable(false);
+  //dialog.setCanceledOnTouchOutside(false); //default = true
+
+  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
+
+  var window = dialog.getWindow();
+  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
+  //window.setGravity(Gravity.FILL_VERTICAL); //window.setGravity(Gravity.CENTER);
+
+  dialog.show();
+
+  myTVitem.getLayoutParams().setMargins(20, 20, 20, 20);
+
+  var btn;
+  if (this.btn_pos_show) {
+    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
+    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
+    //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+  }
+  if (this.btn_neg_show) {
+    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
+    //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+  }
+  if (this.btn_neu_show) {
+    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
+    //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+  }
+}
+
+
+
+
 
 //var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
 var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.show();
-
