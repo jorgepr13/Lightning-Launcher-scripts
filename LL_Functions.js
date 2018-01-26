@@ -32,6 +32,19 @@ container class
 shortcut class
 panel class
 folder class
+
+find item
+  check by id, by name, provide feedback
+  recursive
+  used before creating the item
+  used for the badges
+
+create my clases based on the shortcut but with my defauts, 
+only aplying what I'm going to change
+
+discard the imsges upon applying them, to free up the memory
+clear image func
+the image can be obtained and applied to another item
 */
 
 /* //colors
@@ -73,31 +86,39 @@ LLItem.prototype.setItemProperties = function() {
 /*
 
 //item
-var ed=itm.getProperties().edit();
-ed.setBoolean("s.iconVisibility",false);
-ed.setBoolean("s.labelVisibility",true);
-ed.setFloat("s.labelFontSize",f_sz);
-ed.setBoolean("i.enabled",false);
-//itm.getProperties().edit().setString("s.labelFontTypeFace", "font_path").commit();
-ed.setString("s.labelFontStyle","BOLD"); //NORMAL|ITALIC|BOLD|BOLD_ITALIC
-//ed.setInteger("s.labelFontColor",		0x64ffffff);
-//ed.setInteger("s.selectionColorLabel",	0xffffffff);
-//ed.setInteger("s.focusColorLabel",		0xffffffff);
-//ed.setInteger("s.labelMaxLines",2);
-ed.setBoolean("i.enabled",true);
-ed.setEventHandler("i.tap",		EventHandler.RUN_SCRIPT,my_script.getId());
-//ed.setEventHandler("i.resumed",	EventHandler.RUN_SCRIPT,my_script.getId());
-//ed.setEventHandler("i.paused",	EventHandler.RUN_SCRIPT,my_script.getId());
-ed.setEventHandler("i.longTap",	EventHandler.RUN_SCRIPT,my_script.getId()+"/long");
-/itm.setBinding("s.label",'$weather_day_name_f0',true);
+itm.setBinding("s.label",'$weather_day_name_f0',true);
 itm.setBinding("s.label",'var wx_str = $weather;\n' + 'var wx = JSON.parse(wx_str);\n' + 'var wx_fc = wx.fc[' + '0' + '];\n' + 'return wx_fc.date.day;', true);
 
-var box=ed.getBox("i.box");
-box.setAlignment(al_x,al_y);
+var ed=itm.getProperties().edit();
+ed.setBoolean("i.enabled",false);
+ed.setEventHandler("i.tap",		EventHandler.RUN_SCRIPT,my_script.getId());
+ed.setEventHandler("i.resumed",	EventHandler.RUN_SCRIPT,my_script.getId());
+ed.setEventHandler("i.paused",	EventHandler.RUN_SCRIPT,my_script.getId());
+ed.setEventHandler("i.longTap",	EventHandler.RUN_SCRIPT,my_script.getId()+"/long");
+
+ed.setBoolean("i.onGrid", false);
+var box = ed.getBox("i.box");
+box.setSize("bl,br,bt,bb",0); //border: left,right,top,bottom
+box.setSize("pl,pr,pt,pb,ml,mr,mt,mb",0); //padding, margin
+box.setAlignment("CENTER","MIDDLE");//h: LEFT,CENTER,RIGHT | v: TOP,MIDDLE,BOTTOM
+box.setColor("bt,bl,br,bb","ns",0x00000000);
 ed.commit();
-//setAlignment(String h,String v)
-//h: LEFT,CENTER,RIGHT
-//v: TOP,MIDDLE,BOTTOM
+
+
+
+
+
+ed.setBoolean("s.iconVisibility",false);
+ed.setBoolean("s.labelVisibility",true);
+ed.setFloat(  "s.labelFontSize",f_sz);
+ed.setString( "s.labelFontTypeFace", "font_path");
+ed.setString( "s.labelFontStyle","BOLD"); //NORMAL|ITALIC|BOLD|BOLD_ITALIC
+ed.setInteger("s.labelFontColor",		0x64ffffff);
+ed.setInteger("s.selectionColorLabel",	0xffffffff);
+ed.setInteger("s.focusColorLabel",		0xffffffff);
+ed.setInteger("s.labelMaxLines",2);
+
+
 
 
 //panel
@@ -112,7 +133,7 @@ ed.commit();
 
 var ed=itm.getProperties().edit();
 var box=ed.getBox("i.box");
-box.setColor("bt,bl,br,bb","ns",0x00000000);
+
 //box.setColor("bl,br,bb","ns",0xff33b5e5);
 box.setSize("bt",10);
 box.setSize("bl,br,bb",10);
@@ -126,9 +147,9 @@ var fol_c = fol_i.getContainer();
 set_panel_defaults(fol_i,3,5);
 var ed = fol_i.getProperties().edit();
 ed.setBoolean("s.iconVisibility",false);
+
 ed.setInteger("f.wW",Math.min(event_c.getWidth(),event_c.getCellHeight()*4));
-ed.setInteger("f.wH",event_c.getCellHeight()*4);
-//ed.setInteger("f.wH",Math.max(event_c.getWidth(),event_c.getCellHeight()*4));
+ed.setInteger("f.wH",event_c.getCellHeight()*4); //ed.setInteger("f.wH",Math.max(event_c.getWidth(),event_c.getCellHeight()*4));
 ed.setString("f.wAH","CENTER");	//LEFT|*CENTER*|RIGHT|CUSTOM  //Horizontal alignment
 ed.setString("f.wAV","TOP");	//TOP|*CENTER*|BOTTOM|CUSTOM //Vertical alignment
 ed.setBoolean("f.titleVisibility",true);
@@ -157,6 +178,7 @@ var cnt = itm.getContainer();
 cnt.getProperties().edit().setString("gridPColumnMode","SIZE").setString("gridPRowMode","SIZE").commit();
 cnt.getProperties().edit().setInteger("gridPColumnSize",w).setInteger("gridPRowSize",w).commit();
 //cnt.getProperties().edit().setInteger("gridPColumnNum", 1).setInteger("gridPRowNum", 5).commit();
+fol_c.getProperties().edit().setInteger("bgColor",0xFF000000).commit();
 
 var itm_c=itm.getContainer();
 var ed=itm_c.getProperties().edit();
@@ -177,6 +199,61 @@ ed.commit();
 
 var weather_c = weather_i.getContainer();
 weather_c.getProperties().edit().setBoolean("i.enabled", false).commit();
+
+
+
+Container properties:
+Name	Type	Access	Admissible values
+newOnGrid",         true      	boolean 	Read/Write	true/false
+allowDualPosition", false     	boolean	Read/Write	true/false
+gridPColumnMode",   "AUTO"    	string	Read/Write	AUTO|NUM|SIZE
+gridPColumnNum",    1         	int	Read/Write	>0
+gridPColumnSize",   1         	int	Read/Write	>0
+gridPRowMode",      "AUTO"    	string	Read/Write	AUTO|NUM|SIZE
+gridPRowNum",       1         	int	Read/Write	>0
+gridPRowSize",      1         	int	Read/Write	>0
+gridLColumnMode",   ""        	string	Read/Write	AUTO|NUM|SIZE
+gridLColumnNum",    1         	int	Read/Write	>0
+gridLColumnSize",   1         	int	Read/Write	>0
+gridLRowMode",      ""        	string	Read/Write	AUTO|NUM|SIZE
+gridLRowNum",                 	int	Read/Write	>0
+gridLRowSize",                	int	Read/Write	>0
+gridPL",                      	boolean	Read/Write	true/false
+gridLayoutModeHorizontalLineColor",       	int	Read/Write	argb color
+gridLayoutModeHorizontalLineThickness",   	float	Read/Write	>=0
+gridLayoutModeVerticalLineColor",         	int	Read/Write	argb color
+gridLayoutModeVerticalLineThickness",     	float	Read/Write	>=0
+gridAbove",                   	boolean	Read/Write	true/false
+bgSystemWPScroll",            	boolean	Read/Write	true/false
+bgSystemWPWidth",             	int	Read/Write	>0
+bgSystemWPHeight",            	int	Read/Write	>0
+bgColor",                     	int	Read/Write	argb color
+statusBarHide",               	boolean	Read/Write	true/false
+statusBarColor",              	int	Read/Write	argb color
+navigationBarColor",          	int	Read/Write	argb color
+statusBarOverlap",            	boolean	Read/Write	true/false
+navigationBarOverlap",        	boolean	Read/Write	true/false
+screenOrientation", ""        	string	Read/Write	AUTO|PORTRAIT|LANDSCAPE|SYSTEM
+scrollingDirection", ""       	string	Read/Write	AUTO|X|Y|XY|NONE
+overScrollMode", ""           	string	Read/Write	DECELERATE|BOUNCE|NONE
+noDiagonalScrolling",         	boolean	Read/Write	true/false
+pinchZoomEnable",             	boolean	Read/Write	true/false
+snapToPages",                 	boolean	Read/Write	true/false
+fitDesktopToItems",           	boolean	Read/Write	true/false
+autoExit",                    	boolean	Read/Write	true/false
+rearrangeItems",              	boolean	Read/Write	true/false
+swapItems",                   	boolean	Read/Write	true/false
+freeModeSnap",                	string	Read/Write	NONE|CENTER|EDGE|CENTER_EDGE
+useDesktopSize",              	boolean	Read/Write	true/false
+noScrollLimit",               	boolean	Read/Write	true/false
+wrapX",                       	boolean	Read/Write	true/false
+wrapY",                       	boolean	Read/Write	true/false
+iconPack", ""                 	string	Read/Write	package name or null (see applyIconPack(boolean))
+lwpStdEvents",                	boolean	Read/Write	true/false
+
+
+
+
 
 */
 
@@ -286,17 +363,18 @@ LLShortcut.prototype.setProperties = function() {
   this.setItemProperties();
   if (emptyVariable(this.label)) {this.item.setLabel(this.pkg_label, true);}
   //this.item.setIntent(this.intent);
-  this.item.setDefaultIcon(this.icon);
+  //this.item.setDefaultIcon(this.icon);
 
   var ed = this.item.getProperties().edit();
   //ed.setBoolean("s.iconVisibility", 	     false);
-  ed.setBoolean("s.iconVisibility", 	     true);
-  ed.setBoolean("s.labelVisibility", 	     true);
-  ed.setFloat(  "s.labelFontSize",		       this.label_size);
-  ed.setString( "s.labelFontStyle",	     "NORMAL");
-  ed.setInteger("s.labelFontColor", 	     this.label_color);
-  ed.setInteger("s.selectionColorLabel", 	this.label_color);
-  ed.setInteger("s.focusColorLabel", 	    this.label_color);
+  ed.setBoolean("s.iconVisibility",       true);
+  ed.setBoolean("s.labelVisibility",      true);
+  ed.setFloat(  "s.labelFontSize",	        this.label_size);
+  ed.setString( "s.labelFontStyle",      "NORMAL");
+  //ed.setString("s.labelFontTypeFace", "font_path");
+  ed.setInteger("s.labelFontColor",       this.label_color);
+  ed.setInteger("s.selectionColorLabel",  this.label_color);
+  ed.setInteger("s.focusColorLabel",      this.label_color);
   ed.commit();
 }
 
@@ -386,16 +464,16 @@ Returns the container containing this item.
 
 
 
-var soc = new LLPanel(); soc.setName("social_test"); soc.setPosition(7, 2); soc.setSize(2, 2); soc.makePanel(); soc.setItemProperties();
+//var soc = new LLPanel(); soc.setName("social_test"); soc.setPosition(7, 2); soc.setSize(2, 2); soc.makePanel(); soc.setItemProperties();
 //soc.create();
-save();
+//save();
 
-//var fb = new LLShortcut(); fb.setName("fb_test"); fb.setLabel("FBx"); fb.setPosition(7, 2); fb.setPkgLabel("Facebook"); //fb.setPkg(""); //fb.getInfo();
-var fb = new LLShortcut(); fb.setContainer(soc.getContainer()); fb.setName("fb_test"); fb.setLabel("FBx"); fb.setPosition(0, 0); fb.setPkgLabel("Facebook"); //fb.setPkg(""); //fb.getInfo();
-fb.setLabelSize(30); fb.create();
+var fb = new LLShortcut(); fb.setName("fb_test"); fb.setLabel("FBx"); fb.setPosition(7, 2); fb.setPkgLabel("Facebook"); //fb.setPkg(""); //fb.getInfo();
+//var fb = new LLShortcut(); fb.setContainer(soc.getContainer()); fb.setName("fb_test"); fb.setLabel("FBx"); fb.setPosition(0, 0); fb.setPkgLabel("Facebook"); //fb.setPkg(""); //fb.getInfo();
+fb.setLabelSize(30); fb.setProperties();//fb.create();
 
-var sc = new LLShortcut(); sc.setContainer(soc.getContainer()); sc.setName("sc_test"); sc.setLabel("SCx"); sc.setPosition(0, 1); sc.setPkgLabel("Snapchat"); //sc.setPkg(""); //sc.getInfo();
-sc.setLabelSize(20); sc.create();
+//var sc = new LLShortcut(); sc.setContainer(soc.getContainer()); sc.setName("sc_test"); sc.setLabel("SCx"); sc.setPosition(0, 1); sc.setPkgLabel("Snapchat"); //sc.setPkg(""); //sc.getInfo();
+//sc.setLabelSize(20); sc.create();
 
 
 
@@ -426,8 +504,10 @@ function draw_circle(itm){
 
       // create a paint object
 			var p = new Paint(Paint.ANTI_ALIAS_FLAG);
-			p.setStyle(Paint.Style.STROKE);
+			p.setStyle(Paint.Style.STROKE); //FILL (default), FILL_AND_STROKE. STROKE
 			p.setStrokeWidth(stk_w);
+
+
 
 			//p.setShader(new LinearGradient(0, 0, 0, itm_sz/2, color_end, color_start, tile_mode));
 			p.setShader(new LinearGradient(0, 0, 0, itm_sz, color_end, color_start, tile_mode));
@@ -453,7 +533,7 @@ var mytxt = myvars.getString("ll_day_name") + ", " + myvars.getString("ll_month_
 //var mytxt = "Wednesday, September 30";
 var myarc = new Path();
 myarc.addArc(new RectF(stk_w, itm_h/6,(itm_w-stk_w), itm_h), -180, 180);
-pt = new Paint(Paint.ANTI_ALIAS_FLAG);
+var pt = new Paint(Paint.ANTI_ALIAS_FLAG);
 pt.setStyle(Paint.Style.FILL_AND_STROKE);
 pt.setColor(Color.WHITE);
 pt.setTextSize(68);

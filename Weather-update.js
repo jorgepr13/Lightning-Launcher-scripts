@@ -1,3 +1,6 @@
+/*
+need support for multiple locations, providers
+*/
 var refresh_interval = 20 * 60000; //ms, = min * 60s * 1000ms
 var weather_api_key = "e000fb1333b830be";
 //var weather_loc = "47.0332559,-122.7967021";
