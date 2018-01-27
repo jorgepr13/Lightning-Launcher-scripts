@@ -34,6 +34,14 @@ function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[
 function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
 function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
 
+//bind the classes
+bindClass("android.content.IntentFilter");
+bindClass("android.content.BroadcastReceiver");
+//bindClass("android.support.v4.content.LocalBroadcastManager");
+//https://stackoverflow.com/questions/8802157/how-to-use-localbroadcastmanager
+
+
+
 
 var myItems = ["Easy","Medium","Hard","Very Hard"];
 
@@ -45,6 +53,19 @@ var myItems = ["Easy","Medium","Hard","Very Hard"];
 
 //var dialog = new AlertDialog.Builder(context).setMessage("Hello world").show();
 
+
+var dialogIntent = "custom-event-name"; var dialogDataKey = "data"; var dialogExitKey = "exit";
+function dialogDataCallback(txt) {
+  if (emptyVariable(txt)) {return;}
+  var i = new Intent(dialogIntent); i.putExtra(dialogDataKey, txt.toString());
+  context.sendBroadcast(i);
+  //LocalBroadcastManager.context.sendBroadcast(i);
+}
+function dialogExitCallback() {
+  var i = new Intent(dialogIntent); i.putExtra(dialogExitKey, "true");
+  context.sendBroadcast(i);
+  //LocalBroadcastManager.context.sendBroadcast(i);
+}
 function dialogSettings() {
   //main
   this.ac_color  = 0xff2233ff;
@@ -52,6 +73,7 @@ function dialogSettings() {
   this.bg_itm_color = 0x88333333;
   this.txt_color = 0xddffffff;
   this.txt_size  = 18;
+  this.exit_on_click  = false;
   //title
   this.title_show      = true;
   this.title_txt       = "Title";
@@ -68,18 +90,21 @@ function dialogSettings() {
   this.item_hnt_color = 0x55ffffff;
   //buttons
   this.btn_pos_show      = true;
+  this.btn_pos_exit      = this.exit_on_click;
   this.btn_pos_txt       = "OK";
   this.btn_pos_txt_size  = this.txt_size - 6;
   this.btn_pos_txt_color = this.txt_color;
   this.btn_pos_bg_color  = this.bg_itm_color;
 
   this.btn_neg_show      = true;
+  this.btn_neg_exit      = true;
   this.btn_neg_txt       = "Close";
   this.btn_neg_txt_size  = this.txt_size - 6;
   this.btn_neg_txt_color = this.txt_color;
   this.btn_neg_bg_color  = this.bg_itm_color;
 
   this.btn_neu_show      = true;
+  this.btn_neu_exit      = this.exit_on_click;
   this.btn_neu_txt       = "Test";
   this.btn_neu_txt_size  = this.txt_size - 6;
   this.btn_neu_txt_color = this.txt_color;
@@ -91,6 +116,8 @@ dialogSettings.prototype.setColorBgDialog = function(num) {if (!emptyVariable(nu
 dialogSettings.prototype.setColorBgItem = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_itm_color = num;}}
 dialogSettings.prototype.setColorText = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.txt_color = num;}}
 dialogSettings.prototype.setSizeText = function(num) {if (!emptyVariable(num) && !isNaN(num) && num > 0) {this.txt_size = num;}}
+dialogSettings.prototype.exitOnClick = function() {this.exit_on_click = true;}
+dialogSettings.prototype.stayOnClick = function() {this.exit_on_click = false;}
 
 dialogSettings.prototype.showTitle = function() {this.title_show = true;}
 dialogSettings.prototype.hideTitle = function() {this.title_show = false;}
@@ -109,6 +136,8 @@ dialogSettings.prototype.setItemHintColor = function(num) {if (!emptyVariable(nu
 
 dialogSettings.prototype.showButtonPositive = function() {this.btn_pos_show = true;}
 dialogSettings.prototype.hideButtonPositive = function() {this.btn_pos_show = false;}
+dialogSettings.prototype.exitOnClickButtonPositive = function() {this.btn_pos_exit = true;}
+dialogSettings.prototype.stayOnClickButtonPositive = function() {this.btn_pos_exit = false;}
 dialogSettings.prototype.setButtonPositiveText = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.btn_pos_txt = txt;}}
 dialogSettings.prototype.setButtonPositiveTextSize = function(num) {if (!emptyVariable(num) && !isNaN(num) && num > 0) {this.btn_pos_txt_size = num;}}
 dialogSettings.prototype.setButtonPositiveTextColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_pos_txt_color = num;}}
@@ -116,6 +145,8 @@ dialogSettings.prototype.setButtonPositiveBgColor = function(num) {if (!emptyVar
 
 dialogSettings.prototype.showButtonNegative = function() {this.btn_neg_show = true;}
 dialogSettings.prototype.hideButtonNegative = function() {this.btn_neg_show = false;}
+dialogSettings.prototype.exitOnClickButtonNegative = function() {this.btn_neg_exit = true;}
+dialogSettings.prototype.stayOnClickButtonNegative = function() {this.btn_neg_exit = false;}
 dialogSettings.prototype.setButtonNegativeText = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.btn_pos_txt = txt;}}
 dialogSettings.prototype.setButtonNegativeTextSize = function(num) {if (!emptyVariable(num) && !isNaN(num) && num > 0) {this.btn_neg_txt_size = num;}}
 dialogSettings.prototype.setButtonNegativeTextColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_neg_txt_color = num;}}
@@ -123,10 +154,174 @@ dialogSettings.prototype.setButtonNegativeBgColor = function(num) {if (!emptyVar
 
 dialogSettings.prototype.showButtonNeutral = function() {this.btn_neu_show = true;}
 dialogSettings.prototype.hideButtonNeutral = function() {this.btn_neu_show = false;}
+dialogSettings.prototype.exitOnClickButtonNeutral = function() {this.btn_neu_exit = true;}
+dialogSettings.prototype.stayOnClickButtonNeutral = function() {this.btn_neu_exit = false;}
 dialogSettings.prototype.setButtonNeutralText = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.btn_neu_txt = txt;}}
 dialogSettings.prototype.setButtonNeutralTextSize = function(num) {if (!emptyVariable(num) && !isNaN(num) && num > 0) {this.btn_neu_txt_size = num;}}
 dialogSettings.prototype.setButtonNeutralTextColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_pos_neu_color = num;}}
 dialogSettings.prototype.setButtonNeutralBgColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_neu_bg_color = num;}}
+
+
+
+
+//
+//####################
+//
+
+
+function dialogMessage(message) {
+  if (emptyVariable(message)) {message = "";}
+  this.item_txt = message;
+  this.btn_pos_txt = "Yes";
+  this.btn_neg_txt = "No";
+  this.btn_neu_txt = "Maybe";
+  this.btn_callback = dialogMsgButtonHandler;
+}
+dialogMessage.prototype = new dialogSettings();
+
+dialogMessage.prototype.receiver = function() {
+  var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
+      var e = i.getExtras();
+      if (e.containsKey(dialogDataKey)) {var value = e.get(dialogDataKey); showToast("receiver: " + value); this.btn_callback(value);}
+      if (e.containsKey(dialogExitKey)) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}}
+  }});
+  context.registerReceiver(receiver, new IntentFilter(dialogIntent));
+  //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
+}
+dialogMessage.prototype.show = function() {
+  var builder = new AlertDialog.Builder(context);
+
+  if (this.title_show) {
+    var myTVtitle = new TextView(context);
+    myTVtitle.setText(this.title_txt);
+    myTVtitle.setTextColor(this.title_txt_color);
+    myTVtitle.setTextSize(this.title_txt_size);
+    myTVtitle.setBackgroundColor(this.title_bg_color);
+    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+    myTVtitle.setGravity(Gravity.CENTER);
+    //myTVtitle.setBackgroundResource(R.drawable.gradient);
+    builder.setCustomTitle(myTVtitle);
+    //builder.setTitle(this.title_txt);
+  }
+
+  if (this.item_txt != "") {
+    var myTVitem = new TextView(context);
+    myTVitem.setText(this.item_txt);
+    myTVitem.setTextColor(this.item_txt_color);
+    myTVitem.setTextSize(this.item_txt_size);
+    myTVitem.setBackgroundColor(this.item_bg_color);
+    myTVitem.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+    myTVitem.setGravity(Gravity.CENTER);
+    //myTVitem.setBackgroundResource(R.drawable.gradient);
+    builder.setView(myTVitem);
+    //builder.setMessage(this.item_txt);
+  }
+
+  //builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}});
+  //builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}});
+  //builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}})
+  if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
+  if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
+  if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
+/*
+  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {
+    dialogExit = true; dialogMessageExit = true;
+  }});
+*/
+  //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {dialogExitCallback(true);}});
+
+  var dialog = builder.create();
+  //dialog.setCancelable(false); //default = true
+  //dialog.setCanceledOnTouchOutside(false); //default = true
+
+  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
+
+  var window = dialog.getWindow();
+  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
+  //window.setGravity(Gravity.FILL_VERTICAL);
+
+  dialog.show();
+
+  myTVitem.getLayoutParams().setMargins(20, 20, 20, 20);
+
+  var btn;
+  if (this.btn_pos_show) {
+    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
+    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
+    //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_pos_exit) {dialog.cancel();}
+      dialogDataCallback("Pos");
+    }});
+  }
+  if (this.btn_neg_show) {
+    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
+    //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_neg_exit) {dialog.cancel();}
+      //this.btn_callback(Dialog.BUTTON_NEGATIVE);
+      dialogDataCallback("neg");
+    }});
+  }
+  if (this.btn_neu_show) {
+    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
+    //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_neu_exit) {dialog.cancel();}
+      showToast("neu: \n" + view.getId() + "\n" + Dialog.BUTTON_NEUTRAL, true);
+      //dialogButtonHandler(Dialog.BUTTON_NEUTRAL);
+      dialogDataCallback(Dialog.BUTTON_NEUTRAL);
+    }});
+  }
+}
+
+
+function dialogMsgButtonHandler(button) {
+  showToast("my handler" + button);
+  var msg = "";
+  switch (button) {
+    case Dialog.BUTTON_POSITIVE: msg = "positive";
+      break;
+    case Dialog.BUTTON_NEGATIVE: msg = "negative";
+      break;
+    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";
+      break;
+  }
+  msg = button + " | " + msg + " " + "\n" + "Running again";
+  showToast(msg);
+}
+
+
+//
+//############################################
+//
+
+
+//var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
+//var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.show();
+var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.show();
+
+
+
+//try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -725,218 +920,3 @@ if (typeof progress !== 'undefined') {progress.dismiss();}
 
 
 //setTimeout(dialogListShow(),0);//shows the list again. On a timeout so the startActivity() is correctly launched before
-
-
-//
-//####################
-//
-
-
-function dialogMessage(message) {
-  if (emptyVariable(message)) {message = "";}
-  this.item_txt = message;
-  this.btn_pos_txt = "Yes";
-  this.btn_neg_txt = "No";
-  this.btn_neu_txt = "Maybe";
-  this.btn_callback = dialogMsgButtonHandler;
-}
-dialogMessage.prototype = new dialogSettings();
-
-dialogMessage.prototype.show = function() {
-  var builder = new AlertDialog.Builder(context);
-
-  if (this.title_show) {
-    var myTVtitle = new TextView(context);
-    myTVtitle.setText(this.title_txt);
-    myTVtitle.setTextColor(this.title_txt_color);
-    myTVtitle.setTextSize(this.title_txt_size);
-    myTVtitle.setBackgroundColor(this.title_bg_color);
-    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
-    //myTVtitle.setBackgroundResource(R.drawable.gradient);
-    builder.setCustomTitle(myTVtitle);
-    //builder.setTitle(this.title_txt);
-  }
-
-  if (this.item_txt != "") {
-    var myTVitem = new TextView(context);
-    myTVitem.setText(this.item_txt);
-    myTVitem.setTextColor(this.item_txt_color);
-    myTVitem.setTextSize(this.item_txt_size);
-    myTVitem.setBackgroundColor(this.item_bg_color);
-    myTVitem.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVitem.setGravity(Gravity.CENTER);
-    //myTVitem.setBackgroundResource(R.drawable.gradient);
-    builder.setView(myTVitem);
-    //builder.setMessage(this.item_txt);
-  }
-
-  //builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}});
-  //builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}});
-  //builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}})
-  if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
-  if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
-  if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
-/*
-  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {
-    dialogExit = true; dialogMessageExit = true;
-  }});
-
-  //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {
-      //if (dialogExit) {dialogMenuShow();} else {dialogMessageShow(this.item_txt);}
-  }});
-*/
-  var dialog = builder.create();
-  //dialog.setCancelable(false); //default = true
-  //dialog.setCanceledOnTouchOutside(false); //default = true
-
-  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
-
-  var window = dialog.getWindow();
-  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
-  //window.setGravity(Gravity.FILL_VERTICAL); //window.setGravity(Gravity.CENTER);
-
-  dialog.show();
-
-  myTVitem.getLayoutParams().setMargins(20, 20, 20, 20);
-
-  var btn;
-  if (this.btn_pos_show) {
-    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
-    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {
-      showToast("Pos"); this.btn_callback(Dialog.BUTTON_POSITIVE);
-    }});
-  }
-  if (this.btn_neg_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {
-      //this.btn_callback(Dialog.BUTTON_NEGATIVE);
-      showToast("neg"); dialog.cancel(); 
-    }});
-  }
-  if (this.btn_neu_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
-    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {
-      showToast("neu: \n" + view.getId() + "\n" + Dialog.BUTTON_NEUTRAL, true);
-      //dialogButtonHandler(Dialog.BUTTON_NEUTRAL);
-      sendMessage(Dialog.BUTTON_NEUTRAL.toString());
-    }});
-  }
-}
-
-
-
-function dialogMsgButtonHandler(button) {
-  var msg = "";
-  switch (button) {
-    case Dialog.BUTTON_POSITIVE: msg = "positive";
-      break;
-    case Dialog.BUTTON_NEGATIVE: msg = "negative";
-      break;
-    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";
-      break;
-  }
-  msg = button + " | " + msg + " " + "\n" + "Running again";
-  showToast(msg, false);
-}
-
-//bind the classes
-bindClass("android.content.IntentFilter");
-bindClass("android.content.BroadcastReceiver");
-//bindClass("android.support.v4.content.LocalBroadcastManager");
-
-
-var intent = ["custom-event-name"];
-var key = ["button", "view"]; var value = [null, null];
-function sendMessage(txt) {
-  var i = new Intent(intent[0]);
-  i.putExtra(key[0], txt);
-  context.sendBroadcast(i);
-  //LocalBroadcastManager.context.sendBroadcast(i);
-}
-
-//The Broadcast Receiver is set, based on the intent/s provided
-    //--more than one intent can be set to be received, but we are only sending the first one, and expecting to receive the same back
-    //Once the intent is received, the keys are checked and the value is retrieved
-    var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
-        var e = i.getExtras();
-        for (var i = 0; i < key.length; i++) {
-          if (e.containsKey(key[i])) {value[i] = e.get(key[i]); showToast(value[i]);}
-        }
-        try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
-    }});
-    //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(intent[0]));
-    //Code to register multiple intents
-    var f = new IntentFilter();
-    for (var i = 0; i < intent.length; i++) {f.addAction(intent[i]);}
-    context.registerReceiver(receiver, f);
-    //LocalBroadcastManager.context.registerReceiver(receiver, f);
-    ///
-/*
-https://stackoverflow.com/questions/8802157/how-to-use-localbroadcastmanager
- // Every time a button is clicked, we want to broadcast a notification.
-  findViewById(R.id.button_send).setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      sendMessage();
-    }
-  });
-}
-
-// Send an Intent with an action named "custom-event-name". The Intent sent should 
-// be received by the ReceiverActivity.
-private void sendMessage() {
-  Log.d("sender", "Broadcasting message");
-  Intent intent = new Intent("custom-event-name");
-  // You can also include some extra data.
-  intent.putExtra("message", "This is my message!");
-  LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-}
-
-//------------
-
-// Our handler for received Intents. This will be called whenever an Intent
-// with an action named "custom-event-name" is broadcasted.
-private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    // Get extra data included in the Intent
-    String message = intent.getStringExtra("message");
-    Log.d("receiver", "Got message: " + message);
-  }
-};
-
-// Register to receive messages.
-  // We are registering an observer (mMessageReceiver) to receive Intents
-  // with actions named "custom-event-name".
-  LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-      new IntentFilter("custom-event-name"));
-}
-
-//------------
-
- // Unregister since the activity is about to be closed.
-  LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
-
-*/
-
-//var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
-//var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.show();
-var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.show();
-
-
-
-//try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
-
-
-
