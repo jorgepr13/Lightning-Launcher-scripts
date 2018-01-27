@@ -111,7 +111,7 @@ function dialogSettings() {
   this.btn_neu_bg_color  = this.bg_itm_color;
 }
 
-dialogSettings.prototype.setColorAccent = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.ac_color = num;}}
+dialogSettings.prototype.setColorAccent = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.ac_color = num; this.title_bg_color = this.ac_color;}}
 dialogSettings.prototype.setColorBgDialog = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_color = num;}}
 dialogSettings.prototype.setColorBgItem = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_itm_color = num;}}
 dialogSettings.prototype.setColorText = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.txt_color = num;}}
@@ -175,19 +175,9 @@ function dialogMessage(message) {
   this.btn_pos_txt = "Yes";
   this.btn_neg_txt = "No";
   this.btn_neu_txt = "Maybe";
-  this.btn_callback = dialogMsgButtonHandler;
 }
 dialogMessage.prototype = new dialogSettings();
 
-dialogMessage.prototype.receiver = function() {
-  var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
-      var e = i.getExtras();
-      if (e.containsKey(dialogDataKey)) {var value = e.get(dialogDataKey); showToast("receiver: " + value); this.btn_callback(value);}
-      if (e.containsKey(dialogExitKey)) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}}
-  }});
-  context.registerReceiver(receiver, new IntentFilter(dialogIntent));
-  //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
-}
 dialogMessage.prototype.show = function() {
   var builder = new AlertDialog.Builder(context);
 
@@ -229,7 +219,7 @@ dialogMessage.prototype.show = function() {
   }});
 */
   //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {dialogExitCallback(true);}});
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {dialogExitCallback();}});
 
   var dialog = builder.create();
   //dialog.setCancelable(false); //default = true
@@ -303,6 +293,20 @@ function dialogMsgButtonHandler(button) {
 //var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
 //var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.show();
 var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.show();
+
+var rep = 0;
+var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
+  var e = i.getExtras();
+  if (e.containsKey(dialogDataKey)) {var value = e.get(dialogDataKey); showToast("receiver: " + value); this.btn_callback(value);}
+  if (e.containsKey(dialogExitKey)) {
+    if (rep > 2) {
+      try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
+    } else {msg.show();}
+  }
+  rep++
+}});
+context.registerReceiver(receiver, new IntentFilter(dialogIntent));
+//LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 
 
 
