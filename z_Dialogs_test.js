@@ -17,7 +17,7 @@ bindClass("android.widget.ListView");
 //bindClass("android.graphics.PorterDuff.Mode");
 //bindClass("android.graphics.drawable.Drawable");
 //bindClass("android.widget.Adapter");
-//bindClass("android.view.View");
+bindClass("android.view.View");
 //bindClass("android.R.attr");
 //bindClass("android.R.layout");
 //bindClass("android.R.color");
@@ -731,34 +731,18 @@ if (typeof progress !== 'undefined') {progress.dismiss();}
 //####################
 //
 
-function dialogShowAgain(obj) {
-  var diag = obj;
-  diag.show();
-}
 
 function dialogMessage(message) {
   if (emptyVariable(message)) {message = "";}
-  //this = new dialogSettings();
-  //new dialogSettings();
   this.item_txt = message;
-  this.show = dialogMessageShow;
+  this.btn_pos_txt = "Yes";
+  this.btn_neg_txt = "No";
+  this.btn_neu_txt = "Maybe";
+  this.btn_callback = dialogMsgButtonHandler;
 }
 dialogMessage.prototype = new dialogSettings();
-//dialogMessage.prototype.show = function() {
 
-function dialogMessageShow() {
-/*
-function dialogMessageShow(message) {
-  if (emptyVariable(message)) {message = "";}
-
-  var this.= dialogSettings();
-  this.item_txt = message;
-  this.title_show   = true;  this.title_txt = "Message Dialog";
-  this.btn_pos_show = true;  //this.btn_pos_txt = "OK";
-  this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
-  this.btn_neu_show = false; //this.btn_neu_txt = "Test";
-*/
-  var dialogExit = false;
+dialogMessage.prototype.show = function() {
   var builder = new AlertDialog.Builder(context);
 
   if (this.title_show) {
@@ -787,39 +771,24 @@ function dialogMessageShow(message) {
     //builder.setMessage(this.item_txt);
   }
 
-  if (this.btn_pos_show) {
-    builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  if (this.btn_neg_show) {
-    builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialog.cancel();}
-    });
-  }
-  if (this.btn_neu_show) {
-    builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-    onCancel:function(dialog) {dialogExit = true;}
-  });
+  //builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}});
+  //builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}});
+  //builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, buttonId) {}})
+  if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
+  if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
+  if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
+/*
+  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {
+    dialogExit = true; dialogMessageExit = true;
+  }});
 
   //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-    onDismiss:function(dialog) {
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {
       //if (dialogExit) {dialogMenuShow();} else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {return this.show();} //else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {dialogShowAgain(this);} //else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {dialogMessage(this.item_txt).show();} //else {dialogMessageShow(this.item_txt);}
-      //if (!dialogExit) {msg.show();} //else {dialogMessageShow(this.item_txt);}
-      if (!dialogExit) {setTimeout(this.show(), 10);} //else {dialogMessageShow(this.item_txt);}
-    }
-  });
-
+  }});
+*/
   var dialog = builder.create();
-  //dialog.setCancelable(true); //dialog.setCancelable(false);
+  //dialog.setCancelable(false); //default = true
   //dialog.setCanceledOnTouchOutside(false); //default = true
 
   if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
@@ -838,24 +807,136 @@ function dialogMessageShow(message) {
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
     //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {
+      showToast("Pos"); this.btn_callback(Dialog.BUTTON_POSITIVE);
+    }});
   }
   if (this.btn_neg_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
     //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {
+      //this.btn_callback(Dialog.BUTTON_NEGATIVE);
+      showToast("neg"); dialog.cancel(); 
+    }});
   }
   if (this.btn_neu_show) {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
     //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {
+      showToast("neu: \n" + view.getId() + "\n" + Dialog.BUTTON_NEUTRAL, true);
+      //dialogButtonHandler(Dialog.BUTTON_NEUTRAL);
+      sendMessage(Dialog.BUTTON_NEUTRAL.toString());
+    }});
   }
 }
 
 
 
+function dialogMsgButtonHandler(button) {
+  var msg = "";
+  switch (button) {
+    case Dialog.BUTTON_POSITIVE: msg = "positive";
+      break;
+    case Dialog.BUTTON_NEGATIVE: msg = "negative";
+      break;
+    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";
+      break;
+  }
+  msg = button + " | " + msg + " " + "\n" + "Running again";
+  showToast(msg, false);
+}
 
+//bind the classes
+bindClass("android.content.IntentFilter");
+bindClass("android.content.BroadcastReceiver");
+//bindClass("android.support.v4.content.LocalBroadcastManager");
+
+
+var intent = ["custom-event-name"];
+var key = ["button", "view"]; var value = [null, null];
+function sendMessage(txt) {
+  var i = new Intent(intent[0]);
+  i.putExtra(key[0], txt);
+  context.sendBroadcast(i);
+  //LocalBroadcastManager.context.sendBroadcast(i);
+}
+
+//The Broadcast Receiver is set, based on the intent/s provided
+    //--more than one intent can be set to be received, but we are only sending the first one, and expecting to receive the same back
+    //Once the intent is received, the keys are checked and the value is retrieved
+    var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
+        var e = i.getExtras();
+        for (var i = 0; i < key.length; i++) {
+          if (e.containsKey(key[i])) {value[i] = e.get(key[i]); showToast(value[i]);}
+        }
+        try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
+    }});
+    //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(intent[0]));
+    //Code to register multiple intents
+    var f = new IntentFilter();
+    for (var i = 0; i < intent.length; i++) {f.addAction(intent[i]);}
+    context.registerReceiver(receiver, f);
+    //LocalBroadcastManager.context.registerReceiver(receiver, f);
+    ///
+/*
+https://stackoverflow.com/questions/8802157/how-to-use-localbroadcastmanager
+ // Every time a button is clicked, we want to broadcast a notification.
+  findViewById(R.id.button_send).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+      sendMessage();
+    }
+  });
+}
+
+// Send an Intent with an action named "custom-event-name". The Intent sent should 
+// be received by the ReceiverActivity.
+private void sendMessage() {
+  Log.d("sender", "Broadcasting message");
+  Intent intent = new Intent("custom-event-name");
+  // You can also include some extra data.
+  intent.putExtra("message", "This is my message!");
+  LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+}
+
+//------------
+
+// Our handler for received Intents. This will be called whenever an Intent
+// with an action named "custom-event-name" is broadcasted.
+private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    // Get extra data included in the Intent
+    String message = intent.getStringExtra("message");
+    Log.d("receiver", "Got message: " + message);
+  }
+};
+
+// Register to receive messages.
+  // We are registering an observer (mMessageReceiver) to receive Intents
+  // with actions named "custom-event-name".
+  LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+      new IntentFilter("custom-event-name"));
+}
+
+//------------
+
+ // Unregister since the activity is about to be closed.
+  LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
+*/
 
 //var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
+//var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.show();
 var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.show();
+
+
+
+//try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
+
+
+

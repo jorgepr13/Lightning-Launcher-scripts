@@ -10,8 +10,11 @@ function test(txt) {
 }
 test.prototype = new main();
 
-test.prototype.show() {
+test.prototype.show = function() {
   alert(this.txt + "\n" + this.img + "\n" + this.cnt);
   this.cnt++
   if (this.cnt < 2) {return this.show();}
 }
+
+
+var tst = new test("test"); tst.show();
