@@ -306,9 +306,9 @@ dialogList.prototype.show = function() {
       return view;
     }
   }, context, R.layout.simple_list_item_1, this.item_txt);
-  //builder.setAdapter(adapter, null);
+  builder.setAdapter(adapter, null);
+  //builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.cancel();}}});
   //builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {showToast(this.item_txt[position]);}});
-  builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.cancel();}}});
 
   //default list dialog, no need for the adapter
   //builder.setItems(this.item_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {showToast(this.item_txt[position]);}});
@@ -402,8 +402,8 @@ function dialogMsgButtonHandler(button) {
 
 //var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
 //var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.setMessage("overwiten"): msg.show();
-var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); //msg.show();
-var lst = new dialogList(); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.show(); //lst.setItems(["Easy","Medium","Hard","Very Hard"]); lst.show();
+var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.show();
+var lst = new dialogList(); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); //lst.show(); //lst.setItems(["Easy","Medium","Hard","Very Hard"]); lst.show();
 
 var myData = null;
 var rep = 0;
@@ -411,15 +411,17 @@ var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //
   var e = i.getExtras();
   if (e.containsKey(dialogDataKey)) {
     var value = e.get(dialogDataKey); showToast("receiver: " + value);
-    myData = JSON.parse(value);
+    myData = JSON.parse(value); showToast("dia: " + myData.dialog + "\nbtn: " + myData.button);
   }
   if (e.containsKey(dialogExitKey)) {
-    if (myData.dialog != null && myData.dialog == "Message") {lst.show();}
-    if (myData.dialog != null && myData.dialog == "List") {msg.show();}
+    showToast("receiver exit: " + e.get(dialogDataKey));
     if (rep > 3) {
       try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
+    } else {
+      if (myData.dialog != null && myData.dialog == "Message") {lst.show();}
+      if (myData.dialog != null && myData.dialog == "List") {msg.show();}
+      rep++
     }
-    rep++
   }
 
 }});
