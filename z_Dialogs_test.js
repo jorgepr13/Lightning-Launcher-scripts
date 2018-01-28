@@ -178,6 +178,7 @@ dialogMessage.prototype.show = function() {
   var returnData = {};
   returnData.dialog = "Message";
   returnData.button = null;
+  returnData.exit = false;
 
   var builder = new AlertDialog.Builder(context);
 
@@ -233,27 +234,29 @@ dialogMessage.prototype.show = function() {
 
   var btn;
   if (this.btn_pos_show) {
+    var btn_pos__exit = this.btn_pos_exit;
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_pos_exit) {dialog.cancel();}
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss(); returnData.exit = true;}
       returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neg_show) {
+    var btn_neg__exit = this.btn_neg_exit;
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {//if (this.btn_neg_exit) {dialog.cancel();}
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss(); returnData.exit = true;}
       returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
-      if (this.btn_neg_exit) {dialog.cancel();dialog.dismiss();}
     }});
   }
   if (this.btn_neu_show) {
+    var btn_neu__exit = this.btn_neu_exit;
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_neu_exit) {dialog.cancel();}
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss(); returnData.exit = true;}
       returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
     }});
   }
@@ -280,6 +283,7 @@ dialogList.prototype.show = function() {
   returnData.dialog = "List";
   returnData.button = null;
   returnData.position = -1;
+  returnData.exit = false;
 
   var builder = new AlertDialog.Builder(context);
 
@@ -295,23 +299,41 @@ dialogList.prototype.show = function() {
     builder.setCustomTitle(myTVtitle);
     //builder.setTitle(this.title_txt);
   }
-
+  var item_bg__color = this.item_bg_color; var item_txt__color = this.item_txt_color; var item_txt__size = this.item_txt_size;
+/*
+  var adapter = new ArrayAdapter(context, R.layout.simple_list_item_1, this.item_txt) {
+  //var adapter = new ArrayAdapter(context, R.layout.simple_list_item_1, this.item_txt);
+  //adapter.prototype.getView = function(position, convertView, parent) {
+    getView:function(position, convertView, parent) {
+      var view = this.getView(position, convertView, parent);
+      //var view = convertView;
+      if (view == null) {return view;}
+      view.setBackgroundColor(item_bg__color);
+      view.setTextColor(item_txt__color);
+      view.setTextSize(item_txt__size);
+      //view.setPadding(10,10,10,10);
+      return view;
+    }
+  }
+*/
   var adapter = new JavaAdapter(ArrayAdapter, {
     getView:function(position, convertView, parent) {
       var view = this.super$getView(position, convertView, parent);
-      view.setBackgroundColor(this.item_bg_color);
-      view.setTextColor(this.item_txt_color);
-      view.setTextSize(this.item_txt_size);
+      view.setBackgroundColor(item_bg__color);
+      view.setTextColor(item_txt__color);
+      view.setTextSize(item_txt__size);
       //view.setPadding(10,10,10,10);
       return view;
     }
   }, context, R.layout.simple_list_item_1, this.item_txt);
+
   builder.setAdapter(adapter, null);
   //builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.cancel();}}});
-  //builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {showToast(this.item_txt[position]);}});
 
   //default list dialog, no need for the adapter
   //builder.setItems(this.item_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {showToast(this.item_txt[position]);}});
+  //builder.setItems(this.item_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.cancel();}}});
+  //builder.setItems(this.item_txt, null);
 
   if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
   if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
@@ -321,7 +343,7 @@ dialogList.prototype.show = function() {
   builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {dialogExitCallback();}});
 
   var dialog = builder.create();
-  dialog.setCancelable(true); //default = true
+  //dialog.setCancelable(true); //default = true
   //dialog.setCanceledOnTouchOutside(false); //default = true
 
   if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
@@ -330,45 +352,51 @@ dialogList.prototype.show = function() {
   window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
   //window.setGravity(Gravity.FILL_VERTICAL);
 
+  dialog.show();
+
   var lv = dialog.getListView();
   lv.setDivider(new ColorDrawable(this.item_div_color));
   lv.setDividerHeight(this.item_div_size);
   //lv.setHeaderDividersEnabled(false);
   //lv.setFooterDividersEnabled(false);
   //lv.setCacheColorHint(0xaa00aa00);
-/*
+
+  var item__exit = this.item_exit;
   lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {onItemClick:function(dialog, view, position, id) {
     //view.setBackgroundColor(this.item_bg_color);
     returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1;
-    if (this.item_exit) {dialog.cancel();}
+    if (item__exit) {dialog.dismiss(); returnData.exit = true;}
   }});
-*/
-  dialog.show();
+
+  //dialog.show();
 
   lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
 
   var btn;
   if (this.btn_pos_show) {
+    var btn_pos__exit = this.btn_pos_exit;
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_pos_exit) {dialog.cancel();}
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss(); returnData.exit = true;}
       returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neg_show) {
+    var btn_neg__exit = this.btn_neg_exit;
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_neg_exit) {dialog.cancel();}
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss(); returnData.exit = true;}
       returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neu_show) {
+    var btn_neu__exit = this.btn_neu_exit;
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (this.btn_neu_exit) {dialog.cancel();}
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss(); returnData.exit = true;}
       returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
     }});
   }
@@ -402,29 +430,40 @@ function dialogMsgButtonHandler(button) {
 
 //var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
 //var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.setMessage("overwiten"): msg.show();
-var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.show();
-var lst = new dialogList(); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); //lst.show(); //lst.setItems(["Easy","Medium","Hard","Very Hard"]); lst.show();
+var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); 
+var lst = new dialogList(); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy","Medium","Hard","Very Hard"]); 
+
+msg.show(); //lst.show();
+
 
 var myData = null;
 var rep = 0;
-var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
+var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
+//var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
   var e = i.getExtras();
   if (e.containsKey(dialogDataKey)) {
-    var value = e.get(dialogDataKey); showToast("receiver: " + value);
-    myData = JSON.parse(value); showToast("dia: " + myData.dialog + "\nbtn: " + myData.button);
+    var value = e.get(dialogDataKey); //showToast("receiver: " + value);
+    myData = JSON.parse(value);
+    if (emptyVariable(myData.position) && myData.position != 0) {myData.position = -1;}
+    showToast("dia: " + myData.dialog + "\nbtn: " + myData.button + "\nexit: " + myData.exit + "\npos: " + myData.position);
   }
   if (e.containsKey(dialogExitKey)) {
-    showToast("receiver exit: " + e.get(dialogDataKey));
-    if (rep > 3) {
+    //showToast("receiver exit: " + e.get(dialogDataKey));
+    if (rep > 2) {
       try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
     } else {
-      if (myData.dialog != null && myData.dialog == "Message") {lst.show();}
-      if (myData.dialog != null && myData.dialog == "List") {msg.show();}
-      rep++
+      try {
+        if (myData.dialog != null && myData.dialog == "Message") {lst.show();}
+        if (myData.dialog != null && myData.dialog == "List") {msg.show();}
+        rep++
+      } catch (e) {
+        alert(e.toString()); try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {alert(e.toString());}
+      }
     }
   }
 
-}});
+//}});
+}};
 context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 
@@ -432,7 +471,18 @@ context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 
 //try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
 
+/*
+//https://github.com/NativeScript/NativeScript/issues/4007
+let Receiver = android.content.BroadcastReceiver.extend({
+            onReceive: function (context, data) {
+                console.log("onReceive!!!!");
+            }
+        });
 
+_callBackReceiver = new Receiver();
+app.android.foregroundActivity.registerReceiver(_callBackReceiver, this.getIntentFilter());
+
+*/
 
 
 
