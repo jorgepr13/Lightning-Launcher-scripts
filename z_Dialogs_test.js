@@ -56,7 +56,7 @@ function dialogCallback(txt) {
 }
 function dialogSettings() {
   //main
-  this.name         = "";
+  this.name         = Math.floor((Math.random() * 1000) + 1); //number between 1 and 1000
   this.ac_color     = 0xff2233ff;
   this.bg_color     = 0xdd222222;
   this.bg_itm_color = 0x88333333;
@@ -99,8 +99,8 @@ function dialogSettings() {
   this.btn_neu_txt_color = this.txt_color;
   this.btn_neu_bg_color  = this.bg_itm_color;
 }
-
-dialogSettings.prototype.setName = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.name = txt;}}
+dialogSettings.prototype.getName = function() {return this.name;}}
+dialogSettings.prototype.setName = function(txt) {if (!emptyVariable(txt) && (typeoff(txt) == "string" || typeoff(txt) == "number")) {this.name = txt;}}
 dialogSettings.prototype.setColorAccent = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.ac_color = num; this.title_bg_color = this.ac_color;}}
 dialogSettings.prototype.setColorBgDialog = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_color = num;}}
 dialogSettings.prototype.setColorBgItem = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_itm_color = num; this.item_bg_color  = this.bg_itm_color; this.btn_pos_bg_color  = this.bg_itm_color; this.btn_neg_bg_color  = this.bg_itm_color; this.btn_neu_bg_color  = this.bg_itm_color;}}
@@ -585,7 +585,6 @@ dialogTextInput.prototype.normalizeLength = function() {
     if (i > this.item_txt_hnt.length - 1) {this.item_txt_hnt.push("");}
   }
 }
-
 dialogTextInput.prototype.show = function() {
   var returnData = {};
   returnData.name = this.name;
@@ -727,8 +726,6 @@ var mnu = new dialogList();          mnu.setName("menu");  mnu.setTitleText("Dia
 var menu_act = [msg, lst, chk, txt];
 mnu.show(); //msg.show(); //lst.show();
 
-
-
 //var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
 var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
   var e = i.getExtras();
@@ -739,6 +736,12 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
 
     switch (myData.dialog) {
       case "Message":
+      /*
+      myData.name = this.name;
+      myData.dialog = "Message";
+      myData.button = null;
+      myData.exit = false;
+      */
         if (myData.name == "msg") {
           if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
           //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
@@ -746,13 +749,20 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
         }
         break;
       case "List":
-        if (myData.name == "menu") {
+      /*
+      myData.name = this.name;
+      myData.dialog = "List";
+      myData.button = null;
+      myData.position = -1;
+      myData.exit = false;
+      */
+        if (myData.name == mnu.getName()) {
           if (myData.position != -1) {menu_act[myData.position].show();}
           if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
           if (myData.button == Dialog.BUTTON_NEGATIVE) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {alert(e.toString());}}
           if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
         }
-        if (myData.name == "list") {
+        if (myData.name == lst.getName()) {
           if (myData.position != -1) {showToast(lst.getItems()[myData.position]);}
           if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
           //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
@@ -760,7 +770,15 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
         }
         break;
       case "Checkbox":
-        if (myData.name == "check") {
+      /*
+      myData.name = this.name;
+      myData.dialog = "Checkbox";
+      myData.button = null;
+      myData.position = -1;
+      myData.exit = false;
+      myData.state = this.item_state;
+      */
+        if (myData.name == chk.getName()) {
           if (myData.position != -1) {showToast(chk.getItems()[myData.position]);}
           if (myData.button == Dialog.BUTTON_POSITIVE) {
             var itemsChecked = []; var items = chk.getItems();
@@ -776,7 +794,15 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
         }
         break;
       case "TextInput":
-        if (myData.name == "text") {
+      /*
+      myData.name = this.name;
+      myData.dialog = "TextInput";
+      myData.button = null;
+      myData.exit = false;
+      myData.text = [];
+      myData.num = this.item_txt_num;
+      */
+        if (myData.name == txt.getName()) {
           //var items = []; for (i = 0; i < myData.text.length; i++) {if (myData.state[i]) {items.push(myData.text[i]);}}
           if (myData.button == Dialog.BUTTON_POSITIVE) {showToast(myData.text.join("\n\n"));}
           if (myData.button == Dialog.BUTTON_NEGATIVE) {txt.setInputText(myData.text);}
