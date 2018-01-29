@@ -54,25 +54,21 @@ var myItems = ["Easy","Medium","Hard","Very Hard"];
 //var dialog = new AlertDialog.Builder(context).setMessage("Hello world").show();
 
 
-var dialogIntent = "custom-event-name"; var dialogDataKey = "data"; var dialogExitKey = "exit";
-function dialogDataCallback(txt) {
+var dialogIntent = "custom-event-name"; var dialogIntentKey = "data";
+function dialogCallback(txt) {
   if (emptyVariable(txt)) {return;}
-  var i = new Intent(dialogIntent); i.putExtra(dialogDataKey, txt.toString());
-  context.sendBroadcast(i);
-  //LocalBroadcastManager.context.sendBroadcast(i);
-}
-function dialogExitCallback() {
-  var i = new Intent(dialogIntent); i.putExtra(dialogExitKey, "true");
+  var i = new Intent(dialogIntent); i.putExtra(dialogIntentKey, txt.toString());
   context.sendBroadcast(i);
   //LocalBroadcastManager.context.sendBroadcast(i);
 }
 function dialogSettings() {
   //main
-  this.ac_color  = 0xff2233ff;
-  this.bg_color  = 0xdd222222;
+  this.name         = "";
+  this.ac_color     = 0xff2233ff;
+  this.bg_color     = 0xdd222222;
   this.bg_itm_color = 0x88333333;
-  this.txt_color = 0xddffffff;
-  this.txt_size  = 18;
+  this.txt_color    = 0xddffffff;
+  this.txt_size     = 18;
   this.exit_on_click  = false;
   //title
   this.title_show      = true;
@@ -111,6 +107,7 @@ function dialogSettings() {
   this.btn_neu_bg_color  = this.bg_itm_color;
 }
 
+dialogSettings.prototype.setName = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.name = txt;}}
 dialogSettings.prototype.setColorAccent = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.ac_color = num; this.title_bg_color = this.ac_color;}}
 dialogSettings.prototype.setColorBgDialog = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_color = num;}}
 dialogSettings.prototype.setColorBgItem = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.bg_itm_color = num; this.item_bg_color  = this.bg_itm_color; this.btn_pos_bg_color  = this.bg_itm_color; this.btn_neg_bg_color  = this.bg_itm_color; this.btn_neu_bg_color  = this.bg_itm_color;}}
@@ -147,7 +144,7 @@ dialogSettings.prototype.showButtonNegative = function() {this.btn_neg_show = tr
 dialogSettings.prototype.hideButtonNegative = function() {this.btn_neg_show = false;}
 dialogSettings.prototype.exitOnClickButtonNegative = function() {this.btn_neg_exit = true;}
 dialogSettings.prototype.stayOnClickButtonNegative = function() {this.btn_neg_exit = false;}
-dialogSettings.prototype.setButtonNegativeText = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.btn_pos_txt = txt;}}
+dialogSettings.prototype.setButtonNegativeText = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.btn_neg_txt = txt;}}
 dialogSettings.prototype.setButtonNegativeTextSize = function(num) {if (!emptyVariable(num) && !isNaN(num) && num > 0) {this.btn_neg_txt_size = num;}}
 dialogSettings.prototype.setButtonNegativeTextColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_neg_txt_color = num;}}
 dialogSettings.prototype.setButtonNegativeBgColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_neg_bg_color = num;}}
@@ -172,10 +169,12 @@ function dialogMessage(message) {
   this.btn_neu_txt = "Maybe";
 }
 dialogMessage.prototype = new dialogSettings();
+dialogMessage.prototype.getMessage = function() {return this.item_txt;}
 dialogMessage.prototype.setMessage = function(txt) {if (!emptyVariable(txt) && typeoff(txt) == "string") {this.item_txt = txt;}}
 
 dialogMessage.prototype.show = function() {
   var returnData = {};
+  returnData.name = this.name;
   returnData.dialog = "Message";
   returnData.button = null;
   returnData.exit = false;
@@ -215,11 +214,13 @@ dialogMessage.prototype.show = function() {
   if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
 
   //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {dialogExitCallback();}});
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {dialogExitCallback();}});
+  //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {showToast("Cancel");}});
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {
+    returnData.exit = true; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ);
+  }});
 
   var dialog = builder.create();
-  dialog.setCancelable(true); //default = true
+  //dialog.setCancelable(true); //default = true
   //dialog.setCanceledOnTouchOutside(false); //default = true
 
   if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
@@ -238,8 +239,8 @@ dialogMessage.prototype.show = function() {
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss(); returnData.exit = true;}
-      returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neg_show) {
@@ -247,8 +248,8 @@ dialogMessage.prototype.show = function() {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss(); returnData.exit = true;}
-      returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neu_show) {
@@ -256,8 +257,8 @@ dialogMessage.prototype.show = function() {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss(); returnData.exit = true;}
-      returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
     }});
   }
 }
@@ -266,7 +267,7 @@ dialogMessage.prototype.show = function() {
 //////////////////////////////////////////////
 
 function dialogList(items) {
-  if (emptyVariable(items)) {items = ["empty list"];}
+  if (emptyVariable(items) || typeoff(items) != "array") {items = ["empty list"];}
   this.item_txt = items;
   this.item_exit = false;
   this.btn_pos_txt = "Yes";
@@ -274,12 +275,14 @@ function dialogList(items) {
   this.btn_neu_txt = "Maybe";
 }
 dialogList.prototype = new dialogSettings();
+dialogList.prototype.getItems = function() {return this.item_txt;}
 dialogList.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items;}}
 dialogList.prototype.exitOnClickItem = function() {this.item_exit = true;}
 dialogList.prototype.stayOnClickItem = function() {this.item_exit = false;}
 
 dialogList.prototype.show = function() {
   var returnData = {};
+  returnData.name = this.name;
   returnData.dialog = "List";
   returnData.button = null;
   returnData.position = -1;
@@ -328,19 +331,20 @@ dialogList.prototype.show = function() {
   }, context, R.layout.simple_list_item_1, this.item_txt);
 
   builder.setAdapter(adapter, null);
-  //builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.cancel();}}});
+  //builder.setAdapter(adapter, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.dismiss();}}});
 
   //default list dialog, no need for the adapter
-  //builder.setItems(this.item_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {showToast(this.item_txt[position]);}});
-  //builder.setItems(this.item_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.cancel();}}});
+  //builder.setItems(this.item_txt, new DialogInterface.OnClickListener() {onClick:function(dialog, position) {returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.position = -1; if (this.item_exit) {dialog.dismiss();}}});
   //builder.setItems(this.item_txt, null);
 
   if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
   if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
   if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
 
-  //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {dialogExitCallback();}});
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {dialogExitCallback();}});
+  //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {showToast("Cancel");}});
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {
+    returnData.exit = true; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ);
+  }});
 
   var dialog = builder.create();
   //dialog.setCancelable(true); //default = true
@@ -362,10 +366,9 @@ dialogList.prototype.show = function() {
   //lv.setCacheColorHint(0xaa00aa00);
 
   var item__exit = this.item_exit;
-  lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {onItemClick:function(dialog, view, position, id) {
+  lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {onItemClick:function(dialogg, view, position, id) {if (item__exit) {dialog.dismiss();}
     //view.setBackgroundColor(this.item_bg_color);
-    returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.position = -1;
-    if (item__exit) {dialog.dismiss(); returnData.exit = true;}
+    returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.position = -1;
   }});
 
   //dialog.show();
@@ -378,8 +381,8 @@ dialogList.prototype.show = function() {
     btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
     btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss(); returnData.exit = true;}
-      returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neg_show) {
@@ -387,8 +390,8 @@ dialogList.prototype.show = function() {
     btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
     btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss(); returnData.exit = true;}
-      returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
     }});
   }
   if (this.btn_neu_show) {
@@ -396,8 +399,8 @@ dialogList.prototype.show = function() {
     btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
     btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color); //btn.setPadding(10, 10, 10, 10);
     btn.getLayoutParams().setMargins(10, 0, 10, 0);
-    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss(); returnData.exit = true;}
-      returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogDataCallback(returnDataJ); returnData.button = null;
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
     }});
   }
 }
@@ -409,67 +412,52 @@ dialogList.prototype.show = function() {
 
 
 
-function dialogMsgButtonHandler(button) {
-  showToast("my handler" + button);
-  var msg = "";
-  switch (button) {
-    case Dialog.BUTTON_POSITIVE: msg = "positive";
-      break;
-    case Dialog.BUTTON_NEGATIVE: msg = "negative";
-      break;
-    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";
-      break;
-  }
-  msg = button + " | " + msg + " " + "\n" + "Running again";
-  showToast(msg);
-}
+
+var msg = new dialogMessage("test"); msg.setName("msg"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.setButtonNegativeText("Close");
+var lst = new dialogList(); lst.setName("list"); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy","Medium","Hard","Very Hard"]); lst.setButtonNegativeText("Close");
+var mnu = new dialogList(); mnu.setName("menu"); mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message","List"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
+var menu_act = [msg, lst];
+mnu.show(); //msg.show(); //lst.show();
 
 
 
 
-
-//var msg = new dialogMessage("test").setTitleText("Message Dialog").show();
-//var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.hideTitle(); msg.setMessage("overwiten"): msg.show();
-var msg = new dialogMessage("test"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); 
-var lst = new dialogList(); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy","Medium","Hard","Very Hard"]); 
-
-msg.show(); //lst.show();
-
-
-var myData = null;
-var rep = 0;
-var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
 //var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
+var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
   var e = i.getExtras();
-  if (e.containsKey(dialogDataKey)) {
-    var value = e.get(dialogDataKey); //showToast("receiver: " + value);
-    myData = JSON.parse(value);
-    if (emptyVariable(myData.position) && myData.position != 0) {myData.position = -1;}
-    showToast("dia: " + myData.dialog + "\nbtn: " + myData.button + "\nexit: " + myData.exit + "\npos: " + myData.position);
-  }
-  if (e.containsKey(dialogExitKey)) {
-    //showToast("receiver exit: " + e.get(dialogDataKey));
-    if (rep > 2) {
-      try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
-    } else {
-      try {
-        if (myData.dialog != null && myData.dialog == "Message") {lst.show();}
-        if (myData.dialog != null && myData.dialog == "List") {msg.show();}
-        rep++
-      } catch (e) {
-        alert(e.toString()); try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {alert(e.toString());}
-      }
-    }
-  }
+  if (e.containsKey(dialogIntentKey)) {
+    var value = e.get(dialogIntentKey); //showToast("receiver: " + value);
+    var myData = JSON.parse(value); if (emptyVariable(myData.position) && myData.position != 0) {myData.position = -1;}
+    //showToast("dia: " + myData.dialog + "\nbtn: " + myData.button + "\nexit: " + myData.exit + "\npos: " + myData.position);
 
-//}});
+    switch (myData.name) {
+      case "menu":
+        if (myData.position != -1) {menu_act[myData.position].show();}
+        if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
+        if (myData.button == Dialog.BUTTON_NEGATIVE) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {alert(e.toString());}}
+        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+        break;
+      case "list":
+        if (myData.position != -1) {showToast(lst.getItems()[myData.position]);}
+        if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
+        //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
+        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+        break;
+      case "msg":
+        if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
+        //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
+        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+        break;
+    }
+    if (myData.exit && myData.name != "menu") {mnu.show();}
+
+  }
 }};
 context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 
 
 
-//try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {}
 
 /*
 //https://github.com/NativeScript/NativeScript/issues/4007
@@ -503,158 +491,30 @@ app.android.foregroundActivity.registerReceiver(_callBackReceiver, this.getInten
 
 
 
-function dialogButtonHandler(button) {
-  var msg = "";
-  switch (button) {
-    case Dialog.BUTTON_POSITIVE: msg = "positive";
-      break;
-    case Dialog.BUTTON_NEGATIVE: msg = "negative";
-      break;
-    case Dialog.BUTTON_NEUTRAL:  msg = "neutral";
-      break;
-  }
-  msg = button + " | " + msg + " " + "\n" + "Running again";
-  showToast(msg, false);
-}
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////////////////////////////////////////////
 
-function dialogMenuShow() {
-  //var this.= dialogSettings();
-  this.item_act = [dialogMessageShow, dialogListShow, dialogCheckboxShow, dialogTextInputShow];
-  this.item_txt = ["Message", "List", "Checkbox List", "Text Input"];
-  this.title_show   = true;  this.title_txt = "Select the Dialog to show:";
-  this.btn_pos_show = false; //this.btn_pos_txt = "OK";
-  this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
-  this.btn_neu_show = false; //this.btn_neu_txt = "Test";
-
-  var dialogExit = false;
-  var builder = new AlertDialog.Builder(context);
-
-  if (this.title_show) {
-    var myTVtitle = new TextView(context);
-    myTVtitle.setText(this.title_txt);
-    myTVtitle.setTextColor(this.title_txt_color);
-    myTVtitle.setTextSize(this.title_txt_size);
-    myTVtitle.setBackgroundColor(this.title_bg_color);
-    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
-    //myTVtitle.setBackgroundResource(R.drawable.gradient);
-    builder.setCustomTitle(myTVtitle);
-    //builder.setTitle(this.title_txt);
-  }
-
-  var adapter = new JavaAdapter(ArrayAdapter, {
-    getView:function(position, convertView, parent) {
-      var view = this.super$getView(position, convertView, parent);
-      view.setBackgroundColor(this.item_bg_color);
-      view.setTextColor(this.item_txt_color);
-      view.setTextSize(this.item_txt_size);
-      //view.setPadding(10,10,10,10);
-      return view;
-    }
-  }, context, R.layout.simple_list_item_1, this.item_txt);
-
-  builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-    onClick:function(dialog, position) {dialog.cancel(); dialogMenuHandler(position, this.item_act);}
-  });
-  /*
-    //default list dialog, no need for the adapter
-    builder.setItems(item_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, position) {dialog.cancel(); dialogMenuHandler(position, this.item_act);}
-    });
-  */
-  if (this.btn_pos_show) {
-    builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  if (this.btn_neg_show) {
-    builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialog.cancel();}
-    });
-  }
-  if (this.btn_neu_show) {
-    builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-    onCancel:function(dialog) {dialogExit = true;}
-  });
-
-  //cancel is called when it's explicit set, pressing the back key / default action is dismiss / after a cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-    onDismiss:function(dialog) {if (!dialogExit) {dialogMenuShow();}}
-  });
-
-  var dialog = builder.create();
-  //dialog.setCancelable(true); //dialog.setCancelable(false);
-  //dialog.setCanceledOnTouchOutside(false); //default = true
-
-  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
-
-  var window = dialog.getWindow();
-  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
-  //window.setGravity(Gravity.FILL_VERTICAL);//window.setGravity(Gravity.CENTER);
-
-  var lv = dialog.getListView();
-  lv.setDivider(new ColorDrawable(this.item_div_color));
-  lv.setDividerHeight(this.item_div_size);
-  //lv.setHeaderDividersEnabled(false);
-  //lv.setFooterDividersEnabled(false);
-  //lv.setCacheColorHint(0xaa00aa00);
-
-  dialog.show();
-
-  lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
-
-  var btn;
-  if (this.btn_pos_show) {
-    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
-    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neg_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neu_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
-    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-}
-function dialogMenuHandler(position, action){
-  switch (position) {
-    case 0: action[position](myItems.join("\n"));
-      break; //Message
-    case 1: action[position](myItems);
-      break; //List
-    case 2: //action[position](myItems, myItemsState);
-      action[position](myItems);
-      break; //Checkbox
-    case 3: action[position]("Input some text:","sample text");
-      break; //Text Input
-    case 4: action[position](myItems);
-      break; //Custom List
-  }
-}
-
-
-
-function dialogCheckboxShow(items, itemsState) {
-  if (emptyVariable(items)) {return;}
+function dialogCheckbox(items, itemsState) {
+  if (emptyVariable(items) || typeoff(items) != "array") {items = ["empty list"];}
   if (emptyVariable(itemsState)) {itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);}}
-
-  //var this.= dialogSettings();
   this.item_txt = items;
-  this.title_show   = true;  this.title_txt = "Select The Difficulty Level - Checkbox";
-  this.btn_pos_show = true;  this.btn_pos_txt = "Selected";
-  this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
-  this.btn_neu_show = true;  this.btn_neu_txt = "Deselected";
+  this.item_exit = false;
+  this.item_state = itemsState;
+  this.btn_pos_txt = "Checked";
+  this.btn_neg_txt = "Close";
+  this.btn_neu_txt = "Unchecked";
+}
+dialogCheckbox.prototype = new dialogSettings();
+dialogCheckbox.prototype.getItems = function() {return this.item_txt;}
+dialogCheckbox.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items; var itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);} this.item_state = itemsState;}}
+
+dialogCheckbox.prototype.show = function() {
+  var returnData = {};
+  returnData.name = this.name;
+  returnData.dialog = "List";
+  returnData.button = null;
+  returnData.position = -1;
+  returnData.exit = false;
 
   var colorStateList = [[
   [-R.attr.state_checked],//unchecked
@@ -662,7 +522,6 @@ function dialogCheckboxShow(items, itemsState) {
   [this.ac_color, this.ac_color]];
   colorStateList = new ColorStateList(colorStateList[0], colorStateList[1]);
 
-  var dialogExit = false;
   var builder = new AlertDialog.Builder(context);
 
   if (this.title_show) {
@@ -677,13 +536,14 @@ function dialogCheckboxShow(items, itemsState) {
     builder.setCustomTitle(myTVtitle);
     //builder.setTitle(this.title_txt);
   }
+  var item_bg__color = this.item_bg_color; var item_txt__color = this.item_txt_color; var item_txt__size = this.item_txt_size;
 
   var adapter = new JavaAdapter(ArrayAdapter, {
     getView:function(position, convertView, parent) {
       var view = this.super$getView(position, convertView, parent);
-      view.setBackgroundColor(this.item_bg_color);
-      view.setTextColor(this.item_txt_color);
-      view.setTextSize(this.item_txt_size);
+      view.setBackgroundColor(item_bg__color);
+      view.setTextColor(item_txt__color);
+      view.setTextSize(item_txt__size);
       //view.setPadding(10,10,10,10);
       view.setCheckMarkTintList(colorStateList);
       return view;
@@ -692,7 +552,7 @@ function dialogCheckboxShow(items, itemsState) {
   }, context, R.layout.simple_list_item_multiple_choice, this.item_txt);
   builder.setAdapter(adapter, null);
 /*
-  builder.setMultiChoiceItems(this.item_txt, itemsState, new DialogInterface.OnMultiChoiceClickListener() {
+  builder.setMultiChoiceItems(this.item_txt, this.item_state, new DialogInterface.OnMultiChoiceClickListener() {
     onClick:function(dialog, position, isChecked) {
       if (isChecked) {itemsState[position] = true;}
       else {itemsState[position] = false;}
