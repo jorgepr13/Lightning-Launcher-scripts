@@ -418,7 +418,7 @@ function dialogCheckbox(items, itemsState) {
 dialogCheckbox.prototype = new dialogSettings();
 dialogCheckbox.prototype.getItems = function() {return this.item_txt;}
 dialogCheckbox.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items; var itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);} this.item_state = itemsState;}}
-dialogCheckbox.prototype.setItemsState = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {var itemsState = []; for (var i = 0; i < item_txt.length; ++i) {if (typeoff(items[i]) == "boolean") {itemsState.push(items[i]);} else {itemsState.push(false);}} this.item_state = itemsState;}}
+dialogCheckbox.prototype.setItemsState = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {var itemsState = []; for (var i = 0; i < this.item_txt.length; ++i) {if (typeoff(items[i]) == "boolean") {itemsState.push(items[i]);} else {itemsState.push(false);}} this.item_state = itemsState;}}
 
 dialogCheckbox.prototype.show = function() {
   var returnData = {};
