@@ -559,11 +559,21 @@ dialogTextInput.prototype = new dialogSettings();
 dialogTextInput.prototype.setInputTextNumber = function(num) {if (!emptyVariable(num) && typeoff(num) == "number") {this.item_txt_num = num; this.item_txt = []; this.item_txt_hnt = []; for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_hnt.push("");}}}
 dialogTextInput.prototype.setLabelText = function(items) {if (emptyVariable(items)) {return;}
   if (typeoff(items) == "array") {this.item_txt = []; for (var i = 0; i < items.length; i++) {this.item_txt.push(items[i].toString());}}
-  else {this.item_txt = []; this.item_txt.push(items.toString());}
+  else {this.item_txt[0] = items.toString();}
+  this.normalizeLength();
 }
 dialogTextInput.prototype.setHintText = function(items) {if (emptyVariable(items)) {return;}
   if (typeoff(items) == "array") {this.item_txt_hnt = []; for (var i = 0; i < items.length; i++) {this.item_txt_hnt.push(items[i].toString());}}
-  else {this.item_txt_hnt = []; this.item_txt_hnt.push(items.toString());}
+  else {this.item_txt_hnt[0] = items.toString();}
+  this.normalizeLength();
+}
+dialogTextInput.prototype.normalizeLength = function() {
+  var num = Math.max(this.item_txt.length, this.item_txt_hnt.length);
+  if (num > this.item_txt_num) {this.item_txt_num = num;}
+  for (var i = 0; i < this.item_txt_num; i++) {
+    if (i > this.item_txt.length - 1) {this.item_txt.push("");}
+    if (i > this.item_txt_hnt.length - 1) {this.item_txt_hnt.push("");}
+  }
 }
 
 dialogTextInput.prototype.show = function() {
@@ -613,7 +623,7 @@ dialogTextInput.prototype.show = function() {
       myTVitem[i].setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
       myTVitem[i].setGravity(Gravity.CENTER);
       //myTVitem.setBackgroundResource(R.drawable.gradient);
-      builder.setView(myTVitem[i]);
+      myLL.addView(myTVitem[i]);
     }
 
     editText.push(new EditText(context));
@@ -703,7 +713,7 @@ var msg = new dialogMessage("test"); msg.setName("msg");   msg.setTitleText("Mes
 var lst = new dialogList();          lst.setName("list");  lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy", "Medium", "Hard", "Very Hard"]); lst.setButtonNegativeText("Close");
 var chk = new dialogCheckbox();      chk.setName("check"); chk.setTitleText("Checkbox Dialog"); chk.setItems(["Easy", "Medium", "Hard", "Very Hard"]); //chk.setButtonNegativeText("Close");
 var txt = new dialogTextInput(2);    txt.setName("text");  txt.setTitleText("Text Input Dialog"); txt.setLabelText("Difficulty"); txt.setHintText(["Easy", "Hard"]);
-var mnu = new dialogList();          mnu.setName("menu");  mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message", "List", "Checkbox"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
+var mnu = new dialogList();          mnu.setName("menu");  mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message", "List", "Checkbox", "Text"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
 var menu_act = [msg, lst, chk, txt];
 mnu.show(); //msg.show(); //lst.show();
 
