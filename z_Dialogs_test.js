@@ -32,7 +32,7 @@ bindClass("android.widget.Toast");
 var context = getActiveScreen().getContext();
 //typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
 function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
-function emptyVariable(myVar) {return myVar == null || myVar == undefined || myVar == "";}
+function emptyVariable(myVar) {return myVar === null || myVar === undefined || myVar === "" || myVar === '';}
 function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
 
 //bind the classes
@@ -154,7 +154,7 @@ dialogSettings.prototype.setButtonNeutralBgColor = function(num) {if (!emptyVari
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //                Message
 //////////////////////////////////////////////
-
+//var dialog = new AlertDialog.Builder(context).setMessage("Hello world").show();
 function dialogMessage(message) {
   if (emptyVariable(message)) {message = "";}
   this.item_txt = message;
@@ -352,8 +352,6 @@ dialogList.prototype.show = function() {
   window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
   //window.setGravity(Gravity.FILL_VERTICAL);
 
-  dialog.show();
-
   var lv = dialog.getListView();
   lv.setDivider(new ColorDrawable(this.item_div_color));
   lv.setDividerHeight(this.item_div_size);
@@ -361,13 +359,15 @@ dialogList.prototype.show = function() {
   //lv.setFooterDividersEnabled(false);
   //lv.setCacheColorHint(0xaa00aa00);
 
+  //dialog.show();
+
   var item__exit = this.item_exit;
   lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {onItemClick:function(dialogg, view, position, id) {if (item__exit) {dialog.dismiss();}
     //view.setBackgroundColor(this.item_bg_color);
     returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.position = -1;
   }});
 
-  //dialog.show();
+  dialog.show();
 
   lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
 
@@ -407,7 +407,7 @@ dialogList.prototype.show = function() {
 
 function dialogCheckbox(items, itemsState) {
   if (emptyVariable(items) || typeoff(items) != "array") {items = ["empty list"];}
-  if (emptyVariable(itemsState)) {itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);}}
+  if (emptyVariable(itemsState)) {itemsState = []; for (var i = 0; i < items.length; i++) {itemsState.push(false);}}
   this.item_txt = items;
   this.item_exit = false;
   this.item_state = itemsState;
@@ -417,8 +417,8 @@ function dialogCheckbox(items, itemsState) {
 }
 dialogCheckbox.prototype = new dialogSettings();
 dialogCheckbox.prototype.getItems = function() {return this.item_txt;}
-dialogCheckbox.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items; var itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);} this.item_state = itemsState;}}
-dialogCheckbox.prototype.setItemsState = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {var itemsState = []; for (var i = 0; i < this.item_txt.length; ++i) {if (typeoff(items[i]) == "boolean") {itemsState.push(items[i]);} else {itemsState.push(false);}} this.item_state = itemsState;}}
+dialogCheckbox.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items; var itemsState = []; for (var i = 0; i < items.length; i++) {itemsState.push(false);} this.item_state = itemsState;}}
+dialogCheckbox.prototype.setItemsState = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {var itemsState = []; for (var i = 0; i < this.item_txt.length; i++) {if (typeoff(items[i]) == "boolean") {itemsState.push(items[i]);} else {itemsState.push(false);}} this.item_state = itemsState;}}
 
 dialogCheckbox.prototype.show = function() {
   var returnData = {};
@@ -540,33 +540,172 @@ dialogCheckbox.prototype.show = function() {
 }
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                TextInput
+//////////////////////////////////////////////
+
+function dialogTextInput(num) {
+  if (emptyVariable(num) || typeoff(num) != "number") {num = 1;}
+  this.item_txt = [];
+  this.item_txt_hnt = [];
+  this.item_txt_num = num;
+  this.item_exit = false;
+  this.btn_pos_txt = "Ok";
+  this.btn_neg_txt = "Close";
+  this.btn_neu_txt = "Test";
+  for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_hnt.push("");}
+}
+dialogTextInput.prototype = new dialogSettings();
+
+dialogTextInput.prototype.setInputTextNumber = function(num) {if (!emptyVariable(num) && typeoff(num) == "number") {this.item_txt_num = num; this.item_txt = []; this.item_txt_hnt = []; for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_hnt.push("");}}}
+dialogTextInput.prototype.setLabelText = function(items) {if (emptyVariable(items)) {return;}
+  if (typeoff(items) == "array") {this.item_txt = []; for (var i = 0; i < items.length; i++) {this.item_txt.push(items[i].toString());}}
+  else {this.item_txt = []; this.item_txt.push(items.toString());}
+}
+dialogTextInput.prototype.setHintText = function(items) {if (emptyVariable(items)) {return;}
+  if (typeoff(items) == "array") {this.item_txt_hnt = []; for (var i = 0; i < items.length; i++) {this.item_txt_hnt.push(items[i].toString());}}
+  else {this.item_txt_hnt = []; this.item_txt_hnt.push(items.toString());}
+}
+
+dialogTextInput.prototype.show = function() {
+  var returnData = {};
+  returnData.name = this.name;
+  returnData.dialog = "TextInput";
+  returnData.button = null;
+  returnData.exit = false;
+  returnData.text = [];
+  returnData.num = this.item_txt_num;
+
+  var colorStateList = [[
+  [R.attr.state_pressed],
+  [R.attr.state_focused],
+  [R.attr.state_enabled]],
+  [this.ac_color, this.ac_color, this.item_hnt_color]];
+  colorStateList = new ColorStateList(colorStateList[0], colorStateList[1]);
+
+  var dialogExit = false;
+  var builder = new AlertDialog.Builder(context);
+
+  if (this.title_show) {
+    var myTVtitle = new TextView(context);
+    myTVtitle.setText(this.title_txt);
+    myTVtitle.setTextColor(this.title_txt_color);
+    myTVtitle.setTextSize(this.title_txt_size);
+    myTVtitle.setBackgroundColor(this.title_bg_color);
+    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+    myTVtitle.setGravity(Gravity.CENTER);
+    //myTVtitle.setBackgroundResource(R.drawable.gradient);
+    builder.setCustomTitle(myTVtitle);
+    //builder.setTitle(this.title_txt);
+  }
+
+  myLL = new LinearLayout(context);
+  myLL.setOrientation(LinearLayout.VERTICAL);//myLL.setOrientation(LinearLayout.HORIZONTAL);
+
+  var myTVitem = []; var editText = [];
+  for (var i = 0; i < returnData.num; i++) {
+    //Label
+    if (this.item_txt[i] == "") {myTVitem.push(null);} else {
+      myTVitem.push(new TextView(context));
+      myTVitem[i].setText(this.item_txt[i]);
+      myTVitem[i].setTextColor(this.item_txt_color);
+      myTVitem[i].setTextSize(this.item_txt_size);
+      myTVitem[i].setBackgroundColor(this.item_bg_color);
+      myTVitem[i].setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+      myTVitem[i].setGravity(Gravity.CENTER);
+      //myTVitem.setBackgroundResource(R.drawable.gradient);
+      builder.setView(myTVitem[i]);
+    }
+
+    editText.push(new EditText(context));
+    //editText[i].setText("");
+    editText[i].setHint(this.item_txt_hnt[i]);
+    editText[i].setTextColor(this.item_txt_color);
+    editText[i].setHintTextColor(this.item_hnt_color);
+    editText[i].setBackgroundTintList(colorStateList); //editText[i].setBackgroundTintList(ColorStateList.valueOf(0xcc00aaee));
+    //editText[i].setInputType(InputType.TYPE_CLASS_TEXT); //editText[i].setInputType(InputType.TYPE_CLASS_NUMBER); //editText[i].setInputType(InputType.TYPE_CLASS_DATETIME);
+    //editText[i].setBackgroundColor(this.item_bg_color);
+    //set the width/height of edittext
+    //editText[i].setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    //editText[i].setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom)
+    //editText[i].setCompoundDrawables(new ColorDrawable(0x00000000), new ColorDrawable(0x00000000), new ColorDrawable(0x00000000), new ColorDrawable(0xcc00aaee))
+    //setEllipsize(TextUtils.TruncateAt where)
+    //Causes worthis.in the text that are longer than the view's width to be ellipsized instead of broken in the middle.
+    //setHighlightColor(int color)
+    //setCursorDrawableColor(editText[i], 0xff00ff00);
+    //builder.setView(editText);
+    myLL.addView(editText[i]);
+  }
+  myTVitem = null;
+
+  builder.setView(myLL);
+
+  if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
+  if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
+  if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
+
+  //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {showToast("Cancel");}});
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {
+    returnData.exit = true; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ);
+  }});
+
+  var dialog = builder.create();
+  //dialog.setCancelable(true); //default = true
+  //dialog.setCanceledOnTouchOutside(false); //default = true
+
+  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
+
+  var window = dialog.getWindow();
+  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
+  //window.setGravity(Gravity.FILL_VERTICAL);//window.setGravity(Gravity.CENTER);
+
+  dialog.show();
+
+  myLL.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
+
+  var btn;
+  if (this.btn_pos_show) {
+    var btn_pos__exit = this.btn_pos_exit;
+    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
+    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color); //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss();}
+      for (var i = 0; i < returnData.num; i++) {returnData.text.push(editText[i].getText().toString());}
+      returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null; returnData.text = [];
+    }});
+  }
+  if (this.btn_neg_show) {
+    var btn_neg__exit = this.btn_neg_exit;
+    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color); //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss();}
+      for (var i = 0; i < returnData.num; i++) {returnData.text.push(editText[i].getText().toString());}
+      returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null; returnData.text = [];
+    }});
+  }
+  if (this.btn_neu_show) {
+    var btn_neu__exit = this.btn_neu_exit;
+    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color); //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss();}
+      for (var i = 0; i < returnData.num; i++) {returnData.text.push(editText[i].getText().toString());}
+      returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null; returnData.text = [];
+    }});
+  }
+}
+
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //                Your Code
 //////////////////////////////////////////////
 
-
-
-
-
-//var myItems = ["Easy","Medium","Hard","Very Hard"];
-
-//dialogMessageShow(myItems.join("\n"));
-//dialogListShow(myItems);
-//dialogCheckboxShow(myItems);
-//dialogTextInputShow("Input some text:","sample text");
-//dialogMenuShow();
-
-//var dialog = new AlertDialog.Builder(context).setMessage("Hello world").show();
-
-
-
-
-var msg = new dialogMessage("test"); msg.setName("msg"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.setButtonNegativeText("Close");
-var lst = new dialogList(); lst.setName("list"); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy", "Medium", "Hard", "Very Hard"]); lst.setButtonNegativeText("Close");
-var chk = new dialogCheckbox(); chk.setName("check"); chk.setTitleText("Checkbox Dialog"); chk.setItems(["Easy", "Medium", "Hard", "Very Hard"]); //chk.setButtonNegativeText("Close");
-var mnu = new dialogList(); mnu.setName("menu"); mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message", "List", "Checkbox"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
-var menu_act = [msg, lst, chk];
+var msg = new dialogMessage("test"); msg.setName("msg");   msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.setButtonNegativeText("Close");
+var lst = new dialogList();          lst.setName("list");  lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy", "Medium", "Hard", "Very Hard"]); lst.setButtonNegativeText("Close");
+var chk = new dialogCheckbox();      chk.setName("check"); chk.setTitleText("Checkbox Dialog"); chk.setItems(["Easy", "Medium", "Hard", "Very Hard"]); //chk.setButtonNegativeText("Close");
+var txt = new dialogTextInput(2);    txt.setName("text");  txt.setTitleText("Text Input Dialog"); txt.setLabelText("Difficulty"); txt.setHintText(["Easy", "Hard"]);
+var mnu = new dialogList();          mnu.setName("menu");  mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message", "List", "Checkbox"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
+var menu_act = [msg, lst, chk, txt];
 mnu.show(); //msg.show(); //lst.show();
-
 
 
 
@@ -606,16 +745,26 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
           if (myData.button == Dialog.BUTTON_POSITIVE) {
             var itemsChecked = []; var items = chk.getItems();
             for (i = 0; i < myData.state.length; i++) {if (myData.state[i]) {itemsChecked.push(items[i]);}}
-            showToast(itemsChecked.join(", ") + "\n" + itemsChecked + "\n\n" + myData.state);
+            showToast(itemsChecked.join(", ") + "\n\n" + myData.state);
           }
           if (myData.button == Dialog.BUTTON_NEGATIVE) {chk.setItemsState(myData.state);}
           if (myData.button == Dialog.BUTTON_NEUTRAL) {
             var itemsChecked = []; var items = chk.getItems();
             for (i = 0; i < myData.state.length; i++) {if (!myData.state[i]) {itemsChecked.push(items[i]);}}
-            showToast(itemsChecked.join(", ") + "\n" + itemsChecked + "\n\n" + myData.state);
+            showToast(itemsChecked.join(", ") + "\n\n" + myData.state);
           }
         }
         break;
+      case "TextInput":
+      if (myData.name == "text") {
+        if (myData.button == Dialog.BUTTON_POSITIVE) {
+          //var items = []; for (i = 0; i < myData.text.length; i++) {if (myData.state[i]) {items.push(myData.text[i]);}}
+          showToast(myData.text.join("\n\n"));
+        }
+        if (myData.button == Dialog.BUTTON_NEGATIVE) {chk.setItemsState(myData.state);}
+        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast(myData.text.join("\n\n"));}
+      }
+      break;
     }
     if (myData.exit && myData.name != "menu") {mnu.show();}
 
@@ -623,224 +772,6 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
 }};
 context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
-
-/*
-var itemsChecked = [];
-for (i = 0; i < items.length; i++) {if (myData.state[i]) {itemsChecked.push(items[i]);}}
-showToast(buttonId + " | " + itemsChecked.join(", ") + "\n" + itemsChecked + "\n" + myData.state);
-*/
-
-/*
-//https://github.com/NativeScript/NativeScript/issues/4007
-let Receiver = android.content.BroadcastReceiver.extend({
-            onReceive: function (context, data) {
-                console.log("onReceive!!!!");
-            }
-        });
-
-_callBackReceiver = new Receiver();
-app.android.foregroundActivity.registerReceiver(_callBackReceiver, this.getIntentFilter());
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function dialogTextInputShow(message, text){
-  if (emptyVariable(message)) {message = "";}
-  if (emptyVariable(text)) {text = "";}
-
-  //var this.= dialogSettings();
-  this.item_txt = message;
-  this.title_show   = true;  this.title_txt = "Input Text Dialog";
-  this.btn_pos_show = true;  //this.btn_pos_txt = "OK";
-  this.btn_neg_show = true;  //this.btn_neg_txt = "Close";
-  this.btn_neu_show = true;  //this.btn_neu_txt = "Test";
-
-  var colorStateList = [[
-  [R.attr.state_pressed],
-  [R.attr.state_focused],
-  [R.attr.state_enabled]],
-  [this.ac_color, this.ac_color, this.item_hnt_color]];
-  colorStateList = new ColorStateList(colorStateList[0], colorStateList[1]);
-
-  var dialogExit = false;
-  var builder = new AlertDialog.Builder(context);
-
-  if (this.title_show) {
-    var myTVtitle = new TextView(context);
-    myTVtitle.setText(this.title_txt);
-    myTVtitle.setTextColor(this.title_txt_color);
-    myTVtitle.setTextSize(this.title_txt_size);
-    myTVtitle.setBackgroundColor(this.title_bg_color);
-    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
-    //myTVtitle.setBackgroundResource(R.drawable.gradient);
-    builder.setCustomTitle(myTVtitle);
-    //builder.setTitle(this.title_txt);
-  }
-
-  myLL = new LinearLayout(context);
-  myLL.setOrientation(LinearLayout.VERTICAL);//myLL.setOrientation(LinearLayout.HORIZONTAL);
-
-  if (this.item_txt != "") {
-    var myTVitem = new TextView(context);
-    myTVitem.setText(this.item_txt);
-    myTVitem.setTextColor(this.item_txt_color);
-    myTVitem.setTextSize(this.item_txt_size);
-    myTVitem.setBackgroundColor(this.item_bg_color);
-    myTVitem.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVitem.setGravity(Gravity.CENTER);
-    //myTVitem.setBackgroundResource(R.drawable.gradient);
-    builder.setView(myTVitem);
-    //builder.setMessage(this.item_txt);
-  }
-
-  var editText = new EditText(context);
-  editText.setText(text);
-  editText.setHint("gpa");
-  editText.setTextColor(this.item_txt_color);
-  editText.setHintTextColor(this.item_hnt_color);
-  editText.setBackgroundTintList(colorStateList);
-  //editText.setBackgroundColor(this.item_bg_color);
-  //editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-  //editText.setInputType(InputType.TYPE_CLASS_TEXT);
-  //set the width/height of edittext
-  //editText.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-  //editText.setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom)
-  //editText.setCompoundDrawables(new ColorDrawable(0x00000000), new ColorDrawable(0x00000000), new ColorDrawable(0x00000000), new ColorDrawable(0xcc00aaee))
-  //setEllipsize(TextUtils.TruncateAt where)
-  //Causes worthis.in the text that are longer than the view's width to be ellipsized instead of broken in the middle.
-  //builder.setView(editText);
-  //setHighlightColor(int color)
-  //	setHintTextColor(ColorStateList colors)
-  //editText.setBackgroundTintList(ColorStateList.valueOf(0xcc00aaee));
-  //setCursorDrawableColor(editText, 0xff00ff00);
-  myLL.addView(editText);
-
-  var editTextB = new EditText(context);
-  editTextB.setHint("Number");
-  editTextB.setTextColor(this.item_txt_color);
-  editTextB.setHintTextColor(this.item_hnt_color);
-  editTextB.setBackgroundTintList(colorStateList);
-  editTextB.setInputType(InputType.TYPE_CLASS_NUMBER);
-  //editTextB.setBackgroundColor(this.item_bg_color);
-  myLL.addView(editTextB);
-
-  var editTextC = new EditText(context);
-  editTextC.setHint("Password");
-  editTextC.setTextColor(this.item_txt_color);
-  editTextC.setHintTextColor(this.item_hnt_color);
-  editTextC.setBackgroundTintList(colorStateList);
-  editTextC.setInputType(InputType.TYPE_MASK_CLASS);
-  //editTextC.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_MASK_CLASS);
-  //editTextC.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
-  //editTextC.setBackgroundColor(this.item_bg_color);
-  myLL.addView(editTextC);
-
-  var editTextD = new EditText(context);
-  editTextD.setHint("Date");
-  editTextD.setInputType(InputType.TYPE_CLASS_DATETIME);
-  editTextD.setTextColor(this.item_txt_color);
-  editTextD.setHintTextColor(this.item_hnt_color);
-  editTextD.setBackgroundTintList(colorStateList);
-  myLL.addView(editTextD);
-
-  builder.setView(myLL);
-
-  if (this.btn_pos_show) {
-    builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {
-        text = editText.getText().toString();
-        text += "\nnum:  " + editTextB.getText().toString();
-        text += "\npass: " + editTextC.getText().toString();
-        text += "\ndate: " + editTextD.getText().toString();
-        text += "\n";
-        showToast(text);
-      }
-    });
-  }
-  if (this.btn_neg_show) {
-    builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialog.cancel();}
-    });
-  }
-  if (this.btn_neu_show) {
-    builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialogButtonHandler(buttonId);}
-    });
-  }
-  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-    onCancel:function(dialog) {dialogExit = true;}
-  });
-
-  //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-    onDismiss:function(dialog) {
-      if (dialogExit) {dialogMenuShow();} else {dialogTextInputShow(message, text);}
-    }
-  });
-
-  var dialog = builder.create();
-  //dialog.setCancelable(true); //dialog.setCancelable(false);
-  //dialog.setCanceledOnTouchOutside(false); //default = true
-
-  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
-
-  var window = dialog.getWindow();
-  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
-  //window.setGravity(Gravity.FILL_VERTICAL);//window.setGravity(Gravity.CENTER);
-
-  dialog.show();
-
-  myLL.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
-
-  var btn;
-  if (this.btn_pos_show) {
-    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
-    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 0, 10, 0);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neg_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 0, 10, 0);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neu_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
-    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 0, 10, 0);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-}
 
 /*
 http://www.lightninglauncher.com/wiki/doku.php?id=script_app_drawer
@@ -854,9 +785,6 @@ progress.show();
 //program code
 if (typeof progress !== 'undefined') {progress.dismiss();}
 }
-
-
 */
-
 
 //setTimeout(dialogListShow(),0);//shows the list again. On a timeout so the startActivity() is correctly launched before
