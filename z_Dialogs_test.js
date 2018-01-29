@@ -546,20 +546,29 @@ dialogCheckbox.prototype.show = function() {
 function dialogTextInput(num) {
   if (emptyVariable(num) || typeoff(num) != "number") {num = 1;}
   this.item_txt = [];
+  this.item_txt_in = [];
   this.item_txt_hnt = [];
   this.item_txt_num = num;
   this.item_exit = false;
   this.btn_pos_txt = "Ok";
   this.btn_neg_txt = "Close";
   this.btn_neu_txt = "Test";
-  for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_hnt.push("");}
+  for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_in.push(""); this.item_txt_hnt.push("");}
 }
 dialogTextInput.prototype = new dialogSettings();
 
-dialogTextInput.prototype.setInputTextNumber = function(num) {if (!emptyVariable(num) && typeoff(num) == "number") {this.item_txt_num = num; this.item_txt = []; this.item_txt_hnt = []; for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_hnt.push("");}}}
+dialogTextInput.prototype.setInputTextNumber = function(num) {if (!emptyVariable(num) && typeoff(num) == "number") {
+  this.item_txt_num = num; this.item_txt = []; this.item_txt_in = []; this.item_txt_hnt = [];
+  for (var i = 0; i < num; ++i) {this.item_txt.push(""); this.item_txt_in.push(""); this.item_txt_hnt.push("");}
+}}
 dialogTextInput.prototype.setLabelText = function(items) {if (emptyVariable(items)) {return;}
   if (typeoff(items) == "array") {this.item_txt = []; for (var i = 0; i < items.length; i++) {this.item_txt.push(items[i].toString());}}
   else {this.item_txt[0] = items.toString();}
+  this.normalizeLength();
+}
+dialogTextInput.prototype.setInputText = function(items) {if (emptyVariable(items)) {return;}
+  if (typeoff(items) == "array") {this.item_txt_in = []; for (var i = 0; i < items.length; i++) {this.item_txt_in.push(items[i].toString());}}
+  else {this.item_txt_in[0] = items.toString();}
   this.normalizeLength();
 }
 dialogTextInput.prototype.setHintText = function(items) {if (emptyVariable(items)) {return;}
@@ -568,10 +577,11 @@ dialogTextInput.prototype.setHintText = function(items) {if (emptyVariable(items
   this.normalizeLength();
 }
 dialogTextInput.prototype.normalizeLength = function() {
-  var num = Math.max(this.item_txt.length, this.item_txt_hnt.length);
+  var num = Math.max(this.item_txt.length, this.item_txt_in.length, this.item_txt_hnt.length);
   if (num > this.item_txt_num) {this.item_txt_num = num;}
   for (var i = 0; i < this.item_txt_num; i++) {
     if (i > this.item_txt.length - 1) {this.item_txt.push("");}
+    if (i > this.item_txt_in.length - 1) {this.item_txt_in.push("");}
     if (i > this.item_txt_hnt.length - 1) {this.item_txt_hnt.push("");}
   }
 }
@@ -627,7 +637,7 @@ dialogTextInput.prototype.show = function() {
     }
 
     editText.push(new EditText(context));
-    //editText[i].setText("");
+    editText[i].setText(this.item_txt_in[i]);
     editText[i].setHint(this.item_txt_hnt[i]);
     editText[i].setTextColor(this.item_txt_color);
     editText[i].setHintTextColor(this.item_hnt_color);
@@ -766,18 +776,15 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
         }
         break;
       case "TextInput":
-      if (myData.name == "text") {
-        if (myData.button == Dialog.BUTTON_POSITIVE) {
+        if (myData.name == "text") {
           //var items = []; for (i = 0; i < myData.text.length; i++) {if (myData.state[i]) {items.push(myData.text[i]);}}
-          showToast(myData.text.join("\n\n"));
+          if (myData.button == Dialog.BUTTON_POSITIVE) {showToast(myData.text.join("\n\n"));}
+          if (myData.button == Dialog.BUTTON_NEGATIVE) {txt.setInputText(myData.text);}
+          if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast(myData.text.join("\n\n"));}
         }
-        if (myData.button == Dialog.BUTTON_NEGATIVE) {chk.setItemsState(myData.state);}
-        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast(myData.text.join("\n\n"));}
-      }
-      break;
+        break;
     }
     if (myData.exit && myData.name != "menu") {mnu.show();}
-
   }
 }};
 context.registerReceiver(receiver, new IntentFilter(dialogIntent));
