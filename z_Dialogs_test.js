@@ -4,6 +4,7 @@ bindClass("android.content.DialogInterface");
 bindClass("android.content.res.ColorStateList");
 bindClass("android.graphics.drawable.ColorDrawable");
 bindClass("android.R");
+bindClass("android.view.View");
 bindClass("android.view.Window");
 bindClass("android.view.Gravity");
 bindClass("android.text.InputType");
@@ -14,10 +15,10 @@ bindClass("android.widget.ArrayAdapter");
 bindClass("android.widget.AdapterView");
 bindClass("android.widget.ListView");
 
+
 //bindClass("android.graphics.PorterDuff.Mode");
 //bindClass("android.graphics.drawable.Drawable");
 //bindClass("android.widget.Adapter");
-bindClass("android.view.View");
 //bindClass("android.R.attr");
 //bindClass("android.R.layout");
 //bindClass("android.R.color");
@@ -38,28 +39,20 @@ function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDurati
 bindClass("android.content.IntentFilter");
 bindClass("android.content.BroadcastReceiver");
 //bindClass("android.support.v4.content.LocalBroadcastManager");
+
 //https://stackoverflow.com/questions/8802157/how-to-use-localbroadcastmanager
+//https://github.com/NativeScript/NativeScript/issues/4007
 
 
-
-
-var myItems = ["Easy","Medium","Hard","Very Hard"];
-
-//dialogMessageShow(myItems.join("\n"));
-//dialogListShow(myItems);
-//dialogCheckboxShow(myItems);
-//dialogTextInputShow("Input some text:","sample text");
-//dialogMenuShow();
-
-//var dialog = new AlertDialog.Builder(context).setMessage("Hello world").show();
-
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                Settings
+//////////////////////////////////////////////
 
 var dialogIntent = "custom-event-name"; var dialogIntentKey = "data";
 function dialogCallback(txt) {
   if (emptyVariable(txt)) {return;}
   var i = new Intent(dialogIntent); i.putExtra(dialogIntentKey, txt.toString());
-  context.sendBroadcast(i);
-  //LocalBroadcastManager.context.sendBroadcast(i);
+  context.sendBroadcast(i); //LocalBroadcastManager.context.sendBroadcast(i);
 }
 function dialogSettings() {
   //main
@@ -159,6 +152,7 @@ dialogSettings.prototype.setButtonNeutralTextColor = function(num) {if (!emptyVa
 dialogSettings.prototype.setButtonNeutralBgColor = function(num) {if (!emptyVariable(num) && !isNaN(num)) {this.btn_neu_bg_color = num;}}
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                Message
 //////////////////////////////////////////////
 
 function dialogMessage(message) {
@@ -188,7 +182,7 @@ dialogMessage.prototype.show = function() {
     myTVtitle.setTextSize(this.title_txt_size);
     myTVtitle.setBackgroundColor(this.title_bg_color);
     myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
+    //myTVtitle.setGravity(Gravity.CENTER);
     //myTVtitle.setBackgroundResource(R.drawable.gradient);
     builder.setCustomTitle(myTVtitle);
     //builder.setTitle(this.title_txt);
@@ -201,7 +195,7 @@ dialogMessage.prototype.show = function() {
     myTVitem.setTextSize(this.item_txt_size);
     myTVitem.setBackgroundColor(this.item_bg_color);
     myTVitem.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVitem.setGravity(Gravity.CENTER);
+    //myTVitem.setGravity(Gravity.CENTER);
     //myTVitem.setBackgroundResource(R.drawable.gradient);
     builder.setView(myTVitem);
     //builder.setMessage(this.item_txt);
@@ -264,6 +258,7 @@ dialogMessage.prototype.show = function() {
 }
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                List
 //////////////////////////////////////////////
 
 function dialogList(items) {
@@ -297,7 +292,7 @@ dialogList.prototype.show = function() {
     myTVtitle.setTextSize(this.title_txt_size);
     myTVtitle.setBackgroundColor(this.title_bg_color);
     myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
+    //myTVtitle.setGravity(Gravity.CENTER);
     //myTVtitle.setBackgroundResource(R.drawable.gradient);
     builder.setCustomTitle(myTVtitle);
     //builder.setTitle(this.title_txt);
@@ -325,6 +320,7 @@ dialogList.prototype.show = function() {
       view.setBackgroundColor(item_bg__color);
       view.setTextColor(item_txt__color);
       view.setTextSize(item_txt__size);
+      //view.setGravity(Gravity.CENTER);
       //view.setPadding(10,10,10,10);
       return view;
     }
@@ -406,17 +402,169 @@ dialogList.prototype.show = function() {
 }
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                Checkbox
+//////////////////////////////////////////////
+
+function dialogCheckbox(items, itemsState) {
+  if (emptyVariable(items) || typeoff(items) != "array") {items = ["empty list"];}
+  if (emptyVariable(itemsState)) {itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);}}
+  this.item_txt = items;
+  this.item_exit = false;
+  this.item_state = itemsState;
+  this.btn_pos_txt = "Checked";
+  this.btn_neg_txt = "Close";
+  this.btn_neu_txt = "Unchecked";
+}
+dialogCheckbox.prototype = new dialogSettings();
+dialogCheckbox.prototype.getItems = function() {return this.item_txt;}
+dialogCheckbox.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items; var itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);} this.item_state = itemsState;}}
+dialogCheckbox.prototype.setItemsState = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {var itemsState = []; for (var i = 0; i < item_txt.length; ++i) {if (typeoff(items[i]) == "boolean") {itemsState.push(items[i]);} else {itemsState.push(false);}} this.item_state = itemsState;}}
+
+dialogCheckbox.prototype.show = function() {
+  var returnData = {};
+  returnData.name = this.name;
+  returnData.dialog = "Checkbox";
+  returnData.button = null;
+  returnData.position = -1;
+  returnData.exit = false;
+  returnData.state = this.item_state;
+
+  var colorStateList = [[
+  [-R.attr.state_checked],//unchecked
+  [ R.attr.state_checked]],
+  [this.ac_color, this.ac_color]];
+  colorStateList = new ColorStateList(colorStateList[0], colorStateList[1]);
+
+  var builder = new AlertDialog.Builder(context);
+
+  if (this.title_show) {
+    var myTVtitle = new TextView(context);
+    myTVtitle.setText(this.title_txt);
+    myTVtitle.setTextColor(this.title_txt_color);
+    myTVtitle.setTextSize(this.title_txt_size);
+    myTVtitle.setBackgroundColor(this.title_bg_color);
+    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
+    //myTVtitle.setGravity(Gravity.CENTER);
+    //myTVtitle.setBackgroundResource(R.drawable.gradient);
+    builder.setCustomTitle(myTVtitle);
+    //builder.setTitle(this.title_txt);
+  }
+
+  var item_bg__color = this.item_bg_color; var item_txt__color = this.item_txt_color; var item_txt__size = this.item_txt_size;
+  var adapter = new JavaAdapter(ArrayAdapter, {
+    getView:function(position, convertView, parent) {
+      var view = this.super$getView(position, convertView, parent);
+      view.setBackgroundColor(item_bg__color);
+      view.setTextColor(item_txt__color);
+      view.setTextSize(item_txt__size);
+      //view.setGravity(Gravity.CENTER);
+      //view.setPadding(10,10,10,10);
+      view.setCheckMarkTintList(colorStateList);
+      return view;
+    }
+  //{}, context, R.layout.select_dialog_multichoice, this.item_txt);
+  }, context, R.layout.simple_list_item_multiple_choice, this.item_txt);
+  builder.setAdapter(adapter, null);
+/* //default Checkbox dialog, no need for the adapter
+  builder.setMultiChoiceItems(this.item_txt, this.item_state, new DialogInterface.OnMultiChoiceClickListener() {onClick:function(dialog, position, isChecked) {
+      if (isChecked) {returnData.state[position] = true;} else {returnData.state[position] = false;}
+  }});
+  */
+  if (this.btn_pos_show) {builder.setPositiveButton(this.btn_pos_txt, null);}
+  if (this.btn_neg_show) {builder.setNegativeButton(this.btn_neg_txt, null);}
+  if (this.btn_neu_show) {builder.setNeutralButton(this.btn_neu_txt, null);}
+
+  //builder.setOnCancelListener(new DialogInterface.OnCancelListener() {onCancel:function(dialog) {showToast("Cancel");}});
+  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {onDismiss:function(dialog) {
+    returnData.exit = true; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ);
+  }});
+
+  var dialog = builder.create();
+  //dialog.setCancelable(true); //default = true
+  //dialog.setCanceledOnTouchOutside(false); //default = true
+
+  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
+
+  var window = dialog.getWindow();
+  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
+  //window.setGravity(Gravity.FILL_VERTICAL);//window.setGravity(Gravity.CENTER);
+
+  var lv = dialog.getListView();
+  lv.setDivider(new ColorDrawable(this.item_div_color));
+  lv.setDividerHeight(this.item_div_size);
+  //lv.setHeaderDividersEnabled(false);
+  //lv.setFooterDividersEnabled(false);
+  //lv.setCacheColorHint(0xaa00aa00);
+  lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+  var item__exit = this.item_exit;
+  lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {onItemClick:function(dialogg, view, position, id) {//view is a checkedTextView
+    if (view.isChecked()) {returnData.state[position] = true;} else {returnData.state[position] = false;}
+    //view.setBackgroundColor(item_bg__color); //focus color, if position match last position, reset prev color
+    //returnData.position = position; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.position = -1;
+  }});
+
+  dialog.show();
+
+  lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
+  for (var i = 0; i < this.item_txt.length; i++) {lv.setItemChecked(i, returnData.state[i]);}  //lv.getChildCount(); //like array.length
+
+  var btn;
+  if (this.btn_pos_show) {
+    var btn_pos__exit = this.btn_pos_exit;
+    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
+    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color); //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_pos__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_POSITIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
+    }});
+  }
+  if (this.btn_neg_show) {
+    var btn_neg__exit = this.btn_neg_exit;
+    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color); //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neg__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_NEGATIVE; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
+    }});
+  }
+  if (this.btn_neu_show) {
+    var btn_neu__exit = this.btn_neu_exit;
+    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color); //btn.setPadding(10, 10, 10, 10);
+    btn.getLayoutParams().setMargins(10, 0, 10, 0);
+    btn.setOnClickListener(new View.OnClickListener() {onClick:function(view) {if (btn_neu__exit) {dialog.dismiss();}
+      returnData.button = Dialog.BUTTON_NEUTRAL; var returnDataJ = JSON.stringify(returnData); dialogCallback(returnDataJ); returnData.button = null;
+    }});
+  }
+}
+
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                Your Code
 //////////////////////////////////////////////
 
 
 
 
 
+//var myItems = ["Easy","Medium","Hard","Very Hard"];
+
+//dialogMessageShow(myItems.join("\n"));
+//dialogListShow(myItems);
+//dialogCheckboxShow(myItems);
+//dialogTextInputShow("Input some text:","sample text");
+//dialogMenuShow();
+
+//var dialog = new AlertDialog.Builder(context).setMessage("Hello world").show();
+
+
+
 
 var msg = new dialogMessage("test"); msg.setName("msg"); msg.setTitleText("Message Dialog"); msg.setColorAccent(0xdd00ff00); msg.setButtonNegativeText("Close");
-var lst = new dialogList(); lst.setName("list"); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy","Medium","Hard","Very Hard"]); lst.setButtonNegativeText("Close");
-var mnu = new dialogList(); mnu.setName("menu"); mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message","List"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
-var menu_act = [msg, lst];
+var lst = new dialogList(); lst.setName("list"); lst.setTitleText("List Dialog"); lst.setColorAccent(0xdd00ff00); lst.setItems(["Easy", "Medium", "Hard", "Very Hard"]); lst.setButtonNegativeText("Close");
+var chk = new dialogCheckbox(); chk.setName("check"); chk.setTitleText("Checkbox Dialog"); chk.setItems(["Easy", "Medium", "Hard", "Very Hard"]); //chk.setButtonNegativeText("Close");
+var mnu = new dialogList(); mnu.setName("menu"); mnu.setTitleText("Dialog Menu"); mnu.setItems(["Message", "List", "Checkbox"]); mnu.exitOnClickItem(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonPositive(); mnu.hideButtonNeutral();
+var menu_act = [msg, lst, chk];
 mnu.show(); //msg.show(); //lst.show();
 
 
@@ -427,26 +575,46 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
   var e = i.getExtras();
   if (e.containsKey(dialogIntentKey)) {
     var value = e.get(dialogIntentKey); //showToast("receiver: " + value);
-    var myData = JSON.parse(value); if (emptyVariable(myData.position) && myData.position != 0) {myData.position = -1;}
-    //showToast("dia: " + myData.dialog + "\nbtn: " + myData.button + "\nexit: " + myData.exit + "\npos: " + myData.position);
+    var myData = JSON.parse(value); //if (emptyVariable(myData.position) && myData.position != 0) {myData.position = -1;}
+    //showToast("dia: " + myData.dialog + "\nbtn: " + myData.button + "\nexit: " + myData.exit + "\nname: " + myData.name);
 
-    switch (myData.name) {
-      case "menu":
-        if (myData.position != -1) {menu_act[myData.position].show();}
-        if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
-        if (myData.button == Dialog.BUTTON_NEGATIVE) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {alert(e.toString());}}
-        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+    switch (myData.dialog) {
+      case "Message":
+        if (myData.name == "msg") {
+          if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
+          //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
+          if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+        }
         break;
-      case "list":
-        if (myData.position != -1) {showToast(lst.getItems()[myData.position]);}
-        if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
-        //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
-        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+      case "List":
+        if (myData.name == "menu") {
+          if (myData.position != -1) {menu_act[myData.position].show();}
+          if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
+          if (myData.button == Dialog.BUTTON_NEGATIVE) {try {if (receiver != null) {context.unregisterReceiver(receiver);}} catch (e) {alert(e.toString());}}
+          if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+        }
+        if (myData.name == "list") {
+          if (myData.position != -1) {showToast(lst.getItems()[myData.position]);}
+          if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
+          //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
+          if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+        }
         break;
-      case "msg":
-        if (myData.button == Dialog.BUTTON_POSITIVE) {showToast("Button: Positive");}
-        //if (myData.button == Dialog.BUTTON_NEGATIVE) {showToast("Button: Negative");}
-        if (myData.button == Dialog.BUTTON_NEUTRAL) {showToast("Button: Neutral");}
+      case "Checkbox":
+        if (myData.name == "check") {
+          if (myData.position != -1) {showToast(chk.getItems()[myData.position]);}
+          if (myData.button == Dialog.BUTTON_POSITIVE) {
+            var itemsChecked = []; var items = chk.getItems();
+            for (i = 0; i < myData.state.length; i++) {if (myData.state[i]) {itemsChecked.push(items[i]);}}
+            showToast(itemsChecked.join(", ") + "\n" + itemsChecked + "\n\n" + myData.state);
+          }
+          if (myData.button == Dialog.BUTTON_NEGATIVE) {chk.setItemsState(myData.state);}
+          if (myData.button == Dialog.BUTTON_NEUTRAL) {
+            var itemsChecked = []; var items = chk.getItems();
+            for (i = 0; i < myData.state.length; i++) {if (!myData.state[i]) {itemsChecked.push(items[i]);}}
+            showToast(itemsChecked.join(", ") + "\n" + itemsChecked + "\n\n" + myData.state);
+          }
+        }
         break;
     }
     if (myData.exit && myData.name != "menu") {mnu.show();}
@@ -456,8 +624,11 @@ var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
 context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 
-
-
+/*
+var itemsChecked = [];
+for (i = 0; i < items.length; i++) {if (myData.state[i]) {itemsChecked.push(items[i]);}}
+showToast(buttonId + " | " + itemsChecked.join(", ") + "\n" + itemsChecked + "\n" + myData.state);
+*/
 
 /*
 //https://github.com/NativeScript/NativeScript/issues/4007
@@ -491,164 +662,14 @@ app.android.foregroundActivity.registerReceiver(_callBackReceiver, this.getInten
 
 
 
-//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//////////////////////////////////////////////
 
-function dialogCheckbox(items, itemsState) {
-  if (emptyVariable(items) || typeoff(items) != "array") {items = ["empty list"];}
-  if (emptyVariable(itemsState)) {itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);}}
-  this.item_txt = items;
-  this.item_exit = false;
-  this.item_state = itemsState;
-  this.btn_pos_txt = "Checked";
-  this.btn_neg_txt = "Close";
-  this.btn_neu_txt = "Unchecked";
-}
-dialogCheckbox.prototype = new dialogSettings();
-dialogCheckbox.prototype.getItems = function() {return this.item_txt;}
-dialogCheckbox.prototype.setItems = function(items) {if (!emptyVariable(items) && typeoff(items) == "array") {this.item_txt = items; var itemsState = []; for (var i = 0; i < items.length; ++i) {itemsState.push(false);} this.item_state = itemsState;}}
 
-dialogCheckbox.prototype.show = function() {
-  var returnData = {};
-  returnData.name = this.name;
-  returnData.dialog = "List";
-  returnData.button = null;
-  returnData.position = -1;
-  returnData.exit = false;
 
-  var colorStateList = [[
-  [-R.attr.state_checked],//unchecked
-  [ R.attr.state_checked]],
-  [this.ac_color, this.ac_color]];
-  colorStateList = new ColorStateList(colorStateList[0], colorStateList[1]);
 
-  var builder = new AlertDialog.Builder(context);
 
-  if (this.title_show) {
-    var myTVtitle = new TextView(context);
-    myTVtitle.setText(this.title_txt);
-    myTVtitle.setTextColor(this.title_txt_color);
-    myTVtitle.setTextSize(this.title_txt_size);
-    myTVtitle.setBackgroundColor(this.title_bg_color);
-    myTVtitle.setPadding(10, 20, 10, 20);//setPadding(int left, int top, int right, int bottom)
-    myTVtitle.setGravity(Gravity.CENTER);
-    //myTVtitle.setBackgroundResource(R.drawable.gradient);
-    builder.setCustomTitle(myTVtitle);
-    //builder.setTitle(this.title_txt);
-  }
-  var item_bg__color = this.item_bg_color; var item_txt__color = this.item_txt_color; var item_txt__size = this.item_txt_size;
 
-  var adapter = new JavaAdapter(ArrayAdapter, {
-    getView:function(position, convertView, parent) {
-      var view = this.super$getView(position, convertView, parent);
-      view.setBackgroundColor(item_bg__color);
-      view.setTextColor(item_txt__color);
-      view.setTextSize(item_txt__size);
-      //view.setPadding(10,10,10,10);
-      view.setCheckMarkTintList(colorStateList);
-      return view;
-    }
-  //{}, context, R.layout.select_dialog_multichoice, this.item_txt);
-  }, context, R.layout.simple_list_item_multiple_choice, this.item_txt);
-  builder.setAdapter(adapter, null);
-/*
-  builder.setMultiChoiceItems(this.item_txt, this.item_state, new DialogInterface.OnMultiChoiceClickListener() {
-    onClick:function(dialog, position, isChecked) {
-      if (isChecked) {itemsState[position] = true;}
-      else {itemsState[position] = false;}
-    }
-  });
-*/
-  if (this.btn_pos_show) {
-    builder.setPositiveButton(this.btn_pos_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {
-        var itemsChecked = [];
-        for (i = 0; i < items.length; i++) {
-          if (itemsState[i]) {itemsChecked.push(items[i]);}
-        }
-        showToast(buttonId + " | " + itemsChecked.join(", ") + "\n" + itemsChecked + "\n" + itemsState);
-      }
-    });
-  }
-  if (this.btn_neg_show) {
-    builder.setNegativeButton(this.btn_neg_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {dialog.cancel();}
-    });
-  }
-  if (this.btn_neu_show) {
-    builder.setNeutralButton(this.btn_neu_txt, new DialogInterface.OnClickListener() {
-      onClick:function(dialog, buttonId) {
-        var itemsChecked = [];
-        for (i = 0; i < items.length; i++) {
-          if (!itemsState[i]) {itemsChecked.push(items[i]);}
-        }
-        showToast(buttonId + " | " + itemsChecked.join(", ") + "\n" + itemsChecked + "\n" + itemsState);
-      }
-    });
-  }
-  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-    onCancel:function(dialog) {dialogExit = true;}
-  });
 
-  //cancel is called when explicit set, pressing the back key / default action is dismiss / after cancel, dissmiss gets called too
-  builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-    onDismiss:function(dialog) {
-      if (dialogExit) {dialogMenuShow();} else {dialogCheckboxShow(this.item_txt, itemsState);}
-    }
-  });
 
-  var dialog = builder.create();
-  //dialog.setCancelable(true); //dialog.setCancelable(false);
-  //dialog.setCanceledOnTouchOutside(false); //default = true
-
-  if (!this.title_show) {dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);}
-
-  var window = dialog.getWindow();
-  window.setBackgroundDrawable(new ColorDrawable(this.bg_color));
-  //window.setGravity(Gravity.FILL_VERTICAL);//window.setGravity(Gravity.CENTER);
-
-  var lv = dialog.getListView();
-  lv.setDivider(new ColorDrawable(this.item_div_color));
-  lv.setDividerHeight(this.item_div_size);
-  //lv.setHeaderDividersEnabled(false);
-  //lv.setFooterDividersEnabled(false);
-  //lv.setCacheColorHint(0xaa00aa00);
-  lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-  lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-    onItemClick:function(dialog, view, position, id) {
-      if (view.isChecked()) {itemsState[position] = true;} else {itemsState[position] = false;}
-      //view.setBackgroundColor(this.item_bg_color);
-      //view is a checkedTextView
-    }
-  });
-
-  dialog.show();
-
-  lv.getLayoutParams().setMargins(this.item_div_size, 0, this.item_div_size, 0);
-  //lv.getChildCount(); //like array.length
-  for (var i = 0; i < this.item_txt.length; i++) {lv.setItemChecked(i, itemsState[i]);}
-
-  var btn;
-  if (this.btn_pos_show) {
-    btn = dialog.getButton(Dialog.BUTTON_POSITIVE);
-    btn.setTextSize(this.btn_pos_txt_size); btn.setTextColor(this.btn_pos_txt_color); btn.setBackgroundColor(this.btn_pos_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neg_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-    btn.setTextSize(this.btn_neg_txt_size); btn.setTextColor(this.btn_neg_txt_color); btn.setBackgroundColor(this.btn_neg_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-  if (this.btn_neu_show) {
-    btn = dialog.getButton(Dialog.BUTTON_NEUTRAL);
-    btn.setTextSize(this.btn_neu_txt_size); btn.setTextColor(this.btn_neu_txt_color); btn.setBackgroundColor(this.btn_neu_bg_color);
-    //btn.setPadding(10, 10, 10, 10);
-    btn.getLayoutParams().setMargins(10, 0, 10, 0);
-  }
-}
 
 
 function dialogTextInputShow(message, text){
