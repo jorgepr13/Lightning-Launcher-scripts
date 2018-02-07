@@ -1,0 +1,323 @@
+https://stackoverflow.com/questions/418799/what-does-colon-do-in-javascript
+
+
+What does ':' (colon) do in JavaScript?
+
+I'm learning JavaScript and while browsing through the jQuery library I see : (colon) being used a lot. What is this used for in JavaScript?
+
+// Return an array of filtered elements (r)
+// and the modified expression string (t)
+   return { r: r, t: t };
+share improve this question
+asked
+Jan 7 '09 at 0:52
+
+Micah
+50.3k●72●194●300 edited
+Dec 9 '12 at 17:09
+ 
+smholloway
+499●6●14
+10 Answers
+order by  
+up vote
+196
+down vote
+accepted
+var o = {
+    r: 'some value',
+    t: 'some other value'
+};
+is functionally equivalent to
+
+var o = new Object();
+o.r = 'some value';
+o.t = 'some other value';
+share improve this answer
+answered
+Jan 7 '09 at 0:55
+
+yfeldblum
+56.1k●8●115●159
+11
+So similar to C# object initializer syntax. Thanks! – Micah Jan 7 '09 at 0:56
+@FranciscI.B Doesn't look like javascript to me – DevilishDB Sep 22 '14 at 20:10
+@Franciscl.B then why are you commenting on a question about JavaScript? – DevilishDB Sep 24 '14 at 5:16
+What if there is no enclosing object? – theonlygusti Nov 26 '14 at 16:56
+@FranciscI.B if i had to guess, i think that's TypeScript, which is a superset of JavaScript. It's declaring a class, with a var named xMin, whose type is a float. Pretty sur that's what that means. – Sal_Vader_808 May 14 '17 at 11:08
+add a comment
+up vote
+72
+down vote
+And also, a colon can be used to label a statement. for example
+
+var i = 100, j = 100;
+outerloop:
+while(i>0) {
+  while(j>0) {
+   j++
+
+   if(j>50) {
+     break outerloop;
+   }
+  }
+i++
+
+}
+share improve this answer
+community wiki
+Breton answered
+Jan 7 '09 at 1:24
+
+49
+Oh noes! A GOTO in disguise!!! :) – Ates Goral Oct 29 '09 at 3:07
+4
+that is what i'am looking for~ – james li Apr 24 '12 at 2:05
+1
+LABEL A ((STATEMENT)) – Muhammad Umer Apr 5 '13 at 4:51
+2
+Wow, is this possible? Please don't tell anybody. Oh... wait... – Mathias Lykkegaard Lorenzen Mar 19 '15 at 16:56
+1
+Relevant xkcd – Joze Jul 2 '15 at 13:12
+show 4 more comments
+up vote
+61
+down vote
+You guys are forgetting that the colon is also used in the ternary operator (though I don't know if jquery uses it for this purpose).
+
+the ternary operator is an expression form (expressions return a value) of an if/then statement. it's used like this:
+
+var result = (condition) ? (value1) : (value2) ;
+A ternary operator could also be used to produce side effects just like if/then, but this is profoundly bad practice.
+
+share improve this answer
+answered
+Jan 7 '09 at 1:13
+
+Breton
+12.5k●2●48●72 edited
+Oct 29 '09 at 13:58
+
+you mean A ternary operator? – micmoo Oct 29 '09 at 3:01
+2
+AKA "ternary operator". Note that the OP is strictly asking about the object literal case. If we're to go even beyond what the OP is asking, the colon is also used in labels. – Ates Goral Oct 29 '09 at 3:06
+12
+yes I did mean that. I should just stay off the internet, really, if i'm going to go around flagrantly mis-identifying programming concepts like that. – Breton Oct 29 '09 at 13:59
+It would be awesome to see it used for labels and whatever else so the use is never confused @AtesGoral because I am now still googling those right now. – Shane Jan 3 '14 at 6:40
+Maybe it would be easier to list the things that : isn't used for in Javascript. – kingfrito_5005 Jul 28 '15 at 17:52
+add a comment
+up vote
+37
+down vote
+The ':' is a delimiter for key value pairs basically. In your example it is a Javascript Object Literal notation.
+
+In javascript, Objects are defined with the colon delimiting the identifier for the property, and its value so you can have the following:
+
+return { 
+    Property1 : 125,
+    Property2 : "something",
+    Method1 : function() { /* do nothing */ },
+    array: [5, 3, 6, 7]
+};
+and then use it like:
+
+var o =  { 
+    property1 : 125,
+    property2 : "something",
+    method1 : function() { /* do nothing */ },
+    array: [5, 3, 6, 7]
+};
+
+alert(o.property1); // Will display "125"
+A subset of this is also known as JSON (Javascript Object Notation) which is useful in AJAX calls because it is compact and quick to parse in server-side languages and Javascript can easily de-serialize a JSON string into an object.
+
+// The parenthesis '(' & ')' around the object are important here
+var o = eval('(' + "{key: \"value\"}" + ')');
+You can also put the key inside quotes if it contains some sort of special character or spaces, but I wouldn't recommend that because it just makes things harder to work with.
+
+Keep in mind that JavaScript Object Literal Notation in the JavaScript language is different from the JSON standard for message passing. The main difference between the 2 is that functions and constructors are not part of the JSON standard, but are allowed in JS object literals.
+
+share improve this answer
+answered
+Jan 7 '09 at 1:01
+
+Dan Herbert
+62.7k●40●162●205 edited
+Jun 29 '11 at 15:57
+
+2
+As I read your response I thought I would vote it up, but then you said that "It is also known as JSON". Object literals and JSON are definitely not the same thing, indeed your examples before you mention JSON are not valid JSON. – nnnnnn Jun 28 '11 at 23:25
+@nnnnnn The difference between the 2 are very subtle, but important nonetheless. I've updated my answer to be more specific in regards to that. – Dan Herbert Jun 29 '11 at 15:58
+1
+I see the update. Nice. Note that JSON requires that key names be in quotes. – nnnnnn Jun 30 '11 at 0:07
+Why do you have to mention all of that twice? When you said "and then use it like" – Harsha Apr 22 '17 at 18:29
+add a comment
+up vote
+16
+down vote
+It is part of the object literal syntax. The basic format is:
+
+var obj = { field_name: "field value", other_field: 42 };
+Then you can access these values with:
+
+obj.field_name; // -> "field value"
+obj["field_name"]; // -> "field value"
+You can even have functions as values, basically giving you the methods of the object:
+
+obj['func'] = function(a) { return 5 + a;};
+obj.func(4);  // -> 9
+share improve this answer
+answered
+Jan 7 '09 at 1:00
+
+bandi
+3,499●1●20●24
+1
+Great because it gave me the term to search for and find out more information. – johnny May 9 '14 at 16:24
+add a comment
+up vote
+12
+down vote
+It can be used to list objects in a variable. Also, it is used a little bit in the shorthand of an if sentence:
+
+var something = {face: 'hello',man: 'hey',go: 'sup'};
+And calling it like this
+
+alert(something.man);
+Also the if sentence:
+
+function something() {  
+  (some) ? doathing() : dostuff(); // if some = true doathing();, else dostuff();
+}
+share improve this answer
+answered
+Jun 8 '12 at 8:00
+
+user1431627
+426●8●23 edited
+Jul 25 '13 at 15:34
+ 
+iConnor
+13.7k●9●46●83
+up vote
+10
+down vote
+Let's not forget the switch statement, where colon is used after each "case".
+
+share improve this answer
+answered
+Jun 7 '11 at 10:57
+
+Teppo Vuori
+101●1●2
+up vote
+6
+down vote
+That's JSON, or JavaScript Object Notation. It's a quick way of describing an object, or a hash map. The thing before the colon is the property name, and the thing after the colon is its value. So in this example, there's a property "r", whose value is whatever's in the variable r. Same for t.
+
+share improve this answer
+answered
+Jan 7 '09 at 0:56
+
+JW.
+34.3k●26●91●111
+3
+JSON is only a subset of JavaScript object initialization syntax. '{ a: k() }' where k is a function is not JSON, but it is perfectly fine JavaScript object initialization syntax. – yfeldblum Jan 7 '09 at 0:59
+11
+To be pedantic, no, it's not "JSON". It looks like JSON. It's the object literal syntax that is native to JavaScript and that can appear directly inside code. JSON on the other hand is a data serialization/interchange format. JSON is JSON only when it's "airborne", i.e. in transit or when it's not yet parsed into a real object. – Ates Goral Oct 29 '09 at 3:10
+2
++1 for Ates Goral, but note that the example given doesn't even look like JSON: the names would have to be in double-quotes for it to be valid JSON syntax. – NickFitz Oct 29 '09 at 14:03
+add a comment
+up vote
+6
+down vote
+These are generally the scenarios where colon ':' is used in JavaScript
+
+1- Declaring and Initializing an Object
+
+var Car = {model:"2015", color:"blue"}; //car object with model and color properties
+2- Setting a Label (Not recommended since it results in complicated control structure and Spaghetti code)
+
+List: 
+while(counter < 50)
+{
+     userInput += userInput;
+     counter++;
+     if(userInput > 10000)
+     {
+          break List;
+     }
+}
+3- In Switch Statement
+
+switch (new Date().getDay()) {
+    case 6:
+        text = "Today is Saturday";
+        break; 
+    case 0:
+        text = "Today is Sunday";
+        break; 
+    default: 
+        text = "Looking forward to the Weekend";
+}
+4- In Ternary Operator
+
+document.getElementById("demo").innerHTML = age>18? "True" : "False";
+share improve this answer
+answered
+Apr 8 '16 at 15:28
+
+Leo The Four
+351●6●12
+A single colon can also be used for short-circuit evaluation in lieu of ||. Example: var a = false, b = a || 'Default value'; is equivalent to var a = false, b = a : 'Default value'; – Shaun Cockerill Jan 23 at 3:04
+add a comment
+up vote
+3
+down vote
+One stupid mistake I did awhile ago that might help some people.
+
+Keep in mind that if you are using ":" in an event like this, the value will not change
+
+var ondrag = (function(event, ui) {
+            ...
+
+            nub0x: event.target.offsetLeft + event.target.clientWidth/2;
+            nub0y = event.target.offsetTop + event.target.clientHeight/2;
+
+            ...
+        });
+So "nub0x" will initialize with the first event that happens and will never change its value. But "nub0y" will change during the next events.
+
+share improve this answer
+answered
+Jun 9 '16 at 19:06
+
+Younes Nj
+168●1●13
+I came upon this, and fyi actually what is happening here is that you are using a label before your statement. No assignment is made, but the statement event.target.offsetLeft + event.target.clientWidth/2; does run each time your ondrag method is called, but never assign the value to nub0x – KKetch Feb 3 '17 at 10:20
+Actually this is being used as an evaluation, and the : is being treated as though it were a ||. Therefore, event.target.offsetLeft + event.target.clientWidth/2; will only trigger each time provided nub0x equates to false. – Shaun Cockerill Jan 23 at 3:11
+add a comment
+Your Answer
+
+Body
+ Add picture
+
+ 
+Log in
+
+OR
+Name
+
+Email
+
+ 
+By posting your answer, you agree to the privacy policy and terms of service.
+
+meta chat tour help blog privacy policy legal contact us full site
+Download the Stack Exchange Android app
+2018 Stack Exchange, Inc
+
+
+
+
+

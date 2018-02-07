@@ -15,7 +15,7 @@ getTaskerVariable(["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"]);
 
 3. Optional
 You can have your Tasker "class" as an individual script and "import" it with the following code.
-try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 Where "Tasker_Functions" is the name of the script.
 
 Additional

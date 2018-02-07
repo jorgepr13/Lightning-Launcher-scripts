@@ -461,8 +461,12 @@ Returns the container containing this item.
 //########################
 //########################
 //########################
-
-
+// find item > name, id, container
+//check container, from current desktop recursive skip container, check all desktops recursive skip prev desktop
+//check drawer
+//if not found, ask to create it
+//return array of items
+//will help at the creation, with badges positioning, removal
 
 //var soc = new LLPanel(); soc.setName("social_test"); soc.setPosition(7, 2); soc.setSize(2, 2); soc.makePanel(); soc.setItemProperties();
 //soc.create();
