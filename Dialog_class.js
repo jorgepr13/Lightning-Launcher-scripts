@@ -31,11 +31,12 @@ function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDurati
 //                Settings
 //////////////////////////////////////////////
 
-var dialogIntent = "dialogClass.for.LightningLauncher"; var dialogIntentKey = "data";
+//var dialogIntent = "dialogClass.for.LightningLauncher"; var dialogIntentKey = "data";
 function dialogCallback(txt) {
   if (emptyVariable(txt)) {return;}
-  var i = new Intent(dialogIntent); i.putExtra(dialogIntentKey, txt.toString());
-  context.sendBroadcast(i); //LocalBroadcastManager.context.sendBroadcast(i);
+  dialogHandler(txt);
+  //var i = new Intent(dialogIntent); i.putExtra(dialogIntentKey, txt.toString());
+  //context.sendBroadcast(i); //LocalBroadcastManager.context.sendBroadcast(i);
 }
 function dialogSettings() {
   //main
@@ -689,12 +690,17 @@ dialogTextInput.prototype.show = function() {
     }});
   }
 }
-
+/*
 //var receiver = new JavaAdapter(BroadcastReceiver, {onReceive:function(c, i) { //context, intent //android.content.ContextWrapper
 var receiver = new BroadcastReceiver() {onReceive:function(c, i) {
   var e = i.getExtras(); if (e.containsKey(dialogIntentKey)) {var value = e.get(dialogIntentKey); dialogHandler(value);} }}
 context.registerReceiver(receiver, new IntentFilter(dialogIntent));
 //LocalBroadcastManager.context.registerReceiver(receiver, new IntentFilter(dialogIntent));
+*/
+
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//                Return Info
+//////////////////////////////////////////////
 
 /*
 myDialog.id = this.name;

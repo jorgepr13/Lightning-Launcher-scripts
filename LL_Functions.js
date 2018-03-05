@@ -1,3 +1,107 @@
+/*
+want to:
+add more weather providers 
+add more locations 
+use the dialogs to get the ingo
+
+have a menu on long press 
+set categories on long press menu 
+set/create badges
+
+create my badges
+find parent info, location 
+get child (badge) info to parent 
+show/hide badge on zero 
+find the parent and position the badge automatically 
+do it if the parent gets moved 
+
+find item by label, by package in app drawer 
+
+have a more direct / easier way to perform modifications to shortcuts 
+do something without selecting the parent and it will still be good 
+
+music widget 
+
+shopping list with keep or tasks or business calendar 
+
+category of apps in drop down style 
+set categories on long press menu 
+recent contacts, phone, whatsapp, Kakao 
+
+icons per category 
+
+drawing class 
+
+
+
+badge class
+
+default shortcut
+
+label shortcut
+
+
+
+
+
+
+workout timing plan 
+*/
+/*
+badges
+
+create my badges
+find parent info, location 
+get child (badge) info to parent 
+show/hide badge on zero 
+find the parent and position the badge automatically 
+do it if the parent gets moved
+
+var itm = getActiveScreen().getItemById(itmFind[0]);
+//var cnt = itm.getParent();
+var grd = itm.getProperties().getBoolean("i.onGrid");
+var pos = [itm.getPositionX(), itm.getPositionY()];
+var cel = itm.getCell();
+
+
+
+
+Item
+public Container getParent ()
+Returns the container containing this item.
+
+public RectL getCell ()
+Returns the cell allocated to this item (only works when attached to the grid).
+
+public float getPositionX ()
+Returns
+this item X position (only available when the script is not run in background).
+public float getPositionY ()
+Returns
+this item Y position (only available when the script is not run in background).
+public PropertySet getProperties ()
+Retrieve properties for this item. Please note that modifying properties is expensive and not well suited for item animation.
+
+public String getTag (String id)
+Returns the value associated with this item and id. Can be undefined if it has never been set. Using a null id is the same as calling getTag() without argument
+
+See Also
+setTag(String, String)
+
+public int getHeight ()
+Returns this item view height.
+
+public int getWidth ()
+Returns this item view width.
+
+public boolean isVisible ()
+Returns true if the item is visible.
+
+See Also
+setVisibility(boolean)
+
+
+*/
 
 //import Tasker functions
 //try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
@@ -479,14 +583,13 @@ fb.setLabelSize(30); fb.setProperties();//fb.create();
 //var sc = new LLShortcut(); sc.setContainer(soc.getContainer()); sc.setName("sc_test"); sc.setLabel("SCx"); sc.setPosition(0, 1); sc.setPkgLabel("Snapchat"); //sc.setPkg(""); //sc.getInfo();
 //sc.setLabelSize(20); sc.create();
 
+//var fbb = fb; fbb.setPosition(8, 2); fbb.create(); //not creating another shortcut 
 
 
 save();
-/*
+/*//restart the launcher
 bindClass("java.lang.System");
-//restart the launcher
-System.runFinalization();
-System.exit(0);
+System.runFinalization(); System.exit(0);
 */
 
 /*

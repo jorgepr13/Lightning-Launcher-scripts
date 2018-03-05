@@ -392,6 +392,14 @@ for (var i = 0; i < 10; ++i) {
 }
 
 //fol_i.close();
+save();
+/*
+//restart the launcher
+bindClass("java.lang.System");
+System.runFinalization(); System.exit(0);
+*/
+
+
 
 function set_panel_defaults(itm,row,col) {
 	if (itm === null || row === null || col === null) {return;} //no item received
