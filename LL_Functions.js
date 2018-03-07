@@ -41,6 +41,8 @@ default shortcut
 label shortcut
 
 
+create individual functions passing the item to apply the action to 
+-needs check for the type of item passed 
 
 
 
@@ -48,6 +50,15 @@ label shortcut
 workout timing plan 
 */
 /*
+function show/hide label (item) {
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {
+    item.getProperties().edit().setBoolean("s.labelVisibility", true).commit();
+  }
+}
+
+
+
 badges
 
 create my badges

@@ -13,6 +13,16 @@ create the items then use the func finder to apply the theme
 app tag variable in json , social = [pkg] 
 tag handler, check/create the app in the folder/s fol_social
 
+var tag = {[]};
+tag[].name = "social"
+tag[].item = [];
+tag[].item[].label = "";
+tag[].item[].pkg = "";
+tag[].cont[].id = ;
+tag[].cont[].name = "";
+
+
+
 */
 LL.bindClass("java.io.BufferedReader");
 LL.bindClass("java.io.FileReader");
