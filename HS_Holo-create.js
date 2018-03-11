@@ -10,8 +10,11 @@ name, +x from UTC, DTS
 
 create the items then use the func finder to apply the theme
 
+change it to categories
+social, finance, fitness, educational, tools, coding, media
 app tag variable in json , social = [pkg] 
 tag handler, check/create the app in the folder/s fol_social
+allow containers with multiple categories 
 
 var tag = {[]};
 tag[].name = "social"
@@ -21,6 +24,8 @@ tag[].item[].pkg = "";
 tag[].cont[].id = ;
 tag[].cont[].name = "";
 
+show a menu with the current tags, multi select, create tags, tag manager
+tag manager, add/removes the apps to the containers (check first), add/remove tags
 
 
 */
