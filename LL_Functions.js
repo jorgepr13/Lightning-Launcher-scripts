@@ -361,11 +361,12 @@ function setIconMode(item, mode) {if (emptyVariable(item)) {return;}
 }
 
 function getIconScale(item) {if (emptyVariable(item)) {return;}
-  var scale = 0; var type = item.getType().toLowerCase();
+  var scale = 1; var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {scale = item.getProperties().getFloat("s.iconScale");}
   return scale;
 }
 function setIconScale(item, scale) {if (emptyVariable(item)) {return;}
+  //Default = 100%, you may enlarge or shrink icons by a factor up to 4. Keep in mind that enlarging icons will require much more memory, because the number of pixels is the square of the icon dimension. 
   if (emptyVariable(scale)) {scale = 10;}
   var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.iconScale", scale).commit();}
@@ -425,6 +426,15 @@ function hideIconFilter(item) {if (emptyVariable(item)) {return;}
   var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconFilter", false).commit();}
 }
+
+//item.setDefaultIcon(icon);
+//itm.setBoxBackground(img, "ns", true);
+
+//var img = LL.createImage(drawing, -1, -1);
+//var bmp = pm.getActivityIcon(myIntent).getBitmap();
+//var img = Image.createImage(bmp.getWidth(), bmp.getHeight());
+//img.draw().drawBitmap(bmp, 0, 0, null);
+
 
 /*
 public boolean  getBoolean (String name) 
