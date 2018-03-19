@@ -220,6 +220,12 @@ public Container getParent ()
 Returns the container containing this item.
 
 
+public boolean  getBoolean (String name) 
+public Box  getBox (String name) 
+public EventHandler  getEventHandler (String name) 
+public float  getFloat (String name) 
+public int  getInteger (String name) 
+public String  getString (String name) 
 */
 
 //get current container
@@ -249,6 +255,8 @@ function hideLabel(item) {if (emptyVariable(item)) {return;}
   var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.labelVisibility", false).commit();}
 }
+
+// label
 function getLabel(item) {if (emptyVariable(item)) {return;}
   var label = ""; var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {label = item.getLabel();}
@@ -259,6 +267,7 @@ function setLabel(item, label) {if (emptyVariable(item)) {return;}
   var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {item.setLabel(label, true);}
 }
+
 function getLabelSize(item) {if (emptyVariable(item)) {return;}
   var size = 0; var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {size = item.getProperties().getFloat("s.labelFontSize");}
@@ -269,27 +278,30 @@ function setLabelSize(item, size) {if (emptyVariable(item)) {return;}
   var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.labelFontSize", size).commit();}
 }
+
 function getLabelStyles() {return ["NORMAL", "ITALIC", "BOLD", "BOLD_ITALIC"];}
 function getLabelStyle(item) {if (emptyVariable(item)) {return;}
   var style = ""; var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {style = item.getProperties().getFloat("s.labelFontSize");}
+  if (type == "folder" || type == "shortcut") {style = item.getProperties().getString("s.labelFontStyle");}
   return style;
 }
 function setLabelStyle(item, style) {if (emptyVariable(item)) {return;}
   if (emptyVariable(style)) {style = "NORMAL";}
   var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.labelFontSize", style).commit();}
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setString("s.labelFontStyle", style).commit();}
 }
+
 function getLabelFont(item) {if (emptyVariable(item)) {return;}
   var font = ""; var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {font = item.getProperties().getFloat("s.labelFontTypeFace");}
+  if (type == "folder" || type == "shortcut") {font = item.getProperties().getString("s.labelFontTypeFace");}
   return font;
 }
 function setLabelFont(item, font) {if (emptyVariable(item)) {return;}
   if (emptyVariable(font)) {font = "";}
   var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.labelFontTypeFace", font).commit();}
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setString("s.labelFontTypeFace", font).commit();}
 }
+
 function getLabelColor(item) {if (emptyVariable(item)) {return;}
   var color = 0xffffffff; var type = item.getType().toLowerCase();
   if (type == "folder" || type == "shortcut") {color = item.getProperties().getFloat("s.labelFontColor");}
@@ -298,28 +310,143 @@ function getLabelColor(item) {if (emptyVariable(item)) {return;}
 function setLabelColor(item, color) {if (emptyVariable(item)) {return;}
   if (emptyVariable(color)) {color = 0xffffffff;}
   var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.labelFontColor", color).commit();}
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setInteger("s.labelFontColor", color).commit();}
 }
+
 function getLabelColorFocused(item) {if (emptyVariable(item)) {return;}
   var color = 0xffffffff; var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {color = item.getProperties().getFloat("s.focusColorLabel");}
+  if (type == "folder" || type == "shortcut") {color = item.getProperties().getInteger("s.focusColorLabel");}
   return color;
 }
 function setLabelColorFocused(item, color) {if (emptyVariable(item)) {return;}
   if (emptyVariable(color)) {color = 0xffffffff;}
   var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.focusColorLabel", color).commit();}
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setInteger("s.focusColorLabel", color).commit();}
 }
+
 function getLabelColorSelected(item) {if (emptyVariable(item)) {return;}
   var color = 0xffffffff; var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {color = item.getProperties().getFloat("s.selectionColorLabel");}
+  if (type == "folder" || type == "shortcut") {color = item.getProperties().getInteger("s.selectionColorLabel");}
   return color;
 }
 function setLabelColorSelected(item, color) {if (emptyVariable(item)) {return;}
   if (emptyVariable(color)) {color = 0xffffffff;}
   var type = item.getType().toLowerCase();
-  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.selectionColorLabel", color).commit();}
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setInteger("s.selectionColorLabel", color).commit();}
 }
+
+
+
+
+// icon
+function showIcon(item) {if (emptyVariable(item)) {return;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconVisibility", true).commit();}
+}
+function hideIcon(item) {if (emptyVariable(item)) {return;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconVisibility", false).commit();}
+}
+
+function getIconModes() {return ["STANDARD", "REAL", "FULL_SCALE"];}
+function getIconMode(item) {if (emptyVariable(item)) {return;}
+  var mode = ""; var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {mode = item.getProperties().getString("s.iconSizeMode");}
+  return mode;
+}
+function setIconMode(item, mode) {if (emptyVariable(item)) {return;}
+  if (emptyVariable(mode)) {mode = "NORMAL";}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setString("s.iconSizeMode", mode).commit();}
+}
+
+function getIconScale(item) {if (emptyVariable(item)) {return;}
+  var scale = 0; var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {scale = item.getProperties().getFloat("s.iconScale");}
+  return scale;
+}
+function setIconScale(item, scale) {if (emptyVariable(item)) {return;}
+  if (emptyVariable(scale)) {scale = 10;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.iconScale", scale).commit();}
+}
+
+function showIconReflection(item) {if (emptyVariable(item)) {return;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconReflection", true).commit();}
+}
+function hideIconReflection(item) {if (emptyVariable(item)) {return;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconReflection", false).commit();}
+}
+
+function getIconReflectionOffset(item) {if (emptyVariable(item)) {return;}
+  var offset = 0.3; var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {offset = item.getProperties().getFloat("s.iconReflectionOverlap");}
+  return offset;
+}
+function setIconReflectionOffset(item, offset) {if (emptyVariable(item)) {return;}
+  //Default = 30%, the amount of the icon reflection which is drawn under the original icon.
+  if (emptyVariable(offset)) {offset = .3;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.iconReflectionOverlap", offset).commit();}
+}
+
+function getIconReflectionSize(item) {if (emptyVariable(item)) {return;}
+  var size = 1; var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {size = item.getProperties().getFloat("s.iconReflectionSize");}
+  return size;
+}
+function setIconReflectionSize(item, size) {if (emptyVariable(item)) {return;}
+	//Default = 100%, controls which parts of the original icon is used to build the mirror.
+  if (emptyVariable(size)) {size = 1;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.iconReflectionSize", size).commit();}
+}
+
+function getIconReflectionScale(item) {if (emptyVariable(item)) {return;}
+  var scale = 1; var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {scale = item.getProperties().getFloat("s.iconReflectionScale");}
+  return scale;
+}
+function setIconReflectionScale(item, scale) {if (emptyVariable(item)) {return;}
+	//Default = 100%, enable an additional scale of the mirror effect.
+  if (emptyVariable(scale)) {scale = 1;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setFloat("s.iconReflectionScale", scale).commit();}
+}
+
+function showIconFilter(item) {if (emptyVariable(item)) {return;}
+  //Default: off, reduce scaling artefacts due to one type of icon provided, ie. high resolution only
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconFilter", true).commit();}
+}
+function hideIconFilter(item) {if (emptyVariable(item)) {return;}
+  var type = item.getType().toLowerCase();
+  if (type == "folder" || type == "shortcut") {item.getProperties().edit().setBoolean("s.iconFilter", false).commit();}
+}
+
+/*
+public boolean  getBoolean (String name) 
+public float  getFloat (String name) 
+public int  getInteger (String name) 
+public String  getString (String name)
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
