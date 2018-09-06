@@ -1,0 +1,275 @@
+
+//var mod_date = 20171022;
+
+
+/*
+var items = [
+    [sz,"call","Phone","Contacts +","com.contapps.android"],
+    [sz,"cal","Calendar","label sys (for search)","com.appgenix.bizcal"],
+    [sz,"txt","Txt","Contacts +","com.contapps.android"],
+    [sz,"txt_b","Txt","Messages",""]
+];
+
+item class
+container class
+shortcut class
+panel class
+folder class
+
+*/
+
+function ShortcutLL() {
+    //label.size, .color, .text, .font, .fontstyle, .cnt,
+    this.label      = "";
+    this.label.size = 20;
+    this.name       = "";
+    this.pkg        = "";
+    this.pkglabel   = "";
+    this.intent     = null;
+}
+
+ShortcutLL.prototype.setName = function(nm) {
+    if (nm == null || nm == undefined) {this.name = "";
+    } else {this.name = nm};
+}
+
+ShortcutLL.prototype.setLabel = function(lbl) {
+    if (lbl == null || lbl == undefined) {this.label = "";
+    } else {this.label = lbl};
+}
+
+ShortcutLL.prototype.setLabelSize = function(sz) {
+    if (sz == null || sz == undefined || isNaN(sz)) {this.label.size = 20;
+    } else {this.label.size = sz};
+}
+
+ShortcutLL.prototype.setPkg = function(pkg) {
+    if (pkg == null || pkg == undefined) {this.pkg = "";
+    } else {this.pkg = pkg};
+}
+
+ShortcutLL.prototype.setPkgLabel = function(lbl) {
+    if (lbl == null || lbl == undefined) {this.pkglabel = "";
+    } else {this.pkglabel = lbl};
+}
+
+
+//ShortcutLL.prototype.setIntent = function() {}
+
+
+ShortcutLL.prototype.getInfo = function() {
+    var msg = "";
+    msg += "name: " + this.name + "\n";
+    msg += "label: " + this.label + "\n";
+    msg += "label size: " + this.label.size + "\n";
+    msg += "pkg label: " + this.pkglabel + "\n";
+    msg += "intent: " + this.intent + "\n";
+    
+    alert(msg);
+}
+
+//ShortcutLL.prototype.getContainer = function() {}
+
+
+//fb.setIntent(getIntent("Facebook"));
+
+ShortcutLL.prototype.getIntent = function() {
+//be the setIntent func, if no args were passed, keep the default values, 
+//if args were passed, use the args
+//-if nothing was found, run the function again as this.setIntent(); without args before setting the default
+    if (this.intent == null) {this.intent = getIntentFromPkg(this.pkg)};
+    if (this.intent == null) {this.intent = getIntentFromLabel(this.pkglabel)};
+    //if (this.intent == null && (pkg_str != "" || pkg_str != undefined)) {return this.setIntent();}
+    if (this.intent == null) {this.intent = new Intent()};
+}
+
+
+ShortcutLL.prototype.create = function() {
+    shortcut_make_mod(null,this.name,this.size,this.label,this.pkglabel,this.pkg,this.intent);
+}
+
+
+
+
+//########################
+//########################
+//########################
+
+LL.bindClass("android.content.pm.PackageManager");
+LL.bindClass("android.content.pm.PackageInfo");
+
+function getIntentFromPkg(pkg) {
+    if (pkg == "") {return null};
+    //var pm = LL.getContext().getPackageManager();
+    var pm = getContext().getPackageManager();
+    
+    try {
+        var intent = pm.getLaunchIntentForPackage(pkg);
+        if (intent != null) {return intent};
+    } catch(e) {}
+    return null;
+}
+
+function getIntentFromLabel(lbl) {
+// get an app intent from the app drawer (my drawer)
+// create an array of intents with labels containing the provided label
+// return if both labels match, else return the first intent from the array list
+    if (lbl == "") {return null};
+    var intents = [];
+    var items = LL.getContainerById(99).getAllItems();
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (item.getType().toLowerCase() != "shortcut") {continue};
+        if (item.getLabel().toLowerCase() == lbl.toLowerCase()) {return item.getIntent()};
+        if (item.getLabel().toLowerCase().search(lbl.toLowerCase()) != -1) {intents.push(item.getIntent())};
+    }
+    if (intents.length > 0) {return intents[0]};
+    return null;
+}
+
+function make_panel(cnt, name) {
+    if (cnt == null || name == "") {
+        Android.makeNewToast("Error: No container or panel name were given.",false).show();
+        return null;
+    }
+    var itm = cnt.getItemByName(name);
+    if (itm == null) {
+    //addPanel (float x, float y, float width, float height)
+        var itm = cnt.addPanel(0, 0, 1, 1);
+        itm.setName(name);
+    }
+    return itm;
+}
+
+function make_shortcut(cnt, name, intent) {
+    if (cnt == null || name == "") {
+        Android.makeNewToast("Error: No container or panel name were given.",false).show();
+        return null;
+    }
+    var itm = cnt.getItemByName(name);
+    if (itm == null) {
+        if (intent == null || intent == undefined) {var intent = new Intent()};
+    //addShortcut (String label, Intent intent, float x, float y)
+        var itm = cnt.addShortcut(name, intent, 0, 0);
+        itm.setName(name);
+    }
+    return itm;
+}
+
+
+
+
+function shortcut_make_mod(cnt_name,name,size,lbl_u,lbl_a,pkg,i) {
+    if (name == "" || lbl_u == "") {
+        Android.makeNewToast("Error: No shortcut name or label was given.",false).show();
+        return;
+    }
+    if (lbl_a == null && pkg == null ) {
+        Android.makeNewToast("Warning: No application label or package was given.",false).show();
+    }
+    var cnt = null;
+    if (cnt_name != "" && cnt_name != null) {
+        var cnt = LL.getCurrentDesktop().getItemByName(cnt_name);
+        if (cnt != null) {
+            var cnt = LL.getCurrentDesktop().getItemByName(cnt_name).getContainer();
+        }
+    } 
+    if (cnt == null) {var cnt = LL.getCurrentDesktop();}
+    
+    var size=size||20;
+    var itm = cnt.getItemByName(name);
+    if (itm == null) {
+        var itm = cnt.addShortcut(lbl_u,new Intent(),0,0);
+        itm.setName(name);
+    }
+        
+    if (i != "" || i != null) {itm.setIntent(i);}
+    var ed = itm.getProperties().edit();
+    ed.setBoolean("s.iconVisibility", 	false);
+    ed.setFloat("s.labelFontSize",		size);
+    ed.setString("s.labelFontStyle",	"NORMAL");
+    ed.setInteger("s.labelFontColor", 	0x64ffffff);
+    ed.setInteger("s.selectionColorLabel", 	0xffffffff);
+    ed.setInteger("s.focusColorLabel", 	0xffffffff);
+    ed.commit();
+}
+
+
+
+
+//
+
+
+
+
+/*
+addCustomView (float x, float y)
+Create a new custom view using default values.
+
+addFolder (String label, float x, float y)
+Create a new empty folder with the default icon and size.
+Parameters
+label	folder name
+x	absolute position (rounded to nearest cell when attached to grid)
+y	absolute position (rounded to nearest cell when attached to grid)
+Returns the new folder
+
+public PageIndicator addPageIndicator (float x, float y)
+Create a new page indicator using default values.
+
+addPanel (float x, float y, float width, float height)
+Create a new empty panel. All coordinates are in pixels and rounded to the nearest cell when the item is attached to the grid.
+Returns the new panel
+
+addShortcut (String label, Intent intent, float x, float y)
+Create a new shortcut with the default icon and size.
+Parameters
+label	shortcut text
+intent	shortcut action, see http://developer.android.com/reference/android/content/Intent.html
+x	absolute position (rounded to nearest cell when attached to grid)
+y	absolute position (rounded to nearest cell when attached to grid)
+Returns the new shortcut
+
+addStopPoint (float x, float y)
+Create a new stop point with the default configuration.
+Parameters
+x	absolute position (rounded to nearest cell when attached to grid)
+y	absolute position (rounded to nearest cell when attached to grid)
+Returns the new stop point
+
+getType ()
+Used to identify the kind of this container.
+Returns 'Desktop', or 'Container' for any other type of container (folder, panel).
+
+getType ()
+Returns the item type has a text
+Returns one of: Shortcut, Folder, Panel, Widget, StopPoint, DynamicText, Unlocker, PageIndicator or Unknown
+
+public Container getParent ()
+Returns the parent container for this container, or null if this container is a desktop.
+
+public Container getParent ()
+Returns the container containing this item.
+
+
+*/
+
+
+
+//########################
+//########################
+//########################
+
+var fb = new ShortcutLL();
+fb.setName("fb_test");fb.setLabel("FB");fb.setPkgLabel("Facebook");fb.setPkg("");fb.getIntent();
+//fb.getInfo();//fb.setLabelSize(20);
+fb.create();
+
+
+
+
+
+
+
+
+

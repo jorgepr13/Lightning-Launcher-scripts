@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+<title>Function Tools</title>
+</head>
+
+<h1>Function Tools test</h1>
+<body>
+</body>
+
+<script>
+
+var mod_date = "20171118";
+
+
+// Type of function
+// https://toddmotto.com/understanding-javascript-types-and-reliable-type-checking/
+
+//function typeoff(elem)
+//typeoff return: 'Array, Object, String, Date, RegExp, Function, Boolean, Number, Null, Undefined'
+Object.prototype.typeoff     = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+//Object.prototype.typeoff     = function(elem) {return Object.prototype.toString.call(elem).slice(8, -1)};
+Object.prototype.isArray     = function(elem) {return typeoff(elem) === "array"};
+Object.prototype.isObject    = function(elem) {return typeoff(elem) === "object"};
+Object.prototype.isString    = function(elem) {return typeoff(elem) === "string"};
+Object.prototype.isDate      = function(elem) {return typeoff(elem) === "date"};
+Object.prototype.isRegExp    = function(elem) {return typeoff(elem) === "regexp"};
+Object.prototype.isFunction  = function(elem) {return typeoff(elem) === "function"};
+Object.prototype.isBoolean   = function(elem) {return typeoff(elem) === "boolean"};
+Object.prototype.isNumber    = function(elem) {return typeoff(elem) === "number"};
+Object.prototype.isNull      = function(elem) {return typeoff(elem) === "null"};
+Object.prototype.isUndefined = function(elem) {return typeoff(elem) === "undefined"};
+
+//function typeof_var(obj){ return Object.prototype.toString.call(obj).split(/\W/)[2].toLowerCase();}
+// output: Array Object Function String
+//Object.toType = function(obj) {return ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();}
+//if(Object.toType(shouldBeAnArray) === 'array'){/* do stuff */};
+
+// NW Below
+//var types = 'Array Object String Date RegExp Function Boolean Number Null Undefined'.split(' ');
+//for (var i = 0; i < types.length; i++;) {
+    // NW - Object.prototype.is + types[i]] = function(elem) {return typeoff(elem) === types[i]};
+    // NW - Object.defineProperty(Object.prototype, "is" + types[i], {
+//enumerable: false,
+//value: function(elem) {return typeoff(elem) === types[i]};
+//});}
+
+function typeof_test() {
+    var msg = "";
+    msg += "typeof:\n";
+    msg += "     [] - " + typeof []         + "\n"; // object
+    msg += "     {} - " + typeof {}         + "\n"; // object
+    msg += "     '' - " + typeof ''         + "\n"; // string
+    msg += "   Date - " + typeof new Date() + "\n"; // object
+    msg += "      1 - " + typeof 1          + "\n"; // number
+    msg += "   func - " + typeof function () {} + "\n"; // function
+    msg += "/test/i - " + typeof /test/i    + "\n"; // object
+    msg += "   true - " + typeof true       + "\n"; // boolean
+    msg += "   null - " + typeof null       + "\n"; // object
+    msg += "  undef - " + typeof undefined  + "\n"; // undefined
+    msg += "\n";
+
+    msg += "object call:\n";
+    msg += "     [] - " + Object.prototype.toString.call([])      + "\n"; // [object Array]
+    msg += "     {} - " + Object.prototype.toString.call({})      + "\n"; // [object Object]
+    msg += "     '' - " + Object.prototype.toString.call('')      + "\n"; // [object String]
+    msg += "   Date - " + Object.prototype.toString.call(new Date()) + "\n"; // [object Date]
+    msg += "      1 - " + Object.prototype.toString.call(1)       + "\n"; // [object Number]
+    msg += "   func - " + Object.prototype.toString.call(function () {}) + "\n"; // [object Function]
+    msg += "/test/i - " + Object.prototype.toString.call(/test/i) + "\n"; // [object RegExp]
+    msg += "   true - " + Object.prototype.toString.call(true)    + "\n"; // [object Boolean]
+    msg += "   null - " + Object.prototype.toString.call(null)    + "\n"; // [object Null]
+    msg += "  undef - " + Object.prototype.toString.call()        + "\n"; // [object Undefined]
+    alert(msg);
+
+    msg = "";
+    msg += "typeoff + bool check:\n";
+    msg += "     [] - " + isArray([])         + " - " + typeoff([])         + "\n"; // Array
+    msg += "     {} - " + isObject({})        + " - " + typeoff({})         + "\n"; // Object
+    msg += "     '' - " + isString('')        + " - " + typeoff('')         + "\n"; // String
+    msg += "   Date - " + isDate(new Date())  + " - " + typeoff(new Date()) + "\n"; // Date
+    msg += "      1 - " + isNumber(1)         + " - " + typeoff(1)          + "\n"; // Number
+    msg += "   func - " + isFunction(function () {}) + " - " + typeoff(function () {}) + "\n"; // Function
+    msg += "/test/i - " + isRegExp(/test/i)   + " - " + typeoff(/test/i)    + "\n"; // RegExp
+    msg += "   true - " + isBoolean(false)    + " - " + typeoff(true)       + "\n"; // Boolean
+    msg += "   null - " + isNull(null)        + " - " + typeoff(null)       + "\n"; // Null
+    msg += "  undef - " + isUndefined()       + " - " + typeoff()           + "\n"; // Undefined
+    msg += "  null - " + isUndefined(null)       + " - " + typeoff()           + "\n"; // Undefined
+    alert(msg);
+}
+//typeof_test();
+
+
+
+//
+//
+//
+
+// For loop vs For Each
+// https://jsperf.com/native-arr-foreach-vs-custom-foreach
+// https://stackoverflow.com/questions/23614054/javascript-nuances-of-myarray-foreach-vs-for-loop
+
+// 'i' is scoped to the containing function
+//for (var i = 0; i < arr.length; i++) { ... }
+
+// 'i' is scoped to the internal function
+//arr.forEach(function (elem, i) { ... });
+
+function foreach(fn) {
+    var arr = this;
+    var len = arr.length;
+    for(var i=0; i<len; ++i) {fn(arr[i])};
+}
+
+Object.defineProperty(Array.prototype, 'customForEach', {
+enumerable: false,
+value: foreach
+});
+
+Array.prototype.cForEach = function (fn) {
+    var arr = this;
+    var len = arr.length;
+    for(var i=0; i<len; ++i) {fn(arr[i])};
+}
+
+function for_loop_vs_for_each() {
+    //create an array to test the loops
+    var i, values = [],sum = 0;
+    for (i = 0; i < 10000; i++) {values[i] = i};
+    function add(val) {sum += val}
+
+    var time_a, time_b;
+    var diff_a, diff_b, diff_c, diff_d;
+    var sum_a, sum_b, sum_c, sum_d;
+
+    time_b = new Date().getTime();
+    for (i = 0; i < values.length; i++) {add(values[i]);}
+    time_a = new Date().getTime();
+    diff_a = time_a-time_b;
+    sum_a = sum; sum = 0;
+
+    time_b = new Date().getTime();
+    values.forEach(add);
+    time_a = new Date().getTime();
+    diff_b = time_a-time_b;
+    sum_b = sum; sum = 0;
+
+    time_b = new Date().getTime();
+    values.customForEach(add);
+    time_a = new Date().getTime();
+    diff_c = time_a-time_b;
+    sum_c = sum; sum = 0;
+
+    time_b = new Date().getTime();
+    values.cForEach(add);
+    time_a = new Date().getTime();
+    diff_d = time_a-time_b;
+    sum_d = sum; sum = 0;
+
+    return "Delays [in ms] comparison:\n  " + diff_a + " - " + sum_a + "   For loop\n  " + diff_b + " - " + sum_b + "   For each\n  " + diff_c + " - " + sum_c + "   For each custom 1\n  " + diff_d + " - " + sum_d + "   For each custom 2\n  ";
+}
+//alert(for_loop_vs_for_each());
+
+//
+//
+//
+
+
+function test_array() {
+    var test_arr = ["Pepe", "Juan", "Luis"];
+    alert(test_arr.map(function(x){ return x.toUpperCase() }));
+    alert(test_arr.map(function(x){ return x.toLowerCase(); }));
+    alert(test_arr.filter(function(x){
+        var y = x.toLowerCase();
+        if (y == "luis" || y == "juan") {return x.toLowerCase()}
+    }));
+    alert(test_arr.filter(function(x){
+        var y = x.toLowerCase();
+        if (y == "luis" || y == "juan") {return y}
+    }));
+}
+//test_array();
+
+//
+//
+//
+
+function formatNumber(num, digits) {
+    if (isNaN(num) || num == null || num == undefined) {
+        console.log("formatNumber Error: Wrong number received.");
+        return;
+    }
+    if (isNaN(digits) || digits == null || digits == undefined) {digits = 1};
+
+    //convert num to string
+    var num = num.toString();
+    while (num.length < digits) {
+        num = "0" + num;
+    }
+    return num;
+}
+//alert(formatNumber(1,3));
+//alert(formatNumber(12));
+
+//
+//
+//
+
+function doubleDigits(num) {
+    if (isNaN(num) || num == null || num == undefined) {
+        console.log("doubleDigits Error: Wrong number received.");
+        return;
+    }
+    //return a double digits number
+    if (num < 10) {num = "0" + num;}
+    return num;
+}
+//alert(doubleDigits(1));
+
+
+function checkTime(time, caller) {
+    if (caller == null || caller == undefined) {caller = "checkTime"};
+    if (time == null || time == undefined || time == "") {
+        console.log(caller + " Error: No time was received.");
+        var time = new Date();
+    } else {
+        //alert(typeof time.getTime);
+        //typeof new Date() === 'object';
+        if (typeof time.getTime == "undefined") {
+            var time = new Date(time);
+        }
+    }
+    return time;
+}
+//alert(checkTime());
+//alert(checkTime(1,"test"));
+
+
+function getDateDD(time) {
+    time = checkTime(time, "getDateDD");
+    return formatNumber(time.getDate(),2);
+    //return doubleDigits(time.getDate());
+}
+//alert(getDateDD());
+//alert(getDateDD(1));
+
+
+function getDateMM(time) {
+    time = checkTime(time, "getDateMM");
+    return formatNumber(time.getMonth()+1,2);
+    //return doubleDigits(time.getMonth()+1);
+}
+//alert(getDateMM());
+//alert(getDateMM(1));
+
+
+function getDateYYYY(time) {
+    time = checkTime(time, "getDateYYYY");
+    return formatNumber(time.getFullYear(),4);
+    //return doubleDigits(time.getFullYear());
+}
+//alert(getDateYYYY());
+//alert(getDateYYYY(1));
+
+
+function getDateYYYYMMDD(time, sep) {
+    if (sep == null || sep == undefined) {sep = ""};
+    time = checkTime(time, "getDateYYYYMMDD");
+    return getDateYYYY(time) + sep + getDateMM(time) + sep + getDateDD(time);
+}
+//alert(getDateYYYYMMDD(1));
+//alert(getDateYYYYMMDD(1, "-"));
+
+
+function getDateMMDD(time, sep) {
+    if (sep == null || sep == undefined) {sep = ""};
+    time = checkTime(time, "getDateMMDD");
+    return getDateMM(time) + sep + getDateDD(time);
+}
+//alert(getDateMMDD());
+//alert(getDateMMDD(1, "/"));
+
+function getTimeHH(time) {
+    time = checkTime(time, "getTimeHH");
+    return formatNumber(time.getHours(),2);
+}
+
+function getTimeMM(time) {
+    time = checkTime(time, "getTimeMM");
+    return formatNumber(time.getMinutes(),2);
+}
+
+function getTimeSS(time) {
+    time = checkTime(time, "getTimeSS");
+    return formatNumber(time.getSeconds(),2);
+}
+
+function getTimeHHMMSS(time, sep) {
+    if (sep == null || sep == undefined) {sep = ""};
+    time = checkTime(time, "getTimeHHMMSS");
+    return getTimeHH(time) + sep + getTimeMM(time) + sep + getTimeSS(time);
+}
+
+function getTimeHHMM(time, sep) {
+    if (sep == null || sep == undefined) {sep = ""};
+    time = checkTime(time, "getTimeHHMMSS");
+    return getTimeHH(time) + sep + getTimeMM(time);
+}
+
+
+function getTimeDifference(time_a,time_b) {
+    time_a = checkTime(time_a, "getTimeDifference");
+    time_b = checkTime(time_b, "getTimeDifference");
+
+    //set both times in the same format, (ms)
+    time_a = time_a.getTime();
+    time_b = time_b.getTime();
+
+    //check that numbers were passed and no error occurred
+    if (isNaN(time_a) || isNaN(time_b)) {
+        alert("timeElapsed Error: Wrong numbers were received.");
+        //console.log("timeElapsed Error: Wrong numbers were received.");
+        return 0;
+    }
+
+    //console.log("a: " + time +" , b: " + time_b + ", d: " + Math.abs(time-time_b));
+    return Math.abs(time_a - time_b);
+}
+//alert(getTimeDifference());
+//alert(getTimeDifference("",1));
+
+
+
+
+
+
+function getDaysInMonth(month, year) {
+    //alert(month + " " + year + ", len: " + year.lenght)
+    if (month == null || month == undefined || month == "" || isNaN(month) || month > 12 || year == null || year == undefined || year == "" || isNaN(year)) {
+        var time = checkTime(month, "getDaysInMonth");
+        return new Date(time.getFullYear(), time.getMonth() + 1, 0).getDate();
+    } else {
+        return new Date(year, month, 0).getDate();
+    }
+}
+//alert(getDaysInMonth());
+//alert(getDaysInMonth(1954530000000));
+//alert(getDaysInMonth(2, 2009)); //28
+//alert(getDaysInMonth(2, 2008)); //29
+
+
+function getDaysPerMonth(year) {
+    if (year == null || year == undefined || year == "" || isNaN(year) || year > 10000) {
+        var time = checkTime(year, "getDaysInYear");
+        var year = time.getFullYear();
+    }
+    var days = [];
+    for (month = 1; month < 13; month++) {
+        days.push(getDaysInMonth(month, year));
+    }
+    return days;
+}
+//alert(getDaysPerMonth());
+//alert(getDaysPerMonth(1954530000000));
+//alert(getDaysPerMonth(2009));
+//alert(getDaysPerMonth(2008));
+
+
+function getDaysInYear(year) {
+    if (year == null || year == undefined || year == "" || isNaN(year) || year > 10000) {
+        var time = checkTime(year, "getDaysInYear");
+        var year = time.getFullYear();
+    }
+    var days = 0;
+    for (month = 1; month < 13; month++) {
+        days = days + getDaysInMonth(month, year);
+    }
+    return days;
+}
+//alert(getDaysInYear());
+//alert(getDaysInYear(1954530000000));
+//alert(getDaysInYear(2009)); //28
+//alert(getDaysInYear(2008)); //29
+
+
+
+function getTimeD(time_a,time_b) {
+    time_a = checkTime(time_a, "getTimeDifference");
+    time_b = checkTime(time_b, "getTimeDifference");
+
+    //set both times in the same format, (ms)
+    time_a_ms = time_a.getTime();
+    time_b_ms = time_b.getTime();
+
+    //set time_a to be the oldest/smallest
+    if (time_a_ms > time_b_ms) {
+        time_b_ms = time_a_ms;
+        time_a_ms = time_b.getTime();
+        var time_c = time_a;
+        var time_b = time_a;
+        var time_a = time_c;
+        var time_c = null;
+    }
+    //alert(time_a+"\n"+time_b);
+
+    time_difference = time_b_ms - time_a_ms;
+
+    var ms_day = 86400000; //24*60*60*1000
+    var ms_hr  = 3600000; 	//60*60*1000
+    var ms_min = 60000; 				//60*1000
+    var ms_sec = 1000;
+
+    //create and initialize the return object
+    var time = {};
+    time.end_full = time_b;
+    time.start_full = time_a;
+    time.end = time_b_ms;
+    time.start = time_a_ms;
+    time.total = {};
+    time.total.days = time_difference / ms_day;
+    time.total.hours = time_difference / ms_hr;
+    time.total.minutes = time_difference / ms_min;
+    time.total.seconds = time_difference / ms_sec;
+    time.total.milliseconds = time_difference;
+
+    time.years = 0;
+    time.months = 0;
+
+    time.days = Math.floor(time_difference / ms_day);
+    time_difference = time_difference - (time.days * ms_day);
+
+    time.hours = Math.floor(time_difference / ms_hr);
+    time_difference = time_difference - (time.hours * ms_hr);
+
+    time.minutes = Math.floor(time_difference / ms_min);
+    time_difference = time_difference - (time.minutes * ms_min);
+
+    time.seconds = Math.floor(time_difference / ms_sec);
+    time_difference = time_difference - (time.seconds * ms_sec);
+
+    time.milliseconds = time_difference;
+
+    //get years
+    while (time.days >= 365) {
+        daysinyear = getDaysInYear(time_a_ms);
+        time.days -= daysinyear;
+        time.years++;
+        time_a_ms += daysinyear * ms_day;
+    }
+    //no need to correct the working time (substract the daysingear from time_a_ms), it was already substracted because it was more than 365, hence, it should start on the next year
+
+    //get months
+    if (time.days > 27) {
+        var logdays = "";
+        var daysinmonth = getDaysPerMonth(time_a_ms);
+        var daysinmonth = daysinmonth.concat(getDaysPerMonth(time_a.getFullYear()+1));
+        for (month = time_a.getMonth(); month < daysinmonth.length; month++) {
+            if (time.days < daysinmonth[month]) {break;}
+            logdays = logdays + time.days + " - " + daysinmonth[month] + " =\n";
+            time.days -= daysinmonth[month];
+            time.months++
+        }
+        logdays = logdays + time.days;
+        //alert(daysinmonth.length+"-"+daysinmonth+"\n"+logdays);
+    }
+    return JSON.stringify(time);
+}
+var ms_day = 86400000; //24*60*60*1000
+var time_a = new Date().getTime();
+//alert(getTimeD(time_a,time_a + 428 * (ms_day + 1000)));
+//alert(getTimeD(time_a,time_a + 823 * (ms_day + 1000)));
+
+
+//getFullYear()	Returns the year
+//getMonth()	Returns the month (from 0-11)
+//getDate()	Returns the day of the month (from 1-31)
+//getDay()	Returns the day of the week (from 0-6)
+//getHours()	Returns the hour (from 0-23)
+//getMinutes()	Returns the minutes (from 0-59)
+//getSeconds() Returns the seconds (0-59) in the specified date according to local time.
+//getMilliseconds()   Returns the milliseconds in the specified date according to local time.
+//getTime()   Returns the numeric value of the specified date as the number of milliseconds since January 1, 1970, 00:00:00 UTC.
+
+
+
+
+
+
+function Apple (type) {
+    this.type = type;
+    this.color = "red";
+}
+
+Apple.prototype.getInfo = function() {
+    return this.color + ' ' + this.type + ' apple' + ' ' + this.company;
+}
+Apple.prototype.getMsg = function(msg) {
+    return this.type + ' ' + msg;
+}
+var apple = new Apple('macintosh'); apple.color = "reddish";
+var android = new Apple('Android'); android.color = "green";
+//alert(apple.getInfo()+"\n"+android.getInfo()+"\n"+android.getMsg("rocks"));
+
+
+function Make (co) {
+    this.company = co;
+}
+
+Make.prototype = new Apple("lolo");
+//Make.prototype = new Apple();
+
+var android = new Make('Android'); android.color = "green";
+
+//alert(android.company+"\n"+android.getInfo()+"\n"+android.getMsg("rocks"));
+
+
+
+
+
+
+
+
+function sumAll() {
+    var i, sum = 0;
+    for (i = 0; i < arguments.length; i++) {
+        sum += arguments[i];
+    }
+    return sum;
+}
+
+//var x = sumAll(1, 123, 500, 115, 44, 88);
+//alert(x);
+
+
+
+//You need to check for status 0 (as when loading files locally with XMLHttpRequest, you don't get a status returned because it's not from a Webserver)
+
+function readTextFile1(file){
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.timeout = 2000; // time in milliseconds
+    rawFile.onload = function () {
+    //rawFile.onreadystatechange = function () {
+        alert(file+"\n"+rawFile+"\n"+rawFile.status+"\n"+rawFile.readyState+"\n-"+rawFile.responseText+"-");
+        if(rawFile.readyState === 4 || rawFile.readyState === 1)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+                return allText;
+            }
+        }
+    }
+    rawFile.send(null);
+}
+function readTextFile(file){
+    var rawFile = new XMLHttpRequest();
+    rawFile.timeout = 10000; // time in milliseconds
+    rawFile.open("GET", file, false);
+    //rawFile.open("GET", file, true);
+    //rawFile.onload = function () {
+    rawFile.onreadystatechange = function () {
+        alert("file: "+file+"\nraw: "+rawFile+"\nstatus: "+rawFile.status+"\nstate: "+rawFile.readyState+" vs "+XMLHttpRequest.DONE+"\ntext: -"+rawFile.responseText+"-");
+        if(rawFile.readyState === XMLHttpRequest.DONE && rawFile.status === 200) {
+            var allText = rawFile.responseText;
+            alert(allText);
+            return allText;
+        }
+    }
+    rawFile.send(null);
+}
+//And specify file:// in your filename:
+//readTextFile("file:///C:/your/path/to/file.txt");
+//readTextFile("file:///storage/emulated/0/_Backup/Fonts/fonts_db.json");
+//readTextFile("fonts_db.json");
+
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,5 @@
+// important: preserve the battery life and clear timeouts when the item is paused to avoid useless background activity
+var id = LL.getEvent().getItem().getTag("WV");
+if(id != null) {
+    clearTimeout(id);
+}

@@ -1,0 +1,393 @@
+
+Container properties:
+Name	Type	Access	Admissible values
+newOnGrid	boolean	Read/Write	true/false
+allowDualPosition	boolean	Read/Write	true/false
+gridPColumnMode	string	Read/Write	AUTO|NUM|SIZE
+gridPColumnNum	int	Read/Write	>0
+gridPColumnSize	int	Read/Write	>0
+gridPRowMode	string	Read/Write	AUTO|NUM|SIZE
+gridPRowNum	int	Read/Write	>0
+gridPRowSize	int	Read/Write	>0
+gridLColumnMode	string	Read/Write	AUTO|NUM|SIZE
+gridLColumnNum	int	Read/Write	>0
+gridLColumnSize	int	Read/Write	>0
+gridLRowMode	string	Read/Write	AUTO|NUM|SIZE
+gridLRowNum	int	Read/Write	>0
+gridLRowSize	int	Read/Write	>0
+gridPL	boolean	Read/Write	true/false
+gridLayoutModeHorizontalLineColor	int	Read/Write	argb color
+gridLayoutModeHorizontalLineThickness	float	Read/Write	>=0
+gridLayoutModeVerticalLineColor	int	Read/Write	argb color
+gridLayoutModeVerticalLineThickness	float	Read/Write	>=0
+gridAbove	boolean	Read/Write	true/false
+bgSystemWPScroll	boolean	Read/Write	true/false
+bgSystemWPWidth	int	Read/Write	>0
+bgSystemWPHeight	int	Read/Write	>0
+bgColor	int	Read/Write	argb color
+statusBarHide	boolean	Read/Write	true/false
+statusBarColor	int	Read/Write	argb color
+navigationBarColor	int	Read/Write	argb color
+statusBarOverlap	boolean	Read/Write	true/false
+navigationBarOverlap	boolean	Read/Write	true/false
+screenOrientation	string	Read/Write	AUTO|PORTRAIT|LANDSCAPE|SYSTEM
+scrollingDirection	string	Read/Write	AUTO|X|Y|XY|NONE
+overScrollMode	string	Read/Write	DECELERATE|BOUNCE|NONE
+noDiagonalScrolling	boolean	Read/Write	true/false
+pinchZoomEnable	boolean	Read/Write	true/false
+snapToPages	boolean	Read/Write	true/false
+fitDesktopToItems	boolean	Read/Write	true/false
+autoExit	boolean	Read/Write	true/false
+rearrangeItems	boolean	Read/Write	true/false
+swapItems	boolean	Read/Write	true/false
+freeModeSnap	string	Read/Write	NONE|CENTER|EDGE|CENTER_EDGE
+useDesktopSize	boolean	Read/Write	true/false
+noScrollLimit	boolean	Read/Write	true/false
+wrapX	boolean	Read/Write	true/false
+wrapY	boolean	Read/Write	true/false
+iconPack	string	Read/Write	package name or null (see applyIconPack(boolean))
+lwpStdEvents	boolean	Read/Write	true/false
+Event handlers:
+homeKey	EventHandler	Read/Write
+menuKey	EventHandler	Read/Write
+longMenuKey	EventHandler	Read/Write
+backKey	EventHandler	Read/Write
+longBackKey	EventHandler	Read/Write
+searchKey	EventHandler	Read/Write
+bgTap	EventHandler	Read/Write
+bgDoubleTap	EventHandler	Read/Write
+bgLongTap	EventHandler	Read/Write
+swipeLeft	EventHandler	Read/Write
+swipeRight	EventHandler	Read/Write
+swipeUp	EventHandler	Read/Write
+swipeDown	EventHandler	Read/Write
+swipe2Left	EventHandler	Read/Write
+swipe2Right	EventHandler	Read/Write
+swipe2Up	EventHandler	Read/Write
+swipe2Down	EventHandler	Read/Write
+orientationPortrait	EventHandler	Read/Write
+orientationLandscape	EventHandler	Read/Write
+posChanged	EventHandler	Read/Write
+load	EventHandler	Read/Write
+paused	EventHandler	Read/Write
+resumed	EventHandler	Read/Write
+itemAdded	EventHandler	Read/Write
+itemRemoved	EventHandler	Read/Write
+menu	EventHandler	Read/Write
+App Drawer only:
+adHideActionBar	boolean	Read/Write	true/false
+adDisplayABOnScroll	boolean	Read/Write	true/false
+adDisplayedModes	int	Read/Write	bitfield
+adActionBarTextColor	int	Read/Write	argb color
+
+
+Item properties:
+Name	Type	Access	Admissible values
+i.box	Box	Read/Write through getBox(String)
+i.rotate	boolean	Read/Write	true/false
+i.selectionEffect	string	Read/Write	PLAIN|HOLO|MATERIAL
+i.selectionEffectMask	boolean	Read/Write	true/false
+i.enabled	boolean	Read/Write	true/false
+i.alpha	int	Read/Write	0..255
+i.pinMode	string	Read/Write	NONE|XY|X|Y
+i.filterTransformed	boolean	Read/Write	true/false
+i.onGrid	boolean	Read/Write	true/false
+i.hardwareAccelerated	boolean	Read/Write	true/false
+i.launchAnimation	string	Read/Write	NONE|FADE|SYSTEM|SLIDE_UP|SLIDE_DOWN|SLIDE_LEFT|SLIDE_RIGHT|SCALE_CENTER
+Event handlers:
+i.tap	EventHandler	Read/Write
+i.longTap	EventHandler	Read/Write
+i.swipeLeft	EventHandler	Read/Write
+i.swipeRight	EventHandler	Read/Write
+i.swipeUp	EventHandler	Read/Write
+i.swipeDown	EventHandler	Read/Write
+i.touch	EventHandler	Read/Write
+i.paused	EventHandler	Read/Write
+i.resumed	EventHandler	Read/Write
+i.menu	EventHandler	Read/Write
+
+setEventHandler(String name, int action, String data)
+setEventHandler(String name, EventHandler eventHandler)
+Data can be set for the following actions:
+LAUNCH_APP/LAUNCH_SHORTCUT: Intent to start, as given by Intent.toUri
+RUN_SCRIPT: script id (converted to a string, or script id/data (if data are transmitted to the script)
+OPEN_FOLDER: container identifier (converted to a string). Note that any identifier can be used, but the result of passing a non folder container is undefined (although it may be useful...)
+GO_DESKTOP_POSITION: same content as the shortcut intent created through the Lightning Desktop position shortcut
+ed.setEventHandler("i.tap", EventHandler.RUN_SCRIPT,RC_script.getId());
+
+
+Shortcut properties: STANDARD|REAL|FULL_SCALE
+Name	Type	Access	Admissible values
+s.labelVisibility	boolean	Read/Write	true/false
+s.labelFontColor	int	Read/Write	argb color
+s.selectionColorLabel	int	Read/Write	argb color
+s.focusColorLabel	int	Read/Write	argb color
+s.labelFontSize	float	Read/Write	>0
+s.labelFontTypeFace	string	Read/Write
+s.labelFontStyle	string	Read/Write	NORMAL|ITALIC|BOLD|BOLD_ITALIC
+s.labelMaxLines	int	Read/Write	>0
+s.iconVisibility	boolean	Read/Write
+s.iconSizeMode	string	Read/Write
+s.iconScale	float	Read/Write
+s.iconReflection	boolean	Read/Write	true/false
+s.iconReflectionOverlap	float	Read/Write
+s.iconReflectionSize	float	Read/Write
+s.iconReflectionScale	float	Read/Write
+s.iconFilter	boolean	Read/Write	true/false
+s.labelVsIconPosition	string	Read/Write	LEFT|TOP|RIGHT|BOTTOM
+s.labelVsIconMargin	int	Read/Write
+s.labelShadow	boolean	Read/Write	true/false
+s.labelShadowRadius	float	Read/Write	>=0
+s.labelShadowOffsetX	float	Read/Write
+s.labelShadowOffsetY	float	Read/Write
+s.labelShadowColor	int	Read/Write	argb color
+s.iconEffectScale	float	Read/Write
+s.iconColorFilter	int	Read/Write	argb color
+
+Folder properties:
+Name	Type	Access	Admissible values
+f.titleVisibility	boolean	Read/Write	true/false
+f.titleFontColor	int	Read/Write	argb color
+f.titleFontSize	float	Read/Write	>0
+f.animationIn	string	Read/Write	NONE|OPEN_CLOSE|SLIDE_FROM_LEFT|SLIDE_FROM_RIGHT|SLIDE_FROM_TOP|SLIDE_FROM_BOTTOM
+f.animationOut	string	Read/Write	NONE|OPEN_CLOSE|SLIDE_FROM_LEFT|SLIDE_FROM_RIGHT|SLIDE_FROM_TOP|SLIDE_FROM_BOTTOM
+f.animFade	boolean	Read/Write	true/false
+f.iconStyle	string	Read/Write	NORMAL|GRID_2_2|STACK
+f.autoClose	boolean	Read/Write	true/false
+f.closeOther	boolean	Read/Write	true/false
+f.wAH	string	Read/Write	LEFT|CENTER|RIGHT|CUSTOM
+f.wAV	string	Read/Write	TOP|CENTER|BOTTOM|CUSTOM
+f.wX	int	Read/Write
+f.wY	int	Read/Write
+f.wW	int	Read/Write
+f.wH	int	Read/Write
+f.box	Box	Read/Write through getBox(String)
+f.autoFindOrigin	boolean	Read/Write	true/false
+
+Page Indicator properties:
+Name	Type	Access	Admissible values
+p.style	string	Read/Write	DOTS|RAW|MINIMAP|LINE_X|LINE_Y
+p.rawFormat	string	Read/Write
+p.dotsMarginX	int	Read/Write
+p.dotsMarginY	int	Read/Write
+p.dotsOuterRadius	int	Read/Write	>=0
+p.dotsInnerRadius	int	Read/Write	>=0
+p.dotsOuterStrokeWidth	int	Read/Write	>=0
+p.dotsOuterColor	int	Read/Write	argb color
+p.dotsInnerColor	int	Read/Write	argb color
+p.miniMapOutStrokeColor	int	Read/Write	argb color
+p.miniMapOutFillColor	int	Read/Write	argb color
+p.miniMapOutStrokeWidth	int	Read/Write	>=0
+p.miniMapInStrokeColor	int	Read/Write	argb color
+p.miniMapInFillColor	int	Read/Write	argb color
+p.miniMapInStrokeWidth	int	Read/Write	>=0
+p.lineBgWidth	int	Read/Write	>=0
+p.lineBgColor	int	Read/Write	argb color
+p.lineFgWidth	int	Read/Write	>=0
+p.lineFgColor	int	Read/Write	argb color
+p.lineGravity	string	Read/Write	CENTER|LEFT_TOP|RIGHT_BOTTOM
+
+Custom view properties:
+Name	Type	Access	Admissible values
+v.onCreate	string	Read/Write	id/data, where /data is optional
+v.onDestroy	string	Read/Write	id/data, where /data is optional
+
+*/
+
+/*
+//local vars, used during the creation
+weather path icon	#
+weather temp icon	#
+weather temp hi icon	#
+weather temp low icon	#
+weather wind icon	#
+weather wind hi icon	#
+weather wind low icon	#
+weather wind dir icon	#
+weather rain icon	#
+weather snow icon	#
+weather humid icon	#
+
+//global vars
+weather path json	# local, used to get the other vars
+weather condition
+weather condition icon
+weather condition day
+weather temp hi
+weather temp low
+weather wind hi
+weather wind low
+weather wind dir
+weather wind dir txt
+weather rain
+weather snow
+weather humid
+*/
+
+
+
+
+http://www.lightninglauncher.com/scripting/reference/downloadable/llx-api-12.6/reference/net/pierrox/lightning_launcher/script/api/EventHandler.html
+
+Event Handler 
+
+Constants
+int	ADD_ITEM	
+int	APP_DRAWER	
+int	BACK	
+int	CLOSE_ALL_FOLDERS	
+int	CLOSE_TOPMOST_FOLDER	
+int	CUSTOMIZE_ITEM	
+int	CUSTOMIZE_LAUNCHER	
+int	CUSTOMIZE_PAGE	
+int	CUSTOM_MENU	
+int	EDIT_LAYOUT	
+int	GO_DESKTOP_POSITION	
+int	GO_HOME	
+int	GO_HOME_ZOOM_TO_ORIGIN	
+int	HIDE_FLOATING_DESKTOP	
+int	ITEM_MENU	
+int	LAUNCHER_MENU	
+int	LAUNCH_APP	
+int	LAUNCH_ITEM	
+int	LAUNCH_SHORTCUT	
+int	MOVE_ITEM	
+int	NEXT_PAGE	
+int	NOTHING	
+int	OPEN_FOLDER	
+int	PREVIOUS_PAGE	
+int	RESTART	
+int	RUN_SCRIPT	
+int	SEARCH	
+int	SEARCH_APP	
+int	SELECT_DESKTOP_TO_GO_TO	
+int	SELECT_WALLPAPER	
+int	SET_VARIABLE	
+int	SHOW_FLOATING_DESKTOP	
+int	SHOW_HIDE_APP_MENU	
+int	SHOW_HIDE_APP_MENU_STATUS_BAR	
+int	SHOW_HIDE_STATUS_BAR	
+int	SHOW_NOTIFICATIONS	
+int	SWITCH_FULL_SCALE_OR_ORIGIN	
+int	UNLOCK_SCREEN
+int	UNSET	
+int	USER_MENU	
+int	WALLPAPER_SECONDARY_TAP	
+int	WALLPAPER_TAP	
+int	ZOOM_FULL_SCALE	
+int	ZOOM_TO_ORIGIN	
+
+Public Constructors
+EventHandler(int action, String data)
+
+Public Methods
+int	getAction()
+	Return the action to execute.
+String	getData()
+	An optional data associated to this handler.
+
+
+http://www.lightninglauncher.com/scripting/reference/downloadable/llx-api-12.6/reference/net/pierrox/lightning_launcher/script/api/PropertyEditor.html
+
+setEventHandler (String name, int action, String data)
+	data		optional data, can be null. See getData()
+
+
+var my_script = LL.getScriptByName("Roll-Clock");
+ed.setEventHandler(
+"i.tap",EventHandler.RUN_SCRIPT,
+my_script.getId());
+
+itm.getProperties().edit().setEventHandler(
+"i.tap",EventHandler.RUN_SCRIPT,
+LL.getScriptByName("Roll-Clock").getId()).commit();
+
+
+getData ()
+An optional data associated to this handler. Data can be set for the following actions:
+LAUNCH_APP: Intent to start, as given by Intent.toUri
+RUN_SCRIPT: script id (converted to a string, or script id/data (if data are transmitted to the script)
+OPEN_FOLDER: container identifier (converted to a string). Note that any identifier can be used, but the result of passing a non folder container is undefined (although it may be useful...)
+GO_DESKTOP_POSITION: same content as the shortcut intent created through the Lightning Desktop position shortcut
+
+Returns, can be null
+
+
+
+The Box object
+
+Margin left:ml
+Margin top:mt
+Margin right:mr
+Margin bottom:mb
+Border left:bl
+Border top:bt
+Border right:br
+Border bottom:bb
+Padding left:pl
+Padding top:pt
+Padding right:pr
+Padding bottom:pb
+Content:c
+mode	one of "n" for normal, "s" for selected, or "f" for focused
+Example of using the Box object to change item properties:
+ var color = 0xff00ff00; // pure green
+ var editor = item.getProperties().edit();
+ var box = editor.getBox("i.box");
+ 
+ box.setColor("c", "ns", color); // set background color, for normal and selected states
+ 
+ box.setColor("bl,br,bt,bb", "ns", color); // set all borders color for normal and selected states.
+ 
+ editor.getBox("f.box").setColor("c", "n", color); // set folder background color
+ 
+ editor.commit();
+
+
+Public Methods
+
+public String getAlignmentH ()
+Returns the box horizontal alignment.
+See Also for available values
+
+public String getAlignmentV ()
+Returns the box vertical alignment.
+See Also for available values
+
+public Object getBox ()
+Access to the internal box data. To be used with LLPreferenceBox.
+
+public int getColor (String area, String mode)
+Returns the color of one area.
+Parameters
+area	
+mode	one of "n" for normal, "s" for selected, or "f" for focused
+Returns
+a color corresponding to the given area, or an unspecified color if area or mode is invalid
+
+public int getSize (String area)
+Returns the size of one area.
+Parameters
+area	
+Returns
+the size in pixel of the given area, or 0 if area is not valid
+
+public void setAlignment (String h, String v)
+Set the horizontal and vertical box alignment.
+Parameters
+h	horizontal alignment, one of LEFT, CENTER, RIGHT
+v	vertical alignment, one of TOP, MIDDLE, BOTTOM
+
+public void setColor (String areas, String modes, long color)
+Set the color of a given list of areas.
+Parameters
+areas	one or more areas as a list of comma separated area codes. @see Box for areas color codes.
+modes	a combination of "n" for normal, "s" for selected, and "f" for focused.
+color	argb color value
+
+public void setSize (String areas, int size)
+Set the size of a given list of areas.
+Parameters
+areas	one or more areas as a list of comma separated area codes. @see Box for areas color codes.
+size	in pixel
+

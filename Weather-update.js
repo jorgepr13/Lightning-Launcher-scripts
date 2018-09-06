@@ -1,12 +1,15 @@
+/*
+need support for multiple locations, providers
+*/
 var refresh_interval = 20 * 60000; //ms, = min * 60s * 1000ms
-var weather_api_key = "e000fb1333b830be";
 //var weather_loc = "47.0332559,-122.7967021";
 //var weather_loc = $location_gps;
+var weather_api_key = LL.getVariables().getString("api_key_weather_wu");
 var weather_loc = LL.getVariables().getString("location_net");
-var event = LL.getEvent();
-//var event_d = event.getData();
-var event_s = event.getSource();
-var event_i = event.getItem();
+var eventt = LL.getEvent();
+//var event_d = eventt.getData();
+var event_s = eventt.getSource();
+var event_i = eventt.getItem();
 //LL.getEvent().getSource() = "MENU_ITEM" //"I_LONG_CLICK", "C_LONG_CLICK"
 //http://www.lightninglauncher.com/scripting/reference/api/reference/net/pierrox/lightning_launcher/script/api/Event.html
 
@@ -41,8 +44,8 @@ otherwise, get the variable and refresh it, just in case that it was manually mo
 // ^checking the current time vs the hourly time and doing the halfs hour changes; ex curr time 11:30, data will change to 12:00, until curr time gets to 12:30
 function msgShow(msg,flag){
     if (msg == null || msg == undefined || msg == "") {return 1;}
-    if (flag == null || flag == undefined || flag == "" || isNaN(flag)) {var flag = false;}
-    if (flag == 1) {var flag = true;}
+    if (flag == null || flag == undefined || flag == "" || isNaN(flag)) {flag = false;}
+    if (flag == 1) {flag = true;}
     if (typeoff(flag) == "boolean") {
     Android.makeNewToast(msg,flag).show();
     //var duration = Toast.LENGTH_SHORT; //Toast.LENGTH_LONG
@@ -74,30 +77,30 @@ if (event_s == "I_CLICK" || event_s == "I_LONG_CLICK") {
   //msgUpdating();
   if (event_s == "I_LONG_CLICK") {json_str = getWeatherData();}
   else {
-    var time_a = new Date().getTime()
+    var time_a = new Date().getTime();
     var time_b = 0;
     var wx_old = LL.getVariables().getString("weather");
     if (wx_old == null || wx_old == undefined || wx_old == "") {time_b = time_a + refresh_interval + 1000;}
-    else {var wx = JSON.parse(wx_old);time_b = wx.upd.time_ms;}
-    var time_difference = getTimeDifference(time_a,time_b);
+    else {var wx = JSON.parse(wx_old); time_b = wx.upd.time_ms;}
+    var time_difference = getTimeDifference(time_a, time_b);
     if (time_difference > refresh_interval) {json_str = getWeatherData();} 
-    else {msgShow("Unable to update at this time. \nThe next update will be available in " + Math.floor(Math.abs(time_difference - refresh_interval) / 60000) + " min.");return null;}
+    else {msgShow("Unable to update at this time. \nThe next update will be available in " + Math.floor(Math.abs(time_difference - refresh_interval) / 60000) + " min."); return null;}
   }
   //else {json_str = wx_old;} //fails, unable to parse
 }
 
-if (json_str == null || json_str == undefined) {msgUpdateFailed();return null;}
+if (json_str == null || json_str == undefined) {msgUpdateFailed(); return null;}
 
 //check the weather data object
 json_obj = JSON.parse(json_str);
-if (json_obj === null || typeof json_obj == "undefined") {msgUpdateFailed();return null;}
+if (json_obj == null || typeof json_obj == "undefined") {msgUpdateFailed(); return null;}
 
 //check for a weather data object value
 try {var time = json_obj.current_observation.observation_epoch;} 
-catch (e) {msgUpdateFailed();return null;}
+catch (e) {msgUpdateFailed(); return null;}
 
 //check the value
-if (time == null || time == undefined) {msgUpdateFailed();return null;}
+if (time == null || time == undefined) {msgUpdateFailed(); return null;}
 
 
 //0 = current
@@ -105,7 +108,7 @@ if (time == null || time == undefined) {msgUpdateFailed();return null;}
 
 //define weather structure, default for current weather
 var wx = {};
-wx.upd = {}
+wx.upd = {};
 wx.upd.time = "";
 wx.upd.time_ms = 0;
 wx.loc = "";
@@ -289,7 +292,7 @@ wx_fc.humid.max = wx.fc[1].humid.max;
 //needs % removed from value
 
 
-var wx_str = JSON.stringify(wx, null, '\t');
+var wx_str = JSON.stringify(wx, null, '  ');
 
 //alert(wx_str);
 
@@ -331,7 +334,7 @@ function getCardinalZones(degrees, zones) {
     }
 
     //check for zones type of variable
-    if(typeoff(zones) !== "array") {zones = null;}
+    if (typeoff(zones) !== "array") {zones = null;}
 
     //avoid number below 0, or above 360 (using recursion)
     if (degrees < 0) {return getCardinalZones(degrees + 360, zones);}
@@ -356,8 +359,8 @@ function getCardinalZones(degrees, zones) {
 }
 
 function get_itm_icon(elem) {
-    if (elem === null) {return;} //no element received
-    if (json_str === null || json_str === "") {return;} //no file contents
+    if (elem == null) {return;} //no element received
+    if (json_str == null || json_str == "") {return;} //no file contents
     if (typeof json_obj.fonts.font[0] == "undefined") {return;} //no object
     
     var data = {};
@@ -365,7 +368,7 @@ function get_itm_icon(elem) {
     data.icon = "";
     for (i = 0; i < json_obj.fonts.font.length; i++) {
         for (j = 0; j < json_obj.fonts.font[i].element.length; j++) {
-            if (json_obj.fonts.font[i].element[j].name.indexOf(elem) != -1){
+            if (json_obj.fonts.font[i].element[j].name.indexOf(elem) != -1) {
                 data.path = json_obj.fonts.font[i].path;
                 data.icon = json_obj.fonts.font[i].element[j].icon;
                 break;
@@ -385,7 +388,7 @@ function get_itm_color(status) {
     
     var color = null;
     for (i = 0; i < json_obj.fonts.colors.length; i++) {
-        if (json_obj.fonts.colors[i].status.indexOf(status) != -1){
+        if (json_obj.fonts.colors[i].status.indexOf(status) != -1) {
             color = json_obj.fonts.colors[i].color;
             break;
         }
@@ -395,12 +398,12 @@ function get_itm_color(status) {
 
 
 //Object.prototype.typeoff = function(elem)
-function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase()};
+function typeoff(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2].toLowerCase();}
 
 
 function getNumber(str) {
-    if (str === 0) {return 0};
-    if (str == null || str == undefined || str == "") {return null};
+    if (str == 0) {return 0};
+    if (str == null || str == undefined || str == "") {return null;}
     var str = str.toString();
     var myArray = str.match(/-?\d+\.?\d*/g);
     if (myArray) {var myArray = myArray[0]};
@@ -437,23 +440,23 @@ function checkTime(time, caller) {
 }
 
 function getDateDD(time) {
-    var time = checkTime(time, "getDateDD");
+    time = checkTime(time, "getDateDD");
     return formatNumber(time.getDate(),2);
 }
 
 function getDateMM(time) {
-    var time = checkTime(time, "getDateMM");
+    time = checkTime(time, "getDateMM");
     return formatNumber(time.getMonth()+1,2);
 }
 
 function getDateYYYY(time) {
-    var time = checkTime(time, "getDateYYYY");
+    time = checkTime(time, "getDateYYYY");
     return formatNumber(time.getFullYear(),4);
 }
 
 function getDateMMDD(time, sep) {
     if (sep == null || sep == undefined) {sep = ""};
-    var time = checkTime(time, "getDateMMDD");
+    time = checkTime(time, "getDateMMDD");
     return getDateMM(time) + sep + getDateDD(time);
 }
 
@@ -533,7 +536,7 @@ function readWebStream (my_url) {
         msgShow(e + "\n\nNo Internet or site connection!\n*If the error persist, check that you have the necessary permissions.*"); return null;
     } finally {
         if (conn_stream !== null) {conn_stream.close();}
-        if (conn !== null) {conn.disconnect();}
+        if (conn != null) {conn.disconnect();}
     }
     return result;
 }
@@ -550,10 +553,10 @@ function readStream (stream, path) {
         var line = "";
         while ((line = reader.readLine()) !== null) {bld.append(line);}
     } catch (e) {
-        msgShow(e);return null;
+        msgShow(e); return null;
     } finally {
-        if (reader !== null) {reader.close();}
-        if (path !== null) {stream.close();}
+        if (reader != null) {reader.close();}
+        if (path != null) {stream.close();}
     }
     return bld.toString();
 }

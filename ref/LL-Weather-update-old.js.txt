@@ -1,0 +1,278 @@
+var refresh_period = 60*1000;
+var weather_api_key = "e000fb1333b830be";
+//var weather_api_loc = "47.0332559,-122.7967021";
+//var weather_api_loc = $my_latlon_gps;
+var weather_api_loc = LL.getVariables().getString("my_latlon_net");
+var event = LL.getEvent();
+//var event_d = event.getData();
+var event_s = event.getSource();
+var event_i = event.getItem();
+//alert("e:"+event+"\n\nl:"+"\n\ns:"+event_s+"\n\n"+weather_api_loc);return;
+//LL.getEvent().getSource()!="MENU_ITEM"//"I_LONG_CLICK"//"C_LONG_CLICK"
+//http://www.lightninglauncher.com/scripting/reference/api/reference/net/pierrox/lightning_launcher/script/api/Event.html
+
+if (typeof self.readStream == "undefined" || typeof self.readWebStream == "undefined") {
+    var api_script = LL.getScriptByName("f-ReadStream");
+    if (api_script === null) {
+        //alert("Import script 'f-ReadStream'. \n This script depends on it.");
+        Android.makeNewToast("Import script 'f-ReadStream'. \n This script depends on it.",false).show();
+        return;
+    }
+    //initialize the self methods
+    LL.runScript("f-ReadStream", null);
+}
+
+if (typeof self.timeElapsed == "undefined" || typeof self.getTimeAgo == "undefined") {
+    var api_script = LL.getScriptByName("f-Time");
+    if (api_script === null) {
+        //alert("Import script 'f-Time'. \n This script depends on it.");
+        Android.makeNewToast("Import script 'f-Time'. \n This script depends on it.",false).show();
+        return;
+    }
+    //initialize the self method
+    LL.runScript("f-Time", null);
+}
+//var json_str;
+
+//clear the self refresh/update
+//it's set again at the end of the script
+time_cancel();
+
+if (event_s == "I_PAUSED") {return;}
+if (event_s == "I_CLICK" || event_s == "I_LONG_CLICK") {
+//if (event_s == "I_LONG_CLICK") {
+	var json_str=getWeatherData();
+	//LL.getCurrentScript().setTag(getWeatherData());
+	Android.makeNewToast("Updating weather.",false).show();
+}
+
+//alert("stream: "+typeof self.readStream +"\nweb: "+typeof self.readWebStream +"\nelap: "+ typeof self.timeElapsed +"\nago: "+ typeof self.getTimeAgo + typeof self.readStream == "undefined");
+
+//check if the data was updated
+if (json_str === null || typeof json_str == "undefined") {
+
+	//check for existing weather data
+	var json_str=LL.getCurrentScript().getTag();
+	if (json_str === null || typeof json_str == "undefined") {json_str=getWeatherData();}
+}
+
+//check for good weather data object
+var json_obj=JSON.parse(json_str);
+if (json_obj === null || typeof json_obj == "undefined") {
+	json_str=getWeatherData();
+	json_obj=JSON.parse(json_str);
+}
+
+//check for correct weather data value
+var time=json_obj.current_observation.observation_epoch;
+if (time === null || typeof time == "undefined") {
+	//alert("Weather-update Error: Weather data could not be obtained.");
+	Android.makeNewToast("Weather-update Error: Weather data could not be obtained.",false).show();
+	return;
+}
+
+//download if more than _x_ time have passed
+var time=self.timeElapsed(time*1000);
+if (time === null || typeof time == "undefined") {
+	//alert("Weather-update Error: Wrong weather data.");
+	Android.makeNewToast("Weather-update Error: Wrong weather data.",false).show();
+	return;
+} else {
+	var time=JSON.parse(time);
+	if (typeof time.years == "undefined") {Android.makeNewToast("Weather-update Error: Wrong time data, no object found.",false).show();return;} //no object
+
+	if (time.years > 0 || time.months > 0 || time.days > 0 || time.hours > 0 || time.minutes > 30) {
+	json_str=getWeatherData();
+	json_obj=JSON.parse(json_str);
+	//should go back to the checks
+	//json_str=undefined when there's no internet
+	}
+}
+
+//write the updated weather to the script tag
+LL.getCurrentScript().setTag(json_str);
+
+
+
+//alert(json_str);
+
+//var json_str = self.readStream("","/sdcard/_Backup/Fonts/fonts_db.json");
+//alert(json_str);
+
+
+
+//update the weather binders
+time_refresh();
+
+var ed = LL.getVariables().edit();
+
+//json_obj.current_observation.display_location.full;
+//json_obj.current_observation.display_location.city;
+ed.setString("weather_loc",json_obj.current_observation.display_location.full);
+
+ed.setString("weather_cond_cur",json_obj.current_observation.weather);
+
+ed.setString("weather_cond_icon_cur",json_obj.current_observation.icon);
+
+//ed.setString("weather_temp_cur",json_obj.current_observation.temp_f +"°F");
+ed.setString("weather_temp_cur",json_obj.current_observation.feelslike_f +"°F");
+
+ed.setString("weather_wind_cur",json_obj.current_observation.wind_mph +" mph");
+
+ed.setString("weather_wind_dir_cur",getCardinalZones(json_obj.current_observation.wind_degrees));
+
+ed.setString("weather_rain_cur",json_obj.current_observation.precip_today_in +" in");
+
+//ed.setString("weather_humid_cur",json_obj.current_observation.relative_humidity +"%");
+ed.setString("weather_humid_cur",json_obj.current_observation.relative_humidity);
+
+
+
+var txt_var="";
+for (i = 0; i < json_obj.forecast.simpleforecast.forecastday.length; i++) {
+
+	txt_var="weather_day_name_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].date.weekday_short.substr(0,3));
+
+	txt_var="weather_date_f"+i;
+	ed.setString(txt_var,self.getDateMMDD(json_obj.forecast.simpleforecast.forecastday[i].date.epoch*1000));
+
+	txt_var="weather_cond_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].conditions);
+
+	txt_var="weather_cond_icon_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].icon);
+
+	txt_var="weather_temp_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].low.fahrenheit +"/"+ json_obj.forecast.simpleforecast.forecastday[i].high.fahrenheit +"°F");
+
+	txt_var="weather_wind_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].avewind.mph +"/"+ json_obj.forecast.simpleforecast.forecastday[i].maxwind.mph +" mph");
+
+	txt_var="weather_wind_dir_f"+i;
+	ed.setString(txt_var,getCardinalZones(json_obj.forecast.simpleforecast.forecastday[i].avewind.degrees));
+	//json_obj.forecast.simpleforecast.forecastday[i].avewind.dir
+
+	txt_var="weather_rain_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].qpf_allday.in +" in");
+
+	txt_var="weather_humid_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].avehumidity +"%");
+
+	txt_var="weather_snow_f"+i;
+	ed.setString(txt_var,json_obj.forecast.simpleforecast.forecastday[i].snow_allday.in +" in");
+}
+ed.commit();
+
+//set the update timer
+if (event_i !== null) {
+	event_i.setTag("weather_upd_time", setTimeout(time_refresh,refresh_period));
+}
+
+/*	//variables
+weather_upd_time				weather_date_f
+weather_loc						weather_day_name_f
+weather_cond_cur				weather_cond_f
+weather_cond_icon_cur			weather_cond_icon_f
+weather_temp_cur				weather_temp_f
+weather_wind_cur				weather_wind_f
+weather_wind_dir_cur			weather_wind_dir_f
+weather_rain_cur				weather_rain_f
+weather_humid_cur				weather_humid_f
+								weather_snow_f
+*/
+
+//update the weather
+function getWeatherData(){
+	return self.readWebStream("http://api.wunderground.com/api/"+weather_api_key+"/conditions/forecast10day/q/"+weather_api_loc+".json");
+}
+
+function time_refresh() {
+	//json_obj.current_observation.observation_time;
+	//json_obj.current_observation.observation_epoch;
+	LL.getVariables().edit().setString("weather_upd_time",self.getTimeAgo(json_obj.current_observation.observation_epoch*1000)).commit();
+	return;
+}
+
+function time_cancel() {
+	if (event_i !== null) {
+		var id = event_i.getTag("weather_upd_time");
+		if (id !== null) {clearTimeout(parseInt(id));}
+	}
+	return;
+}
+
+function getCardinalZones(degrees,zones) {
+	//function checks
+	if (isNaN(degrees) || degrees === null || degrees === undefined) {
+	//alert("getCardinalZones Error: No number received.");
+		console.log("getCardinalZones Error: No number received.");
+		return;
+	}
+
+	//check for zones type of variable
+	if(typeof_var(zones) !== "array"){zones=null;}
+
+	//avoid number below 0, or above 360 using recursion
+	if (degrees < 0) {return getCardinalZones(degrees+360,zones);}
+	if (degrees > 360) {return getCardinalZones(degrees-360,zones);}
+
+	//set the cardinal zones if they were not given 
+	if (zones === null || zones === undefined || zones.length == 0) {
+		var zones=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+	}
+	
+	//get the amount of degrees by cardinal zone, then get one half of it (assuming that it starts from 0)
+	var zones_deg=180/zones.length; //360/zones.length/2
+
+	//get the cardinal zone index
+	for (var i = 0; i < zones.length; i++) {
+		if (degrees < zones_deg*(1+2*i)) {break;}
+	}
+	if (degrees < 360 && i === zones.length) {i=0;}
+	return zones[i];
+	//return zones[zone_i];
+}
+
+function get_itm_icon(elem) {
+	if (elem === null) {return;} //no element received
+	if (json_str === null || json_str === "") {return;} //no file contents
+	if (typeof json_obj.fonts.font[0] == "undefined") {return;} //no object
+
+	var data={};
+	data.path="";
+	data.icon="";
+	for (i = 0; i < json_obj.fonts.font.length; i++) {
+		for (j = 0; j < json_obj.fonts.font[i].element.length; j++) {
+			if (json_obj.fonts.font[i].element[j].name.indexOf(elem) != -1){
+				data.path=json_obj.fonts.font[i].path;
+				data.icon=json_obj.fonts.font[i].element[j].icon;
+				break;
+			}
+		}
+	}
+	data = JSON.stringify(data);
+	if (typeof data == "undefined"||data === null)  {
+		return;} else {return data;}
+}
+
+function get_itm_color(status) {
+	if (json_str === null || json_str == "" || json_str == undefined) {return;} //no file contents
+	if (typeof json_obj.fonts.colors[0] == "undefined") {return;} //no object
+	if (status == null) {status=0;}
+	status.toString();
+	var color=null;
+	for (i = 0; i < json_obj.fonts.colors.length; i++) {
+		if (json_obj.fonts.colors[i].status.indexOf(status) != -1){
+			color=json_obj.fonts.colors[i].color;
+			break;
+		}
+	}
+	return color;
+}
+
+function typeof_var(obj){ return Object.prototype.toString.call(obj).split(/\W/)[2].toLowerCase();}
+// output: Array Object Function String
+//Object.toType = function(obj) {return ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();}
+//if(Object.toType(shouldBeAnArray) === 'array'){/* do stuff */};
+

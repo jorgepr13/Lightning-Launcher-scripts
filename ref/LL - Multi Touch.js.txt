@@ -1,0 +1,52 @@
+
+//time between clicks, in milliseconds 
+var delta = 500;
+
+var event = LL.getEvent();
+var time = event.getDate();
+var cnt = event.getContainer();
+var itm = event.getItem();
+var name = itm.getName();
+var data = JSON.parse(LL.getScriptTag())||[-1,-1];
+
+if(data[0] == -1) {data[0] = name};
+var itm_nxt = cnt.getItemByName(data[0]);
+if(name.search(data[0]) != -1) {
+	//get next item if available
+	var a = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+	for (i=0;i<a.length;i++) {
+		if ( name == data[0] || name == (data[0] + "_" + a[i])) {
+			if (i+1 <= a.length) {
+				itm_nxt = cnt.getItemByName( "" + data[0] + "_" + a[i+1] + "" );
+				if (itm_nxt == null) {
+					itm_nxt = cnt.getItemByName(data[0]);
+					break;
+				};
+			} else {break};
+			break;
+		};
+	};
+	//once the next item is found, hide the current and show the next item
+	if (itm.isVisible()) 		{itm.setVisibility(false)};
+	if (!(itm_nxt.isVisible())) {itm_nxt.setVisibility(true)};
+};
+
+//keep the main name in the script tag
+if(data[0] != -1) {name = data[0]};
+
+LL.setScriptTag(JSON.stringify([name,time]));
+setTimeout(function(){
+	var data2=JSON.parse(LL.getScriptTag())||[-1,-1];
+	if(data2[0]==name && data2[1]==time) tap();
+},delta);
+
+return;
+
+function tap(){
+	itm.launch();
+
+	LL.setScriptTag(null);
+	if(data[0] != -1) {itm = cnt.getItemByName(data[0])};
+	if (itm_nxt != null && itm_nxt != itm) {if (itm_nxt.isVisible()) {itm_nxt.setVisibility(false)}};
+	if (itm != null) {if (!(itm.isVisible())) {itm.setVisibility(true)}};
+}

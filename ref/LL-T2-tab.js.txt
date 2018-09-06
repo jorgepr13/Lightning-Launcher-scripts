@@ -1,0 +1,13 @@
+var id = LL.getEvent().getItem().getParent().getId();
+
+var desk   = LL.getCurrentDesktop();
+var items = desk.getItems();
+var n = items.getLength(); 
+
+for(var j=(n-1);j>-1;--j)
+  { 
+  if (items.getAt(j).getContainer().getId() == id)
+     { self.TAT.lastPressed = j; }
+  }
+
+LL.runScript("T2-prep", null);

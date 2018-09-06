@@ -1,0 +1,15 @@
+{
+"id":"OPEN_APP_DETAILS",
+"appname":"Android",
+"help":"Set the %package variable to the app package you want before using this intent.",
+"name":"App Details Settings",
+"action":"android.settings.APPLICATION_DETAILS_SETTINGS",
+"data":"package:%package",
+"target":"Activity",
+"hasOutput":false,
+"categories":[{
+"category":"android.intent.category.DEFAULT",
+"name":"android.intent.category.DEFAULT"
+}],
+"extras":[]
+}

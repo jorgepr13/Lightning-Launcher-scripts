@@ -1,0 +1,193 @@
+
+
+http://www.pocketables.com/2013/06/how-to-use-google-navigation-from-autovoice.html
+
+http://www.pocketables.com/2013/06/beginners-guide-to-tasker-part-8-autovoice.html
+
+command filter with (?<variablename>.+), and will create %variablename with a value of whatever it replaced. 
+As an example, 
+a regex command filter “say hello to (?<name>.+)” and 
+a spoken command “say hello to Bob” 
+will create %name with the value “Bob”.
+
+”turn (?<room>.+) lights to (?<level>.+) percent”
+
+
+use more than one possible command filter (trigger term) when creating AutoVoice contexts
+Command: "user manual|any tip|user guide (regex)"
+
+
+
+http://www.pocketables.com/2013/05/how-to-get-the-variable-for-words-in-a-dynamic-autovoice-command.html
+
+
+Variable Set %temp to %avword(#?google)
+%avword(%temp)
+
+%avword(#?google) 
+essentially tells Tasker to search the array %avword for any variables that match “google”, and return their array number. 
+So if the fifth word is “google”, %avword(#?google) will be 5. 
+Then, by slapping a variable that contains that behind %avword, you’re actually asking for the array variable %avword5.
+
+Variable Set %temp to %avword(#?second*)-1, Use Maths. 
+
+You can then use %avword(%temp) to refer to the variable right in front of “second” or “seconds”.
+
+
+http://www.vogella.com/tutorials/JavaRegularExpressions/article.html
+
+This example extracts the text between a title tag.
+
+// Extract the text between the two title elements
+pattern = "(?i)(<title.*?>)(.+?)()";
+String updated = EXAMPLE_TEST.replaceAll(pattern, "$2");
+
+
+Specifying modes inside the regular expression
+
+You can add the mode modifiers to the start of the regex. To specify multiple modes, simply put them together as in (?ismx).
+
+(?i) makes the regex case insensitive.
+
+(?s) for "single line mode" makes the dot match all characters, including line breaks.
+
+(?m) for "multi-line mode" makes the caret and dollar match at the start and end of each line in the subject string.
+
+
+htmltag = Pattern.compile("<a\\b[^>]*href=\"[^>]*>(.*?)</a>");
+link = Pattern.compile("href=\"[^>]*\">");
+
+
+
+http://beginnersbook.com/2014/08/java-regex-tutorial/
+
+Here is the complete list of various character classes constructs:
+[abc]: It would match with text if the text is having either one of them(a,b or c) and only once.
+[^abc]:  Any single character except a, b, or c (^ denote negation)
+[a-zA-Z]:  a through z, or A through Z, inclusive (range)
+[a-d[m-p]]:  a through d, or m through p: [a-dm-p] (union)
+[a-z&&[def]]:  Any one of them (d, e, or f)
+[a-z&&[^bc]]: a through z, except for b and c: [ad-z] (subtraction)
+[a-z&&[^m-p]]:  a through z, and not m through p: [a-lq-z] (subtraction)
+
+
+
+Predefined Character Classes – Metacharacters
+
+These are like short codes which you can use while writing regex.
+
+Construct	Description
+.   ->	Any character (may or may not match line terminators)
+\d  ->	A digit: [0-9]
+\D  ->	A non-digit: [^0-9]
+\s  ->	A whitespace character: [ \t\n\x0B\f\r]
+\S  ->	A non-whitespace character: [^\s]
+\w  ->	A word character: [a-zA-Z_0-9]
+\W  ->	A non-word character: [^\w]
+For e.g.
+Pattern.matches("\\d", "1"); would return true
+Pattern.matches("\\D", "z"); return true
+Pattern.matches(".p", "qp"); return true, dot(.) represent any character
+
+Boundary Matchers
+
+^	Matches the beginning of a line.
+$	Matches then end of a line.
+\b	Matches a word boundary.
+\B	Matches a non-word boundary.
+\A	Matches the beginning of the input text.
+\G	Matches the end of the previous match
+\Z	Matches the end of the input text except the final terminator if any.
+\z	Matches the end of the input text.
+
+For e.g.
+Pattern.matches("^Hello$", "Hello"): return true, Begins and ends with Hello
+Pattern.matches("^Hello$", "Namaste! Hello"): return false, does not begin with Hello
+Pattern.matches("^Hello$", "Hello Namaste!"): return false, Does not end with Hello
+
+
+Quantifiers
+
+Greedy	Reluctant	Possessive	Matches
+X?	X??	X?+	Matches X once, or not at all (0 or 1 time).
+X*	X*?	X*+	Matches X zero or more times.
+X+	X+?	X++	Matches X one or more times.
+X{n}	X{n}?	X{n}+	Matches X exactly n times.
+X{n,}	X{n,}?	X{n,}+	Matches X at least n times.
+X{n, m)	X{n, m)? X{n, m)+	Matches X at least n time, but at most m times.
+
+
+Few examples
+
+Few examples
+
+import java.util.regex.*;  
+class RegexExample{  
+public static void main(String args[]){  
+   // It would return true if string matches exactly "tom"
+   System.out.println(
+     Pattern.matches("tom", "Tom")); //False
+	
+   /* returns true if the string matches exactly 
+    * "tom" or "Tom"
+    */
+   System.out.println(
+     Pattern.matches("[Tt]om", "Tom")); //True
+   System.out.println(
+     Pattern.matches("[Tt]om", "Tom")); //True
+	
+   /* Returns true if the string matches exactly "tim" 
+    * or "Tim" or "jin" or "Jin"
+    */
+   System.out.println(
+     Pattern.matches("[tT]im|[jJ]in", "Tim"));//True
+   System.out.println(
+     Pattern.matches("[tT]im|[jJ]in", "jin"));//True
+	
+   /* returns true if the string contains "abc" at 
+    * any place
+    */
+   System.out.println(
+     Pattern.matches(".*abc.*", "deabcpq"));//True
+	
+   /* returns true if the string does not have a 
+    * number at the beginning
+    */
+   System.out.println(
+     Pattern.matches("^[^\\d].*", "123abc")); //False
+   System.out.println(
+     Pattern.matches("^[^\\d].*", "abc123")); //True
+	
+   // returns true if the string contains of three letters
+   System.out.println(
+     Pattern.matches("[a-zA-Z][a-zA-Z][a-zA-Z]", "aPz"));//True
+   System.out.println(
+     Pattern.matches("[a-zA-Z][a-zA-Z][a-zA-Z]", "aAA"));//True
+   System.out.println(
+     Pattern.matches("[a-zA-Z][a-zA-Z][a-zA-Z]", "apZx"));//False
+	
+   // returns true if the string contains 0 or more non-digits
+   System.out.println(
+     Pattern.matches("\\D*", "abcde")); //True
+   System.out.println(
+     Pattern.matches("\\D*", "abcde123")); //False
+	
+   /* Boundary Matchers example
+    * ^ denotes start of the line
+    * $ denotes end of the line
+    */
+   System.out.println(
+     Pattern.matches("^This$", "This is Chaitanya")); //False
+   System.out.println(
+     Pattern.matches("^This$", "This")); //True
+   System.out.println(
+     Pattern.matches("^This$", "Is This Chaitanya")); //False
+}
+}
+
+
+
+Reference
+
+
+

@@ -1,0 +1,157 @@
+/*
+
+For instance, you can securely check if a given object is in fact an Array using Array.isArray(myObj)
+
+The following code uses instanceof to demonstrate that String and Date objects are also of typeObject (they are derived from Object).
+
+
+
+
+
+
+I am trying to return a specific node in a JSON object structure which looks like this
+
+{ 
+	"id":"0", 
+	"children":[ 
+		{ 
+				"id":"1", 
+				"children":[...] 
+		}, 
+		{ 
+				"id":"2", 
+				"children":[...] 
+		} 
+	] 
+}
+
+So it's a tree-like child-parent relation. Every node has a unique ID. I'm trying to find a specific node 
+
+I execute the search for example by findNode("10", rootNode). But even though the search finds a match the function always returns undefined. I have a bad feeling that the recursive function doesn't stop after finding the match and continues running an finally returns undefined because in the latter recursive executions it doesn't reach a return point, but I'm not sure how to fix this.
+
+
+
+When searching recursively, you have to pass the result back by returning it. You're not returning the result of findNode(id, currentChild), though.
+
+*/
+
+function findNode(id, currentNode) { 
+
+	var i, 
+	currentChild, 
+	result; 
+
+	if (id == currentNode.id) { 
+		return currentNode; 
+	} else { 
+
+// Use a for loop instead of forEach to avoid nested functions 
+// Otherwise "return" will not work properly 
+		for (i = 0; i < currentNode.children.length; i += 1) { 
+			currentChild = currentNode.children[i]; 
+
+// Search in the current child 
+			result = findNode(id, currentChild); 
+			
+// Return the result if the node has been found 
+			if (result !== false) { 
+				return result; 
+			}
+		}
+
+// The node has not been found and we have no more options 
+		return false; 
+	} 
+}
+
+
+
+/*
+http://stackoverflow.com/questions/20913403/recursively-search-json-string-dictionaries-for-all-values-with-key-value-pair-i
+
+I have a JSON string below and I have to get value of all names. I get that there is a recursive way to do it but I need help. I searched stack for a solution to this but did not find anything that addresses it straight forward.
+
+I am at work. I will update fiddle as soon as I can. My time is quite limited and sometimes I do not get back to my stack stuff immediately. If that is an issue for someone, I apologize. I do not need answers in milliseconds however and I accept constructive criticism :). I will post questions once I have actually managed to get to the fiddle.
+
+[ 
+	{ "name": "john",
+		 "surname": "doe",
+		 "children": [ 
+		 	{ "name": "anne",
+		 			 "surname": "peters" 
+		 		} 
+		 	] 
+	}, 
+	{ "name": "joe",
+		 "surname": "doe", 
+		 "children": [ 
+		 	{ "name": "bob",
+		 		 "surname": "peters",
+		 		 "children": [ 
+		 		 	{ "name": "bill",
+		 		 		 "surname": "peters" 
+		 		 		} 
+		 		 ] 
+		 		} 
+		 	] 
+	}, 
+	{ "name": "jim",
+		 "surname": "doe" 
+	} 
+]
+
+I need to get:
+
+john anne joe bob bill jim
+
+
+
+
+
+You can try this:
+
+function getNames(obj, list) { 
+	if (!obj) return list; 
+	if (obj instanceof Array) { 
+		for (var i in obj) { 
+			list = list.concat(getNames(obj[i], [])); 
+		} 
+		return list; 
+	} 
+	if (obj.name) list.push(obj.name); 
+	if (obj.children) return getNames(obj.children, list); 
+		return list; 
+	} 
+	// Outputs a list of names 
+	console.log(getNames(JSON.parse(json), []));
+
+
+
+
+
+
+pass an object with the search keys
+parse it 
+loop through the search keys
++ calling the search function
+
+
+- How to organize the results? 
+- mark or use the first key as a reference? 
+
+function getKeyValue(obj, keyName, list) { 
+	if (!obj) return list; 
+	if (obj instanceof Array) { 
+		for (var key in obj) { 
+			list = list.concat(getKeyValue(obj[key], keyName, [])); 
+		} 
+		return list; 
+	}
+	}
+	// Outputs a list of names 
+	console.log(getKeyValue(JSON.parse(json), []));
+	
+	
+*/
+
+

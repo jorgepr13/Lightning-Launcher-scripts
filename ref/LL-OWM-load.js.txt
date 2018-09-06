@@ -1,0 +1,83 @@
+/* About the script
+ *  Author  : Jappie Toutenhoofd (https://plus.google.com/+JappieToutenhoofd)
+ *  Link    : https://plus.google.com/+JappieToutenhoofd/posts/
+ *
+ *  Purpose : Get OpenWeather-data for given city. (current & next 10 days)
+ *  - binds weather-data as json to .self
+ *  - refreshes every:
+ */
+
+var data_refresh_interval_minutes = 15;
+var Req1 = "http://api.openweathermap.org/data/2.5/";
+var Req2 = "?q=fort+polk,la"; // <-- your city,land here !!
+Req2 += "&units=imperial";
+//Req2 += "&units=metric";      // or imperial
+//Req2 += "&lang=nl";           // or other country code for language
+
+var daynames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+var windrose = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+//var daynames = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+//var windrose = ["N", "NO", "O", "ZO", "Z", "ZW", "W", "NW"];
+
+// reset current tag to select new daynames
+//LL.getCurrentScript().setTag(null);
+
+if (typeof self.APIcomm == "undefined") {
+    var api_script = LL.getScriptByName("APIcomm");
+    if (api_script === null) {
+        alert("Also import script 'APIcomm'. \n This script depends on it.");
+        return;
+    }
+    LL.runScript('APIcomm', null);
+}
+
+function ResetCache() {
+    owm = {};
+    owm.req = {};
+    owm.req.current = Req1 + "weather" + Req2;
+    owm.req.hourly  = Req1 + "forecast/" + Req2 + "&cnt=10";
+    owm.req.forcast = Req1 + "forecast/daily" + Req2 + "&cnt=10";
+    owm.days = daynames;
+    owm.rose = windrose;
+    owm.last = 1;
+}
+
+var myTag = LL.getCurrentScript().getTag();
+ if (myTag === null || myTag === "") {
+        ResetCache();
+    } else {
+        var owm = JSON.parse(myTag);
+        if (typeof owm.req == "undefined") {
+            ResetCache();
+        }
+    }
+
+function refreshOWM() { 
+        var repl = self.APIcomm(owm.req.current);
+        if (typeof repl == "undefined"||repl === null) {
+            Android.makeNewToast("Error: OWM Current-data.", true).show();
+            return;}
+        owm.current = JSON.parse(repl);
+
+        repl = self.APIcomm(owm.req.hourly);
+        if (typeof repl == "undefined"||repl === null) {
+            Android.makeNewToast("Error: OWM Hourly-data.", true).show();
+            return;}
+        owm.hourly = JSON.parse(repl);
+
+        repl = self.APIcomm(owm.req.forcast);
+        if (typeof repl == "undefined"||repl === null) {
+            Android.makeNewToast("Error: OWM Forcast-data.", true).show();
+            return;}
+        owm.forcast = JSON.parse(repl);
+
+        owm.last = new Date();
+        myTag = JSON.stringify(owm);
+        LL.getScriptByName("OWM-load").setTag(myTag);
+
+        LL.runScript('OWM-binders', myTag);
+
+}
+
+//refreshOWM();
+self.runEvery(refreshOWM,(data_refresh_interval_minutes * 60000));

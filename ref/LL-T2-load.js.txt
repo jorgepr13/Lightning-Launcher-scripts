@@ -1,0 +1,14 @@
+/*  Initial make self.TAT */
+if(! ("TAT" in self))
+ { 
+self.TAT = {};
+self.TAT.lastPressed = 0;
+ }
+if(! ("lastPressed" in self.TAT))
+ { 
+self.TAT.lastPressed = 0;
+ }
+
+self.TAT.lastPressed = 0;
+
+LL.runScript("T2-prep", null);

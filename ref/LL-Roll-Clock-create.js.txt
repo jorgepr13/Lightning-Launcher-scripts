@@ -1,0 +1,116 @@
+/* About the script
+ *  Purpose : Rolling Clock Widget (swipe for date)
+ *  Author  : Jappie Toutenhoofd (https://plus.google.com/+JappieToutenhoofd)
+ *  Link    : https://plus.google.com/+JappieToutenhoofd/posts/
+ */
+
+var RC_script = LL.getScriptByName("Roll-Clock");
+if (RC_script === null) {
+    alert("Also install 'Roll-Clock' not just 'Roll-Clock-create'.");
+    return;
+}
+var Touch = LL.getEvent();
+if (Touch.getItem() !== null) {
+    alert("Run from empty. \n Do NOT set 'item menu'. \n Only set 'Lightning menu' in script-editor.");
+    return;
+}
+var Tcont = Touch.getContainer();
+if (Tcont.getId() == 99) {
+    alert("Cool, but messy! Let's not do this.");
+    return;
+}
+
+var clockbase = Tcont.addPanel(Touch.getTouchX(), Touch.getTouchY(), (3 * Tcont.getCellWidth()), Tcont.getCellHeight());
+var cc = clockbase.getContainer();
+var ce = cc.getProperties().edit();
+ce.setBoolean("newOnGrid", true);
+ce.setBoolean("allowDualPosition", true);
+ce.setBoolean("useDesktopSize", false);
+ce.setString("scrollingDirection", "NONE");
+ce.setString("gridPColumnMode", "NUM");
+ce.setString("gridLColumnMode", "NUM");
+ce.setString("gridPRowMode", "NUM");
+ce.setString("gridLRowMode", "NUM");
+ce.setInteger("gridPColumnNum", 5);
+ce.setInteger("gridLColumnNum", 5);
+ce.setInteger("gridPRowNum", 1);
+ce.setInteger("gridLRowNum", 1);
+ce.commit();
+
+for (var i = 0; i <= 4; ++i) {
+    var dgt = cc.addPanel(0, 0, cc.getCellWidth(), cc.getCellHeight());
+    dgt.setCell(i, 0, (i + 1), 1, true);
+    dgt.setName("dgt" + i);
+    var dc = dgt.getContainer();
+    var de = dc.getProperties().edit();
+    de.setBoolean("newOnGrid", true);
+    de.setBoolean("allowDualPosition", true);
+    de.setBoolean("useDesktopSize", false);
+    de.setString("scrollingDirection", "Y");
+    de.setString("gridPColumnMode", "NUM");
+    de.setString("gridLColumnMode", "NUM");
+    de.setString("gridPRowMode", "NUM");
+    de.setString("gridLRowMode", "NUM");
+    de.setInteger("gridPColumnNum", 1);
+    de.setInteger("gridLColumnNum", 1);
+    de.setInteger("gridPRowNum", 1);
+    de.setInteger("gridLRowNum", 1);
+    de.setBoolean("i.enabled", false);
+    de.commit();
+
+    if (i == 2) {
+        var newItem = dc.addShortcut(":", new Intent(), 0, 0);
+        newItem.setCell(0, 0, 1, 1, true);
+        var ed = newItem.getProperties().edit();
+        ed.setBoolean("s.iconVisibility", false);
+        ed.setBoolean("s.labelVisibility", true);
+        ed.setFloat("s.labelFontSize", 30);
+        ed.setBoolean("i.enabled", false);
+        ed.commit();
+
+        var newItem = dc.addShortcut("/", new Intent(), 0, 0);
+        newItem.setCell(0, 1, 1, 2, true);
+        var ed = newItem.getProperties().edit();
+        ed.setBoolean("s.iconVisibility", false);
+        ed.setBoolean("s.labelVisibility", true);
+        ed.setFloat("s.labelFontSize", 30);
+        ed.setBoolean("i.enabled", false);
+        ed.commit();
+    } else {
+        for (var j = 0; j <= 9; ++j) {
+            var newItem = dc.addShortcut(j, new Intent(), 0, 0);
+            newItem.setCell(0, j, 1, (j + 1), true);
+            var ed = newItem.getProperties().edit();
+            ed.setBoolean("s.iconVisibility", false);
+            ed.setBoolean("s.labelVisibility", true);
+            ed.setFloat("s.labelFontSize", 30);
+            ed.setBoolean("i.enabled", false);
+            ed.commit();
+    							}
+    		}
+}
+var click = cc.addShortcut("click", new Intent(), 0, 0);
+click.setCell(0, 0, 5, 1, true);
+click.setTag("QT", "notheme");
+var pe = click.getProperties().edit();
+pe.setBoolean("s.iconVisibility" , false);
+pe.setBoolean("s.labelVisibility", false);
+pe.setEventHandler("i.resumed"  , EventHandler.RUN_SCRIPT, RC_script.getId());
+pe.setEventHandler("i.paused"   , EventHandler.RUN_SCRIPT, RC_script.getId());
+pe.setEventHandler("i.tap"      , EventHandler.RUN_SCRIPT, RC_script.getId());
+pe.setEventHandler("i.swipeUp"  , EventHandler.RUN_SCRIPT, RC_script.getId());
+pe.setEventHandler("i.swipeDown", EventHandler.RUN_SCRIPT, RC_script.getId());
+pe.commit();
+
+
+// hack: the resumed event is triggered as soon as the item is created, hence before the "i.resumed" event handler is set
+// the following lines will effectively pause and resume the launcher, and start the clock
+var intent = new Intent();
+intent.setClassName("net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher.activities.Dashboard");
+intent['putExtra(java.lang.String,int)']("p", LL.getCurrentDesktop().getId());
+LL.startActivity(intent);
+/*
+ not 0, 1, 13, 25, 26, 36, 40, 41, 42
+LL.runAction(36);
+LL.runAction(EventHandler.RUN_SCRIPT,click,RC_script.getId());
+*/

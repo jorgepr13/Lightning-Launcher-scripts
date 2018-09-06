@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+<title>Function Tools</title>
+</head>
+
+<h1>Function Tools test</h1>
+<body>
+</body>
+
+<script>
+
+var mod_date = "20171117";
+
+
+// Type of function
+// https://toddmotto.com/understanding-javascript-types-and-reliable-type-checking/
+
+//var types = 'Array Object String Date RegExp Function Boolean Number Null Undefined'.split(' ');
+Object.prototype.typeoff     = function(elem) {return Object.prototype.toString.call(elem).split(/\W/)[2]};
+//Object.prototype.typeoff     = function(elem) {return Object.prototype.toString.call(elem).slice(8, -1)};
+Object.prototype.isArray     = function(elem) {return typeoff(elem) === "Array"};
+Object.prototype.isObject    = function(elem) {return typeoff(elem) === "Object"};
+Object.prototype.isString    = function(elem) {return typeoff(elem) === "String"};
+Object.prototype.isDate      = function(elem) {return typeoff(elem) === "Date"};
+Object.prototype.isRegExp    = function(elem) {return typeoff(elem) === "RegExp"};
+Object.prototype.isFunction  = function(elem) {return typeoff(elem) === "Function"};
+Object.prototype.isBoolean   = function(elem) {return typeoff(elem) === "Boolean"};
+Object.prototype.isNumber    = function(elem) {return typeoff(elem) === "Number"};
+Object.prototype.isNull      = function(elem) {return typeoff(elem) === "Null"};
+Object.prototype.isUndefined = function(elem) {return typeoff(elem) === "Undefined"};
+
+function typeof_test() {
+    var msg = "";
+    msg += "typeof:\n";
+    msg += "     [] - " + typeof []         + "\n"; // object
+    msg += "     {} - " + typeof {}         + "\n"; // object
+    msg += "     '' - " + typeof ''         + "\n"; // string
+    msg += "   Date - " + typeof new Date() + "\n"; // object
+    msg += "      1 - " + typeof 1          + "\n"; // number
+    msg += "   func - " + typeof function () {} + "\n"; // function
+    msg += "/test/i - " + typeof /test/i    + "\n"; // object
+    msg += "   true - " + typeof true       + "\n"; // boolean
+    msg += "   null - " + typeof null       + "\n"; // object
+    msg += "  undef - " + typeof undefined  + "\n"; // undefined
+    msg += "\n";
+    
+    msg += "object call:\n";
+    msg += "     [] - " + Object.prototype.toString.call([])      + "\n"; // [object Array]
+    msg += "     {} - " + Object.prototype.toString.call({})      + "\n"; // [object Object]
+    msg += "     '' - " + Object.prototype.toString.call('')      + "\n"; // [object String]
+    msg += "   Date - " + Object.prototype.toString.call(new Date()) + "\n"; // [object Date]
+    msg += "      1 - " + Object.prototype.toString.call(1)       + "\n"; // [object Number]
+    msg += "   func - " + Object.prototype.toString.call(function () {}) + "\n"; // [object Function]
+    msg += "/test/i - " + Object.prototype.toString.call(/test/i) + "\n"; // [object RegExp]
+    msg += "   true - " + Object.prototype.toString.call(true)    + "\n"; // [object Boolean]
+    msg += "   null - " + Object.prototype.toString.call(null)    + "\n"; // [object Null]
+    msg += "  undef - " + Object.prototype.toString.call()        + "\n"; // [object Undefined]
+    alert(msg);
+    
+    msg = "";
+    msg += "typeoff + bool check:\n";
+    msg += "     [] - " + isArray([])         + " - " + typeoff([])         + "\n"; // Array
+    msg += "     {} - " + isObject({})        + " - " + typeoff({})         + "\n"; // Object
+    msg += "     '' - " + isString('')        + " - " + typeoff('')         + "\n"; // String
+    msg += "   Date - " + isDate(new Date())  + " - " + typeoff(new Date()) + "\n"; // Date
+    msg += "      1 - " + isNumber(1)         + " - " + typeoff(1)          + "\n"; // Number
+    msg += "   func - " + isFunction(function () {}) + " - " + typeoff(function () {}) + "\n"; // Function
+    msg += "/test/i - " + isRegExp(/test/i)   + " - " + typeoff(/test/i)    + "\n"; // RegExp
+    msg += "   true - " + isBoolean(false)    + " - " + typeoff(true)       + "\n"; // Boolean
+    msg += "   null - " + isNull(null)        + " - " + typeoff(null)       + "\n"; // Null
+    msg += "  undef - " + isUndefined()       + " - " + typeoff()           + "\n"; // Undefined
+    msg += "  null - " + isUndefined(null)       + " - " + typeoff()           + "\n"; // Undefined
+    alert(msg);
+}
+//typeof_test();
+
+//
+//
+//
+
+//RegExp test
+
+function regexp_test() {
+    var msg = "";
+    
+    //Methods that use regular expressions
+    //exec: returns an array of information or null on a mismatch.
+    //test: returns true or false.
+    //match	: returns an array of information or null on a mismatch.
+    //search: returns the index of the match, or -1 if the search fails.
+    //replace: replaces the matched substring with a replacement substring.
+    //split	: break a string into an array of substrings
+    
+    //regex properties not retained
+    //var myArray = /d(b+)d/g.exec('cdbbdbsbz'); 
+    // equivalent to "cdbbdbsbz".match(/d(b+)d/g);
+    
+    var myRe = /d(b+)d/g; //constant
+    //var myRe = new RegExp('d(b+)d', 'g'); //can be variable
+    var myArray = myRe.exec('cdbbdbsbz');
+    //console.log('The value of lastIndex is ' + myRe.lastIndex);
+    // "The value of lastIndex is 5"
+    //msg += "input: '" + myRe.input + "'\n";
+    msg += "source: '" + myRe.source + "'\n"; //d(b+)d
+    //msg += "index: '" + myRe.index + "'\n";
+    msg += "lastIndex: '" + myRe.lastIndex + "'\n"; //5
+    msg += "myArray: '" + myArray + "'\n";
+    msg += "myRe: '" + myRe + "'\n";
+    msg += "\n";
+    
+    var re = /(\w+)\s(\w+)/;
+    var str = 'John Smith';
+    var newstr = str.replace(re, '$2, $1');
+    //console.log(newstr);
+    // "Smith, John"
+    msg += "replace: " + str + "; to: " + newstr + "'\n";
+    msg += "\n";
+    
+    
+    //var re = new RegExp('\\w+\\s', 'g');
+    var re = /\w+\s/g;
+    var str = 'fee fi fo fum';
+    var myArray = str.match(re);
+    //console.log(myArray);
+    // ["fee ", "fi ", "fo "]
+    msg += "match: " + str + "\n";
+    msg += "myArray: " + myArray + "'\n";
+    
+    var xArray; while(xArray = re.exec(str)) msg += "xArray: " + xArray + "'\n";
+    //console.log(xArray);
+    msg += "\n";
+    
+    alert(msg);
+    msg = "";
+
+
+// The name string contains multiple spaces and tabs,
+// and may have multiple spaces between first and last names.
+var names = 'Harry Trump ;Fred Barney; Helen Rigby ; Bill Abel ; Chris Hand ';
+
+var output = ['---------- Original String\n', names + '\n'];
+
+// Prepare two regular expression patterns and array storage.
+// Split the string into array elements.
+
+// pattern: possible white space then semicolon then possible white space
+var pattern = /\s*;\s*/;
+
+// Break the string into pieces separated by the pattern above and
+// store the pieces in an array called nameList
+var nameList = names.split(pattern);
+
+// new pattern: one or more characters then spaces then characters.
+// Use parentheses to "memorize" portions of the pattern.
+// The memorized portions are referred to later.
+pattern = /(\w+)\s+(\w+)/;
+
+// New array for holding names being processed.
+var bySurnameList = [];
+
+// Display the name array and populate the new array
+// with comma-separated names, last first.
+//
+// The replace method removes anything matching the pattern
+// and replaces it with the memorized string—second memorized portion
+// followed by comma space followed by first memorized portion.
+//
+// The variables $1 and $2 refer to the portions
+// memorized while matching the pattern.
+
+output.push('---------- After Split by Regular Expression');
+
+var i, len;
+for (i = 0, len = nameList.length; i < len; i++) {
+  output.push(nameList[i]);
+  bySurnameList[i] = nameList[i].replace(pattern, '$2, $1');
+}
+
+// Display the new array.
+output.push('---------- Names Reversed');
+for (i = 0, len = bySurnameList.length; i < len; i++) {
+  output.push(bySurnameList[i]);
+}
+
+// Sort by last name, then display the sorted array.
+bySurnameList.sort();
+output.push('---------- Sorted');
+for (i = 0, len = bySurnameList.length; i < len; i++) {
+  output.push(bySurnameList[i]);
+}
+
+output.push('---------- End');
+
+//console.log(output.join('\n'));
+msg += output.join("\n");
+    
+    
+    
+    msg += "\n";
+    
+    alert(msg);
+}
+//regexp_test();
+
+
+function regexp_test_b() {
+    var msg = "";
+
+    var re = /-?\d+\.?\d*/g;
+    var str = 'f75.45 -72 12.3456F  abc-342.34C';
+    //var str = 'abcd';
+    var myArray = str.match(re);
+    //var myArray = re.exec(str);
+    //console.log(myArray);
+    msg += "match: \n";
+    msg += "str: " + str + "\n";
+    msg += "myArray: '" + myArray + "'\n";
+    if (myArray) {msg += myArray[0]} else msg += "not found";
+    msg += "\n";
+    alert(msg);
+}
+regexp_test_b();
+
+
+function number_check(str) {
+    if (str == null || str == undefined || str == "") {return null};
+    var myArray = str.match(/-?\d+\.?\d*/g);
+    if (myArray) {var myArray = myArray[0]};
+    return myArray;
+}
+//alert(number_check('75.45 -72 12.3456F  -342.34C'));
+//alert(number_check('abc'));
+//alert(number_check());
+
+
+
+
+//
+//
+//
+
+
+
+//
+//
+//
+
+
+
+</script>
+</html>

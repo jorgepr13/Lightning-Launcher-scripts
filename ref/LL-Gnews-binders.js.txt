@@ -1,0 +1,68 @@
+var editor = LL.getVariables().edit();
+
+    editor.setString("gnewsQuery", self.gnews.query);
+
+var cnt = self.gnews.length;
+for (var i = 0; i < cnt; i++) {
+
+  var item  = self.gnews[i];
+
+  var title     = item.titleNoFormatting.replace(/&#39;/g, "'");
+  var content   = item.content.replace(/&#39;/g, "'");
+  var publisher = item.publisher.replace(/&#39;/g, "'");
+  var pubdate   = new Date(item.publishedDate);
+
+//  var url   = item.unescapedUrl;
+//  var tbUrl = null;  if (item.image){ tbUrl = item.image.tbUrl;} 
+
+    if (i === 0) {
+        editor.setString("gnews_0_title"    , title);
+        editor.setString("gnews_0_content"  , content);
+        editor.setString("gnews_0_publisher", publisher);
+        editor.setString("gnews_0_pubdate"  , pubdate);
+    }
+    if (i === 1) {
+        editor.setString("gnews_1_title"    , title);
+        editor.setString("gnews_1_content"  , content);
+        editor.setString("gnews_1_publisher", publisher);
+        editor.setString("gnews_1_pubdate"  , pubdate);
+    }
+    if (i === 2) {
+        editor.setString("gnews_2_title"    , title);
+        editor.setString("gnews_2_content"  , content);
+        editor.setString("gnews_2_publisher", publisher);
+        editor.setString("gnews_2_pubdate"  , pubdate);
+    }
+    if (i === 3) {
+        editor.setString("gnews_3_title"    , title);
+        editor.setString("gnews_3_content"  , content);
+        editor.setString("gnews_3_publisher", publisher);
+        editor.setString("gnews_3_pubdate"  , pubdate);
+    }
+    if (i === 4) {
+        editor.setString("gnews_4_title"    , title);
+        editor.setString("gnews_4_content"  , content);
+        editor.setString("gnews_4_publisher", publisher);
+        editor.setString("gnews_4_pubdate"  , pubdate);
+    }
+    if (i === 5) {
+        editor.setString("gnews_5_title"    , title);
+        editor.setString("gnews_5_content"  , content);
+        editor.setString("gnews_5_publisher", publisher);
+        editor.setString("gnews_5_pubdate"  , pubdate);
+    }
+    if (i === 6) {
+        editor.setString("gnews_6_title"    , title);
+        editor.setString("gnews_6_content"  , content);
+        editor.setString("gnews_6_publisher", publisher);
+        editor.setString("gnews_6_pubdate"  , pubdate);
+    }
+    if (i === 7) {
+        editor.setString("gnews_7_title"    , title);
+        editor.setString("gnews_7_content"  , content);
+        editor.setString("gnews_7_publisher", publisher);
+        editor.setString("gnews_7_pubdate"  , pubdate);
+    }
+}
+
+editor.commit();

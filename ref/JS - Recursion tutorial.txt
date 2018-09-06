@@ -1,0 +1,142 @@
+
+
+
+JavaScript
+
+Article
+
+Recursion in Functional JavaScriptBy M. David Green June 29, 2015
+
+You may have come across references to recursive functions while programming in JavaScript. You may even have tried to construct (or deconstruct) a few yourself. But you probably haven’t seen a lot of examples of effective recursion in the wild. In fact, other than the exotic nature of this approach, you may not have considered when and where recursion is useful, or how dangerous it can be if used carelessly.
+
+What is Recursion Good For?
+
+Recursion is a technique for iterating over an operation by having a function call itself repeatedly until it arrives at a result. Most loops can be rewritten in a recursive style, and in some functional languages this approach to looping is the default.
+
+ More from this author
+
+Function Composition: Building Blocks for Maintainable CodeVersioning Show, Episode 3, with Alex WalkerVersioning Show, Episode 2, with Mat Marquis
+
+However, while JavaScript’s functional coding style does support recursive functions, we need to be aware that most JavaScript compilers are not currently optimized to support them safely.
+
+Recursion is best applied when you need to call the same function repeatedly with different parameters from within a loop. While it can be used in many situations, it is most effective for solving problems involving iterative branching, such as fractal math, sorting, or traversing the nodes of complex or non-linear data structures.
+
+One reason that recursion is favored in functional programming languages is that it allows for the construction of code that doesn’t require setting and maintaining state with local variables. Recursive functions are also naturally easy to test because they are easy to write in a pure manner, with a specific and consistent return value for any given input, and no side effects on external variable states.
+
+Looping
+
+The classic example of a function where recursion can be applied is the factorial. This is a function that returns the value of multiplying a number again and again by each preceding integer, all the way down to one.
+
+For example, the factorial of three is:
+
+3 × 2 × 1 = 6
+
+The factorial of six is:
+
+6 × 5 × 4 × 3 × 2 × 1 = 720
+
+You can see how quickly these results get big. You can also see that we’re repeating the same behavior over and over. We take the result of one multiplication operation and multiply it again by one less than the second value. Then we do that again and again until we reach one.
+
+Using a for loop, it’s not difficult to create a function that will perform this operation iteratively until it returns the correct result:
+
+var factor = function(number) { var result = 1; var count; for (count = number; count > 1; count--) { result *= count; } return result; }; console.log(factor(6)); // 720
+
+This works, but it isn’t very elegant from a functional programming perspective. We have to use a couple of local variables that maintain and track state in order to support that for loop and then return a result. Wouldn’t it be cleaner if we could ditch that for loop, and take a more functional JavaScript approach?
+
+Recursion
+
+We know JavaScript will let us write functions that take functions as arguments. So what if we want to use the actual function we’re writing and execute it in the context of running it.
+
+Is that even possible? You bet it is! For example, take the case of a simple while loop like this:
+
+var counter = 10; while(counter > 0) { console.log(counter--); }
+
+When this is done, the value of counter has been changed, but the loop has done its job of printing out each value it held as we slowly sucked the state out of it.
+
+A recursive version of the same loop might look more like this:
+
+var countdown = function(value) { if (value > 0) { console.log(value); return countdown(value - 1); } else { return value; } }; countdown(10);
+
+Do you see how we’re calling the countdownfunction right inside the definition of thecountdown function? JavaScript handles that like a boss, and just does what you would hope. Every time countdown is executed, JavaScript keeps track of where it was called from, and then works backward through that stack of function calls until it’s finished. Our function has also avoided modifying the state of any variables, but has still taken advantage of a passed in value to control the recursion.
+
+Getting back to our factorial case, we could rewrite our earlier function like this to use recursion:
+
+var factorial = function(number) { if (number <= 0) { // terminal case return 1; } else { // block to execute return (number * factorial(number - 1)); } }; console.log(factorial(6)); // 720
+
+Writing code this way allows us to describe the whole process in a stateless way with no side effects. Also worth noticing is the way we test the value of the argument being passed in to the function first thing, before doing any calculations. We want any functions that are going to call themselves to exit quickly and cleanly when they get to their terminal case. For a factorial calculated this way, the terminal case comes when the number passed in is zero or negative (we could also test for negative values and return a different message, if we so desired).
+
+Tail Call Optimization
+
+One problem with contemporary implementations of JavaScript is that they don’t have a standard way to prevent recursive functions from stacking up on themselves indefinitely, and eating away at memory until they exceed the capacity of the engine. JavaScript recursive functions need to keep track of where they were called from each time, so they can resume at the correct point.
+
+In many functional languages, such as Haskell and Scheme, this is managed using a technique called tail call optimization. With tail call optimization, each successive cycle in a recursive function would take place immediately, instead of stacking up in memory.
+
+Theoretically, tail call optimization is part of the standard for ECMAScript 6, currently the next version of JavaScript, however it has yet to be fully implemented by most platforms.
+
+Trampoline Functions
+
+There are ways to force JavaScript to perform recursive functions in a safe manner when necessary. For example, it’s possible to construct a custom trampoline function to manage recursive execution iteratively, keeping only one operation on the stack at a time. Trampoline functions used this way can take advantage of JavaScript’s ability to bind a function to a specific context, so as to bounce a recursive function up against itself, building up results one at a time until the cycle is complete. This will avoid creating a deep stack of operations waiting to be performed.
+
+In practice, making use of trampoline functions usually slows down performance in favor of safety. Additionally, much of the elegance and readability we obtain by writing our functions in a recursive manner gets lost in the code convolutions necessary to make this approach work in JavaScript.
+
+If you’re curious, I encourage you to read more about this concept, and share your thoughts in the discussion below. You might start with a short thread on StackOverflow, then explore some essays by Don Taylor and Mark McDonnellthat dig deeper into the ups and downs of trampolines in JavaScript.
+
+We’re Not There Yet
+
+Recursion is a powerful technique that’s worth knowing about. In many cases, recursion is the most direct way to solve a complex problem. But until ECMAScript 6 is implemented everywhere we need it with tail call optimization, we will need to be very careful about how and where we apply recursion.
+
+Was this helpful?
+
+ More:
+
+factorial, for loops, functional programming, functional-js, recursion,tail call optimization, trampoline functions
+
+Meet the author
+
+M. David Green 
+
+I've worked as a Web Engineer, Writer, Communications Manager, and Marketing Director at companies such as Apple, Salon.com, StumbleUpon, and Moovweb. My research into the Social Science of Telecommunications at UC Berkeley, and while earning MBA in Organizational Behavior, showed me that the human instinct to network is vital enough to thrive in any medium that allows one person to connect to another.
+
+LATEST COURSES 
+
+1h 1m
+
+PREMIUM COURSE
+
+Diving into ES2015
+
+3h 7m
+
+PREMIUM COURSE
+
+JavaScript: Next Steps
+
+1h 11m
+
+PREMIUM COURSE
+
+React The ES6 Way
+
+LATEST BOOKS 
+
+PREMIUM BOOK
+
+ECMAScript 2015: A SitePoint Anthology
+
+PREMIUM BOOK
+
+Jump Start Git
+
+PREMIUM BOOK
+
+Full Stack JavaScript Development with MEAN
+
+Get the lastest in JavaScript, once a week, for free.Subscribe
+
+FacebookLinkedInTwitter
+
+AboutOur StoryAdvertisePress RoomReferenceTerms of UsePrivacy PolicyFAQContact UsContributeVisit
+
+
+
+

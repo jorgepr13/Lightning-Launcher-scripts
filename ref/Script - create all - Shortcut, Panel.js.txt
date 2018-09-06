@@ -1,0 +1,248 @@
+
+
+var cnt =LL.getCurrentDesktop();
+var w=150;
+var panels = [
+	["social_p",w,w*5,cnt.getWidth()-w-1,cnt.getHeight()/2],
+	["config_p",w,w*7,0,11]
+//	[item name (id),w,h,x,y]
+];
+
+
+var i=0;
+panel_make_mod(panels[i][0],panels[i][3],panels[i][4],panels[i][1],panels[i][2]);
+
+
+
+var cnt_name = panels[i][0]||"";
+var sz = 14;
+var items = [
+	[sz,"fb","FB","Facebook","com.facebook.katana"],
+	[sz,"fb_b","FM","Messenger","com.facebook.orca"],
+	[sz,"wa","WA","Whatsapp","com.whatsapp"],
+	[sz,"mail","M","Maildroid","com.maildroid.pro"],
+	[sz,"mail_b","M","GMail","com.google.android.gm"],
+	[sz,"sc","SC","Snapchat","com.snapchat.android"]
+//	[sz,"kt","KT","Kakao Talk","com.kakao.talk",""]
+//	[sz,"kik","KIK","KIK","kik.android"]
+//	[size,item name (id),label user,label app,app package]
+];
+
+for (i=0;i<items.length;i++) {
+	shortcut_make_mod(cnt_name,items[i][1],items[i][0],items[i][2],items[i][3],items[i][4]);
+};
+
+
+
+/*
+var items = [
+    [sz,"call","Phone","Contacts +","com.contapps.android"],
+    [sz,"cal","Calendar","label sys (for search)","com.appgenix.bizcal"],
+    [sz,"txt","Txt","Contacts +","com.contapps.android"],
+    [sz,"txt_b","Txt","Messages",""]
+];
+
+var items = [
+    [sz,"file","File","3C Toolbox","ccc71.at"],
+    [sz,"file_b","File","My files","",""],
+    [sz,"ie","Brw","Chrome","com.android.chrome",""],
+    [sz,"gal","Gallery","F-Stop Media Gallery","com.fstop.photo"],
+    [sz,"gal_b","Gallery","Gallery","gallery",""],
+    [sz,"map","Map","Locus Map","menion.android.locus.pro"],
+    [sz,"map_b","Maps","Maps","com.google.android.apps.maps"],
+    [sz,"zzz","zZz","Sleep as Android","com.urbandroid.sleep"]
+];
+
+var items = [
+    [sz,"tsk","Tasker","Tasker","net.dinglisch.android.taskerm"],
+    [sz,"zw","ZW","Zooper Widget","org.zooper.zwpro"],
+    [sz,"pu","PU","Popup Widget","com.ss.popupWidget"]
+];
+
+facebook         - com.facebook.katana
+messenger         - com.facebook.orca
+google+             - com.google.android.apps.plus
+hangouts         - com.google.android.talk
+instagram         - com.instagram.android
+kakao             - com.kakao.talk
+kik                 - kik.android
+line             - jp.naver.line.android
+oovoo             - com.oovoo
+skype             - com.skype.raider
+snapchat         - com.snapchat.android
+tango             - com.sgiggle.production
+twitter             - com.twitter.android
+whatsapp         - com.whatsapp
+maildroid         - com.maildroid.pro
+gmail             - com.google.android.gm
+
+Business Calendar     - com.appgenix.bizcal
+Contacts +         - com.contapps.android
+
+3C Toolbox         - ccc71.at
+chrome             - com.android.chrome
+F-Stop Media Gallery - com.fstop.photo
+Locus Map         - menion.android.locus.pro
+Maps             - com.google.android.apps.maps
+Sleep as Android - com.urbandroid.sleep
+gentle alarm     - com.mobitobi.android.gentlealarm
+
+
+Popup Widget     - com.ss.popupWidget
+Tasker             - net.dinglisch.android.taskerm
+Zooper Widget     - org.zooper.zwpro
+*/
+
+
+
+
+
+
+function panel_make_mod(name,x,y,w,h) {
+	if (name=="") {
+		Android.makeNewToast("Error: No panel name was given.",false).show();
+		return;
+	};
+	var x=x||0;
+	var y=y||0;
+	var w=w||5;
+	var h=h||5;
+	var cnt=LL.getCurrentDesktop();
+
+	var itm = cnt.getItemByName(name);
+	if (itm == null) {
+		//create a panel; addPanel(float x, float y, float width, float height)
+		var itm = cnt.addPanel(x,y,w,h);
+		itm.setName(name);
+	};
+
+	//panel move, resize and modify the rows and columns
+	itm.getProperties().edit().setBoolean("i.onGrid", false).commit();
+	itm.setSize(w,h);
+	itm.setPosition(x,y);
+	var cnt = itm.getContainer();
+	cnt.getProperties().edit().setString("gridPColumnMode","SIZE").setString("gridPRowMode","SIZE").commit();
+	cnt.getProperties().edit().setInteger("gridPColumnSize",w).setInteger("gridPRowSize",w).commit();
+	//cnt.getProperties().edit().setInteger("gridPColumnNum", 1).setInteger("gridPRowNum", 5).commit();
+
+	var ed = itm.getProperties().edit();
+		var box = ed.getBox("i.box");
+			box.setSize("bl,br,bt,bb",0);
+			box.setSize("bl,br,bt,bb",1);
+			box.setSize("pl,pr,pt,pb,ml,mr,mt,mb",0);
+			box.setAlignment("CENTER","MIDDLE");
+	ed.commit();
+}
+
+
+
+function shortcut_make_mod(cnt_name,name,size,lbl_u,lbl_a,pkg) {
+	if (name==""||lbl_u=="") {
+		Android.makeNewToast("Error: No shortcut name or label was given.",false).show();
+		return;
+	};
+	if (lbl_a==""||pkg=="") {
+		flash("Warning: No application label or package was given.");
+	};
+	if (cnt_name != "" || cnt_name != null) {
+		var cnt = LL.getCurrentDesktop().getItemByName(cnt_name);
+		if (cnt == null) {
+			var cnt = LL.getCurrentDesktop();
+		} else {
+			var cnt = LL.getCurrentDesktop().getItemByName(cnt_name).getContainer();
+		};		
+	} else {
+		var cnt = LL.getCurrentDesktop();
+	};
+	var size=size||20;
+
+	var cont=true
+	var i=app_intent(lbl_a,pkg);
+	if (i == "" || i == null) {cont = confirm("Warning: Application not found.\nDo you want to create the shortcut?");};
+	if (cont == true) {
+		var itm = cnt.getItemByName(name);
+		if (itm == null) {
+			if (i != "" || i != null) {
+				var itm = cnt.addShortcut(lbl_u,i,0,0);
+			} else {
+				var itm = cnt.addShortcut(lbl_u,new Intent(),0,0);
+			};
+			itm.setName(name);
+		};
+		if (i != "" || i != null) {itm.setIntent(i);};
+		var ed = itm.getProperties().edit();
+			ed.setBoolean("s.iconVisibility", 	false);
+			ed.setFloat("s.labelFontSize",		size);
+			ed.setString("s.labelFontStyle",	"NORMAL");
+			ed.setInteger("s.labelFontColor", 	0x64ffffff);
+			ed.setInteger("s.selectionColorLabel", 	0xffffffff);
+			ed.setInteger("s.focusColorLabel", 	0xffffffff);
+		ed.commit();
+	};
+}
+
+/*
+NORMAL|ITALIC|BOLD|BOLD_ITALIC
+0x64ffffff //grey (transparent white)
+0xff33b5e5 //blue
+0xffffffff //white
+0x00000000 //transparent black
+*/
+
+function app_intent(lbl,pkg){
+	LL.bindClass("android.content.pm.PackageManager");
+	LL.bindClass("android.content.pm.PackageInfo");
+	var pm=LL.getContext().getPackageManager();
+	var intent=""
+	if (lbl == "" && pkg == "") {return intent};
+
+	if (pkg != "") {
+		try {
+			var intent=pm.getLaunchIntentForPackage(pkg);
+			if (intent != null) {return intent};
+		} catch(e) {};
+	};
+
+	//var list = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
+	var list = pm.getInstalledPackages(0);
+	for(var i=0;i<list.size();++i){
+		try {
+			var pkgx=PackageInfo(list.get(i)).packageName.toLowerCase();
+			if (pkgx == null) {continue};
+			if (pkg != "") {
+				if(pkgx.search(pkg.toLowerCase()) !=-1){
+					var intent=pm.getLaunchIntentForPackage(pkgx);
+					if (intent == null) {continue};
+					return intent;
+					break;
+				} else {continue};
+			};
+			if (lbl != "") {
+				var lblx=pm.getApplicationLabel(pm.getApplicationInfo(pkgx,0));
+				if (lblx == null) {continue};
+				if(lblx.toLowerCase().search(lbl.toLowerCase()) !=-1){
+					var intent=pm.getLaunchIntentForPackage(pkgx);
+					if (intent == null) {continue};
+					return intent;
+					break;
+				} else {continue};
+			};
+		} catch(e) {continue};
+	};
+
+	if (lbl != "") {
+		//get an app intent from the app drawer (my drawer)
+		var cnt = LL.getContainerById(99);
+		var itms = cnt.getItems();
+		for (i=0;i<itms.getLength();i++) {
+			var itmx = itms.getAt(i);
+			if (itmx.getType().toLowerCase() !== "shortcut") {continue};
+			if (itmx.getLabel().toLowerCase().search(lbl.toLowerCase()) !=-1) {
+				intent = itmx.getIntent()
+				return intent;
+			};
+		};
+	};
+	if (intent == "" || intent == null) {Android.makeNewToast("Warning: No application was found.",true).show();};
+    return intent;
+}

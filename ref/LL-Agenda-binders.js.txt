@@ -1,0 +1,96 @@
+var agenda = JSON.parse(LL.getEvent().getData());
+var editor = LL.getVariables().edit();
+
+var c = new Date(agenda.last);
+var hh = c.getHours();
+var mm = c.getMinutes();
+if (mm < 10) {
+    mm = "0" + mm;
+}
+
+var s = agenda.days[c.getDay()] + hh + ":" + mm;
+
+editor.setString("agd_last", s);
+
+var future = agenda.items.length;
+for (var i = 0; i < future; i++) {
+
+    var d  = agenda.items[i].day; 
+    var dta= d + "\n";
+    var ta = "";
+    var at = "";
+    var appts = agenda.items[i].appointments;
+    for (var j = 0; j < appts.length; j++) {
+        dta += appts[j].start + "-" + appts[j].end + " " + appts[j].desc;
+        ta += appts[j].start + "-" + appts[j].end + " " + appts[j].desc;
+        at += appts[j].desc + " " + appts[j].start + "-" + appts[j].end;
+        if (j < (appts.length - 1)) {
+            dta += "\n";
+            ta += "\n";
+            at += "\n";
+        }
+    }
+
+    if (i === 0) {
+        editor.setString("agd_0_d"  , d);
+        editor.setString("agd_0_dta", dta);
+        editor.setString("agd_0_ta" , ta);
+        editor.setString("agd_0_at" , at);
+    }
+    if (i === 1) {
+        editor.setString("agd_1_d"  , d);
+        editor.setString("agd_1_dta", dta);
+        editor.setString("agd_1_ta" , ta);
+        editor.setString("agd_1_at" , at);
+    }
+    if (i === 2) {
+        editor.setString("agd_2_d"  , d);
+        editor.setString("agd_2_dta", dta);
+        editor.setString("agd_2_ta" , ta);
+        editor.setString("agd_2_at" , at);
+    }
+    if (i === 3) {
+        editor.setString("agd_3_d"  , d);
+        editor.setString("agd_3_dta", dta);
+        editor.setString("agd_3_ta" , ta);
+        editor.setString("agd_3_at" , at);
+    }
+    if (i === 4) {
+        editor.setString("agd_4_d"  , d);
+        editor.setString("agd_4_dta", dta);
+        editor.setString("agd_4_ta" , ta);
+        editor.setString("agd_4_at" , at);
+    }
+    if (i === 5) {
+        editor.setString("agd_5_d"  , d);
+        editor.setString("agd_5_dta", dta);
+        editor.setString("agd_5_ta" , ta);
+        editor.setString("agd_5_at" , at);
+    }
+    if (i === 6) {
+        editor.setString("agd_6_d"  , d);
+        editor.setString("agd_6_dta", dta);
+        editor.setString("agd_6_ta" , ta);
+        editor.setString("agd_6_at" , at);
+    }
+    if (i === 7) {
+        editor.setString("agd_7_d"  , d);
+        editor.setString("agd_7_dta", dta);
+        editor.setString("agd_7_ta" , ta);
+        editor.setString("agd_7_at" , at);
+    }
+    if (i === 8) {
+        editor.setString("agd_8_d"  , d);
+        editor.setString("agd_8_dta", dta);
+        editor.setString("agd_8_ta" , ta);
+        editor.setString("agd_8_at" , at);
+    }
+    if (i === 9) {
+        editor.setString("agd_9_d"  , d);
+        editor.setString("agd_9_dta", dta);
+        editor.setString("agd_9_ta" , ta);
+        editor.setString("agd_9_at" , at);
+    }
+}
+
+editor.commit();

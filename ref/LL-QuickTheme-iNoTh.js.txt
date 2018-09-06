@@ -1,0 +1,2 @@
+var i = LL.getEvent().getItem();
+    i.setTag("QT", "notheme");

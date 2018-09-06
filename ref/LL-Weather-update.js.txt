@@ -1,0 +1,552 @@
+var refresh_period = 120*1000; //ms; sec * 1000ms
+var weather_api_key = "e000fb1333b830be";
+var weather_api_loc = "47.0332559,-122.7967021";
+//var weather_api_loc = $my_latlon_gps;
+//var weather_api_loc = LL.getVariables().getString("my_latlon_net");
+var event = LL.getEvent();
+//var event_d = event.getData();
+var event_s = event.getSource();
+var event_i = event.getItem();
+//alert("e:"+event+"\n\nl:"+"\n\ns:"+event_s+"\n\n"+weather_api_loc);return;
+//LL.getEvent().getSource()!="MENU_ITEM"//"I_LONG_CLICK"//"C_LONG_CLICK"
+//http://www.lightninglauncher.com/scripting/reference/api/reference/net/pierrox/lightning_launcher/script/api/Event.html
+
+//import readStream classes
+LL.bindClass("java.io.BufferedReader");
+LL.bindClass("java.io.InputStreamReader");
+LL.bindClass("java.io.FileInputStream");
+LL.bindClass("java.lang.StringBuilder");
+
+//import readWebStream classes
+LL.bindClass("java.net.URL");
+LL.bindClass("java.net.HttpURLConnection");
+LL.bindClass("java.io.BufferedInputStream");
+
+//need to add hourly to the weather object
+//need to get/change the data based on the hourly data vs constantly getting the data from the internet, 
+// ^last update time will remain
+// ^control to update the data will remain
+// ^can be done changing the cur variable
+// ^checking the current time vs the hourly time and doing the halfs hour changes; ex curr time 11:30, data will change to 12:00, until curr time gets to 12:30
+
+
+
+
+/*
+if (typeof self.timeElapsed == "undefined" || typeof self.getTimeAgo == "undefined") {
+    var api_script = LL.getScriptByName("f-Time");
+    if (api_script === null) {
+        //alert("Import script 'f-Time'. \n This script depends on it.");
+        Android.makeNewToast("Import script 'f-Time'. \n This script depends on it.",false).show();
+        return;
+    }
+    //initialize the self method
+    LL.runScript("f-Time", null);
+}
+*/
+
+
+var json_str = null;
+var json_obj = null;
+
+//clear the self refresh/update
+//it's set again at the end of the script
+//time_cancel();
+
+/*
+if (event_s == "I_PAUSED") {return;}
+if (event_s == "I_CLICK" || event_s == "I_LONG_CLICK") {
+    //if (event_s == "I_LONG_CLICK") {};
+    json_str = getWeatherData();
+    Android.makeNewToast("Updating weather.",false).show();
+}
+*/
+//alert("stream: "+typeof self.readStream +"\nweb: "+typeof self.readWebStream +"\nelap: "+ typeof self.timeElapsed +"\nago: "+ typeof self.getTimeAgo + typeof self.readStream == "undefined");
+
+function getWeatherData(){
+    //return readStream("","/sdcard/Download/weather.json");
+    return readStream("","/storage/emulated/0/Download/weather.json");
+    //return readWebStream("http://api.wunderground.com/api/"+weather_api_key+"/conditions/forecast10day/q/"+weather_api_loc+".json");
+}
+
+//needs fix for checks, usually gets json_str (data), but never gets json_obj (parse)
+function checkWeatherData(idx) {
+    if (isNaN(idx) || idx == null || idx == undefined) {idx=1;}
+
+    //check if the data was updated or get the existing/prior weather data
+    if (json_str == null || json_str == undefined) {
+        
+        //the tag will have a different formatting than the internet data, 
+        //but it can be removed (not added to the tag) since a variable will be used instead
+        
+        //json_str = LL.getCurrentScript().getTag();
+        if (json_str == null || json_str == undefined) {
+            if (idx < 2) {
+                json_str = getWeatherData();
+                return checkWeatherData(idx+1);
+            } else {return null;}
+        }
+    }
+
+    idx++; //2-3
+    //check the weather data object
+    json_obj = JSON.parse(json_str);
+    if (json_obj === null || typeof json_obj == "undefined") {
+        if (idx < 4) {
+            json_str = getWeatherData();
+            return checkWeatherData(idx+1);
+        } else {return null;}
+    }
+
+    idx++; //3-4
+    //check for a weather data object value
+    try { var time = json_obj.current_observation.observation_epoch;} 
+    catch (e) { var time = wx.upd.time_ms;}
+    if (time == null || time == undefined) {
+        //alert("Weather-update Error: Weather data could not be obtained.");
+        Android.makeNewToast("Weather-update Error: Weather data could not be obtained.",false).show();
+        return null;
+    }
+    time = time * 1000;
+
+/*
+  idx++ //4-5
+  //download if more than _x_ time have passed
+  var time = self.timeElapsed(time);
+  if (time == null || typeof time == "undefined") {
+  	//alert("Weather-update Error: Wrong weather data.");
+  	Android.makeNewToast("Weather-update Error: Wrong weather data.",false).show();
+  	return null;
+  } else {
+  	var time=JSON.parse(time);
+  	if (typeof time.years == "undefined") {Android.makeNewToast("Weather-update Error: Wrong time data, no object found.",false).show();return null;} //no object
+
+  	if (time.years > 0 || time.months > 0 || time.days > 0 || time.hours > 0 || time.minutes > 30) {
+  	//json_str=undefined when there's no internet
+    if (idx < 6) {
+      json_str = getWeatherData();
+      return checkWeatherData(idx+1);
+    } else {return json_str;}
+  	}
+  }
+*/
+
+  return json_str;
+} //end function checkWeatherData
+
+json_str = getWeatherData();
+//json_str = checkWeatherData();
+
+if (json_str == null || typeof json_str == "undefined") {
+    Android.makeNewToast("Weather-update Error: Unable to obtain the weather data.",false).show();
+    return null;
+}
+json_obj = JSON.parse(json_str);
+
+//write the updated weather to the script tag
+//if (json_str !== LL.getCurrentScript().getTag() && json_str !== null) {LL.getCurrentScript().setTag(json_str)};
+//json_str = LL.getCurrentScript().getTag();
+
+//parse the json data received
+//update the tag with my object, just the data I need, organized, and processed 
+
+//create the weather object structure
+//different weather providers can be used to match this structure, 
+//and there shouldn't be a change to the coding to retireve the data.
+//0 = current
+//1+ = forecast days, 1 will be day 1, which is the same as current day.
+
+
+var wx = {};
+wx.upd = {}
+wx.upd.time = "";
+wx.upd.time_ms = 0;
+wx.loc = "";
+
+var i = -1;
+wx.fc = [];
+wx.fc[i+1] = {};
+var wx_fc = wx.fc[i+1];
+
+wx_fc.date = {};
+wx_fc.date.time_ms = 0;
+wx_fc.date.day = "";
+wx_fc.date.date = "";
+
+wx_fc.cond = {};
+wx_fc.cond.txt = "";
+wx_fc.cond.icon = {};
+wx_fc.cond.icon.name = "";
+wx_fc.cond.icon.txt = "";
+wx_fc.cond.icon.path = "";
+
+wx_fc.temp = {};
+wx_fc.temp.min = 0;
+wx_fc.temp.max = 0;
+wx.temp = {};
+wx.temp.unit = "";
+wx.temp.icon = {};
+wx.temp.icon.txt = "";
+wx.temp.icon.path = "";
+
+wx_fc.wind = {};
+wx_fc.wind.min = 0;
+wx_fc.wind.max = 0;
+wx_fc.wind.deg = 0;
+wx_fc.wind.dir = "";
+wx.wind = {};
+wx.wind.unit = "";
+wx.wind.icon = {};
+wx.wind.icon.txt = "";
+wx.wind.icon.path = "";
+
+wx_fc.rain = {};
+wx_fc.rain.min = 0;
+wx_fc.rain.max = 0;
+wx.rain = {};
+wx.rain.unit = "";
+wx.rain.icon = {};
+wx.rain.icon.txt = "";
+wx.rain.icon.path = "";
+
+wx_fc.snow = {};
+wx_fc.snow.min = 0;
+wx_fc.snow.max = 0;
+wx.snow = {};
+wx.snow.unit = "";
+wx.snow.icon = {};
+wx.snow.icon.txt = "";
+wx.snow.icon.path = "";
+
+wx_fc.humid = {};
+wx_fc.humid.min = 0;
+wx_fc.humid.max = 0;
+wx.humid = {};
+wx.humid.unit = "";
+wx.humid.icon = {};
+wx.humid.icon.txt = "";
+wx.humid.icon.path = "";
+//end of weather structure
+
+//setting default values
+wx.temp.unit = "°F";
+wx.temp.icon.txt = "";
+wx.temp.icon.path = "";
+
+wx.wind.unit = "mph";
+wx.wind.icon.txt = "";
+wx.wind.icon.path = "";
+
+wx.rain.unit = "in";
+wx.rain.icon.txt = "";
+wx.rain.icon.path = "";
+
+wx.snow.unit = "in";
+wx.snow.icon.txt = "";
+wx.snow.icon.path = "";
+
+wx.humid.unit = "%";
+wx.humid.icon.txt = "";
+wx.humid.icon.path = "";
+//end of default values
+
+//getting Weather Underground values
+wx.loc = json_obj.current_observation.display_location.full;
+//json_obj.current_observation.display_location.full;
+//json_obj.current_observation.display_location.city;
+
+wx.upd.time = json_obj.current_observation.observation_time;
+wx.upd.time_ms = json_obj.current_observation.observation_epoch * 1000;
+//json_obj.current_observation.observation_time;
+//json_obj.current_observation.observation_epoch;
+
+for (i = 0; i < json_obj.forecast.simpleforecast.forecastday.length; i++) {
+    wx.fc[i+1] = {};
+    var wx_fc = wx.fc[i+1];
+    
+    wx_fc.date = {};
+    wx_fc.date.time_ms = json_obj.forecast.simpleforecast.forecastday[i].date.epoch*1000;
+    wx_fc.date.day = json_obj.forecast.simpleforecast.forecastday[i].date.weekday_short.substr(0,3);
+    //wx_fc.date.date = json_obj.forecast.simpleforecast.forecastday[i].date.month + "" + json_obj.forecast.simpleforecast.forecastday[i].date.day; //needs format 1 to 01
+    //wx_fc.date.date = getDateMMDD(wx_fc.date.time_ms);
+    
+    wx_fc.cond = {};
+    wx_fc.cond.txt = json_obj.forecast.simpleforecast.forecastday[i].conditions;
+    wx_fc.cond.icon = {};
+    wx_fc.cond.icon.name = json_obj.forecast.simpleforecast.forecastday[i].icon;
+    wx_fc.cond.icon.txt = "";
+    wx_fc.cond.icon.path = "";
+    
+    wx_fc.temp = {};
+    wx_fc.temp.min = json_obj.forecast.simpleforecast.forecastday[i].low.fahrenheit;
+    wx_fc.temp.max = json_obj.forecast.simpleforecast.forecastday[i].high.fahrenheit;
+    //wx_fc.temp.txt = wx_fc.temp.min + "/" + wx_fc.temp.max + wx.temp.unit;
+    
+    wx_fc.wind = {};
+    wx_fc.wind.min = Math.min(json_obj.forecast.simpleforecast.forecastday[i].avewind.mph, json_obj.forecast.simpleforecast.forecastday[i].maxwind.mph);
+    wx_fc.wind.max = Math.max(json_obj.forecast.simpleforecast.forecastday[i].avewind.mph, json_obj.forecast.simpleforecast.forecastday[i].maxwind.mph);
+    wx_fc.wind.deg = json_obj.forecast.simpleforecast.forecastday[i].avewind.degrees;
+    wx_fc.wind.dir = getCardinalZones(wx_fc.wind.deg);
+    //wx_fc.wind.dir = json_obj.forecast.simpleforecast.forecastday[i].avewind.dir;
+    //wx_fc.wind.txt = wx_fc.wind.min + "/" + wx_fc.wind.max + " " + wx.wind.unit;
+    if (wx_fc.wind.min < 0) {wx_fc.wind.min = 0;}
+    
+    wx_fc.rain = {};
+    wx_fc.rain.min = Math.min(json_obj.forecast.simpleforecast.forecastday[i].qpf_allday.in, json_obj.forecast.simpleforecast.forecastday[i].qpf_day.in, json_obj.forecast.simpleforecast.forecastday[i].qpf_night.in);
+    wx_fc.rain.max = Math.max(json_obj.forecast.simpleforecast.forecastday[i].qpf_allday.in, json_obj.forecast.simpleforecast.forecastday[i].qpf_day.in, json_obj.forecast.simpleforecast.forecastday[i].qpf_night.in);
+    if (wx_fc.rain.min < 0) {wx_fc.rain.min = 0;}
+    
+    wx_fc.snow = {};
+    wx_fc.snow.min = Math.min(json_obj.forecast.simpleforecast.forecastday[i].snow_allday.in, json_obj.forecast.simpleforecast.forecastday[i].snow_day.in, json_obj.forecast.simpleforecast.forecastday[i].snow_night.in);
+    wx_fc.snow.max = Math.max(json_obj.forecast.simpleforecast.forecastday[i].snow_allday.in, json_obj.forecast.simpleforecast.forecastday[i].snow_day.in, json_obj.forecast.simpleforecast.forecastday[i].snow_night.in);
+    if (wx_fc.snow.min < 0) {wx_fc.snow.min = 0;}
+    
+    wx_fc.humid = {};
+    wx_fc.humid.min = json_obj.forecast.simpleforecast.forecastday[i].minhumidity;
+    wx_fc.humid.max = json_obj.forecast.simpleforecast.forecastday[i].maxhumidity;
+    //wx_fc.humid.avg = json_obj.forecast.simpleforecast.forecastday[i].avehumidity;
+    if (wx_fc.humid.min < 0) {wx_fc.humid.min = 0;}
+	
+}
+
+wx.fc[0] = {};
+var wx_fc = wx.fc[0];
+
+wx_fc.date = {};
+wx_fc.date.time_ms = wx.upd.time_ms;
+wx_fc.date.day = wx.fc[1].date.day;
+wx_fc.date.date = "";
+
+wx_fc.cond = {};
+wx_fc.cond.txt = json_obj.current_observation.weather;
+wx_fc.cond.icon = {};
+wx_fc.cond.icon.name = json_obj.current_observation.icon;
+wx_fc.cond.icon.txt = "";
+wx_fc.cond.icon.path = "";
+
+wx_fc.temp = {};
+//wx.temp.cur = json_obj.current_observation.temp_f;
+wx_fc.temp.cur = json_obj.current_observation.feelslike_f;
+wx_fc.temp.min = wx.fc[1].temp.min;
+wx_fc.temp.max = wx.fc[1].temp.max;
+
+wx_fc.wind = {};
+wx_fc.wind.cur = json_obj.current_observation.wind_mph;
+wx_fc.wind.min = wx.fc[1].wind.min;
+wx_fc.wind.max = wx.fc[1].wind.max;
+wx_fc.wind.deg = json_obj.current_observation.wind_degrees;
+//wx_fc.wind.dir = json_obj.current_observation.wind_dir;
+wx_fc.wind.dir = getCardinalZones(wx_fc.wind.deg);
+
+wx_fc.rain = {};
+wx_fc.rain.cur = json_obj.current_observation.precip_today_in;
+wx_fc.rain.min = wx.fc[1].rain.min;
+wx_fc.rain.max = wx.fc[1].rain.max;
+
+wx_fc.snow = {};
+wx_fc.snow.cur = wx.fc[1].snow.max;
+wx_fc.snow.min = wx.fc[1].snow.min;
+wx_fc.snow.max = wx.fc[1].snow.max;
+
+wx_fc.humid = {};
+wx_fc.humid.cur = json_obj.current_observation.relative_humidity;
+wx_fc.humid.min = wx.fc[1].humid.min;
+wx_fc.humid.max = wx.fc[1].humid.max;
+//needs % removed from value
+
+var wx_str = JSON.stringify(wx);
+
+//alert(wx_str);
+
+
+//write the updated weather to the script tag
+//if (wx_str != LL.getCurrentScript().getTag() && wx.upd.time_ms != 0) {LL.getCurrentScript().setTag(wx_str)};
+if (wx_str != LL.getVariables().getString("weather") && wx.upd.time_ms != 0) {LL.getVariables().edit().setString("weather", wx_str).commit();};
+/*
+//create bindings
+var wx_str = LL.getCurrentScript().getTag();                 //not self update
+var wx_str = LL.getScriptByName("Weather_Update").getTag();  //not self update
+var wx_str = LL.getVariables().getString("weather");         //not self update
+var wx_str = $weather; //yes, self update
+var wx = JSON.parse(wx_str);
+var wx_fc = wx.fc[0];
+return wx_fc.wind.min + "/" + wx_fc.wind.max + " " + wx.wind.unit + " - " + wx_fc.temp.min + "/" + wx_fc.temp.max + wx.temp.unit;
+return wx_fc.wind.min + "/" + wx_fc.wind.max + " " + wx.wind.unit;
+return wx_fc.temp.min + "/" + wx_fc.temp.max + wx.temp.unit;
+
+
+//itm.setBinding("s.label",'$weather_day_name_f'+i,true);
+//itm.setBinding("s.label",
+'var wx_str = $weather;\n' + 
+'var wx = JSON.parse(wx_str);\n' + 
+'var wx_fc = wx.fc[' + i + '];\n' + 
+'return wx_fc.wind.min + "/" + wx_fc.wind.max + " " + wx.wind.unit;'
+,true);
+
+*/
+
+//
+//
+//
+
+
+/*	//variables
+weather_date_f        weather_upd_time
+weather_day_name_f    weather_loc
+weather_cond_f        weather_cond_cur
+weather_cond_icon_f   weather_cond_icon_cur
+weather_temp_f        weather_temp_cur
+weather_wind_f        weather_wind_cur
+weather_wind_dir_f    weather_wind_dir_cur
+weather_rain_f        weather_rain_cur
+weather_humid_f       weather_humid_cur
+weather_snow_f
+*/
+
+/*
+//update the weather binders
+time_refresh();
+
+//set the update timer
+if (event_i !== null) {
+	event_i.setTag("weather_upd_time", setTimeout(time_refresh,refresh_period));
+}
+*/
+
+//
+//FUNCTIONS
+//
+
+function time_refresh() {
+    //json_obj.current_observation.observation_time;
+    //json_obj.current_observation.observation_epoch;
+    //LL.getVariables().edit().setString("weather_upd_time", getTimeAgo(json_obj.current_observation.observation_epoch*1000)).commit();
+    return;
+}
+
+function time_cancel() {
+    if (event_i !== null) {
+        var id = event_i.getTag("weather_upd_time");
+        if (id !== null) {clearTimeout(parseInt(id));}
+    }
+    return;
+}
+
+function getCardinalZones(degrees, zones) {
+    //function checks
+    if (isNaN(degrees) || degrees == null || degrees == undefined) {
+        //alert("getCardinalZones Error: No number received.");
+        console.log("getCardinalZones Error: No number received.");
+        return;
+    }
+
+    //check for zones type of variable
+    if(typeof_var(zones) !== "array") {zones = null;}
+
+    //avoid number below 0, or above 360 (using recursion)
+    if (degrees < 0) {return getCardinalZones(degrees + 360, zones);}
+    if (degrees > 360) {return getCardinalZones(degrees - 360, zones);}
+
+    //set the cardinal zones if they were not given
+    if (zones == null || zones == undefined || zones.length == 0) {
+        var zones = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    }
+
+    //get the amount of degrees by cardinal zone, then get one half of it, to get half before and half after (assuming that var zones starts from 0 deg)
+    var zones_deg = 180 / zones.length; //360/zones.length/2; Default: 180/16 = 11.25 deg
+
+    //get the cardinal zone index
+    for (var i = 0; i < zones.length; i++) {
+        if (degrees < zones_deg * (1 + 2 * i)) {break;}
+    }
+    //return 0 if the index was not found in the zones; between the N range ex. 350 and 10.
+    if (degrees < 360 && i == zones.length) {i = 0;}
+    return zones[i];
+    //return zones[zone_i];
+}
+
+function get_itm_icon(elem) {
+    if (elem === null) {return;} //no element received
+    if (json_str === null || json_str === "") {return;} //no file contents
+    if (typeof json_obj.fonts.font[0] == "undefined") {return;} //no object
+    
+    var data = {};
+    data.path = "";
+    data.icon = "";
+    for (i = 0; i < json_obj.fonts.font.length; i++) {
+        for (j = 0; j < json_obj.fonts.font[i].element.length; j++) {
+            if (json_obj.fonts.font[i].element[j].name.indexOf(elem) != -1){
+                data.path = json_obj.fonts.font[i].path;
+                data.icon = json_obj.fonts.font[i].element[j].icon;
+                break;
+            }
+        }
+    }
+    data = JSON.stringify(data);
+    if (typeof data == "undefined" || data == null)  {return;} 
+    else {return data;}
+}
+
+function get_itm_color(status) {
+    if (json_str == null || json_str == "" || json_str == undefined) {return;} //no file contents
+    if (typeof json_obj.fonts.colors[0] == "undefined") {return;} //no object
+    if (status == null) {status = 0;}
+    status = status.toString();
+    
+    var color = null;
+    for (i = 0; i < json_obj.fonts.colors.length; i++) {
+        if (json_obj.fonts.colors[i].status.indexOf(status) != -1){
+            color = json_obj.fonts.colors[i].color;
+            break;
+        }
+    }
+    return color;
+}
+
+function readStream (stream, path) {
+    if ((stream == null || stream == "" || stream == undefined) && (path == null || path == "" || path == undefined)) {return null;}
+    if (stream !== null && stream !== "" && stream !== undefined) {path = null;}
+
+    var reader = null;
+    try {
+        if (path !== null) {stream = new FileInputStream(path);}
+        reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+        var bld = new StringBuilder();
+        var line = "";
+        while ((line = reader.readLine()) !== null) {bld.append(line);}
+        return bld.toString();
+    } catch (e) {
+        Android.makeNewToast(e, true).show();
+        return null;
+    } finally {
+        if (reader !== null) {reader.close();}
+        //if (path !== null) {stream.close();}
+    }
+}
+
+function readWebStream (my_url) {
+    if (my_url == null || my_url == undefined || my_url == "") {return null;}
+
+    var conn = null;
+    var conn_stream = null;
+    try {
+        conn = new URL(encodeURI(my_url));
+        conn.setConnectTimeout(10000); //ms
+        conn.setReadTimeout(15000); //ms
+        conn.openConnection();
+        conn_stream = new BufferedInputStream(conn.getInputStream());
+        return readStream(conn_stream);
+    } catch (exception) {
+        Android.makeNewToast("No Internet or site connection!\n*If the error persist, check that you have the necessary permissions.*", false).show();
+        //alert("No Internet or site connection!\n"+my_url+"\n\n"+exception);
+        return null;
+    } finally {
+        if (conn_stream !== null) {conn_stream.close();}
+        if (conn !== null) {conn.disconnect();}
+    }
+}
+
+function typeof_var(obj){ return Object.prototype.toString.call(obj).split(/\W/)[2].toLowerCase();}
+// output: Array Object Function String
+//Object.toType = function(obj) {return ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();}
+//if(Object.toType(shouldBeAnArray) === 'array'){/* do stuff */};

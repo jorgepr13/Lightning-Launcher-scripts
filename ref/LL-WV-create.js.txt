@@ -1,0 +1,18 @@
+// webviews work best on first page.
+// After resize, reload LL
+
+// usage: check data. and enter:
+// zoom;url
+
+LL.bindClass("android.webkit.WebView");
+var context = LL.getContext();
+
+var mydata = data.split(";");
+var myZoom = mydata[0];
+var myURL = mydata[1];
+
+var webView = new WebView(context);
+    webView.getSettings().setJavaScriptEnabled(true);
+    webView.setInitialScale(myZoom);
+    webView.loadUrl("http://" + myURL);
+return webView;

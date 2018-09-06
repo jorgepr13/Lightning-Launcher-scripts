@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="main.css">
+        <style type="text/css">
+.main-container {
+max-width: 960px;
+margin: auto;
+}
+.site-menu,
+.main-content,
+.sidebar {
+float: left;
+}
+.site-menu,
+.sidebar {
+width: 20%;
+}
+.main-content {
+width: 60%;
+background-color: LightPink;
+}
+.site-menu {
+background-color: LightGoldenRodYellow;
+}
+.sidebar {
+background-color: LightSteelBlue;
+}
+
+body {
+font-family: Verdana;
+}
+article {
+width: 800px;
+}
+article header h1 {
+color: green;
+}
+article header p {
+background-color: red;
+color: white;
+}
+article figure {
+width: 600px;
+border: 3px solid black;
+padding: 5px;
+}
+article figure img {
+width: 100%;
+}
+
+
+nav ul {
+background-color: PaleVioletRed;
+list-style: none;
+padding: 0;
+width: 200px;
+border: 1px solid MediumVioletRed;
+}
+nav ul li {
+border-bottom: 1px solid MediumVioletRed;
+padding: 5px;
+}
+nav ul li:last-child {
+border-bottom: 0;
+}
+nav ul li a {
+color: white;
+text-decoration: none;
+}
+nav ul li a:hover {
+text-decoration: underline;
+}
+
+
+.site-nav {
+background-color: green;
+list-style: none;
+padding: 0;
+width: 200px;
+border: 1px solid blue;
+}
+.site-nav .site-nav-item {
+border-bottom: 1px solid blue;
+padding: 5px;
+}
+.site-nav .site-nav-item:last-child {
+border-bottom: 0;
+}
+.site-nav .site-nav-item a {
+color: white;
+text-decoration: none;
+}
+.site-nav .site-nav-item a:hover {
+text-decoration: underline;
+}
+
+input[type="text"],
+input[type="email"] {
+border: 1px solid blue;
+}
+
+        </style>
+
+        <title>Justin Beaver fascinated by HTML</title>
+    </head>
+    <body>
+        <div class="main-container">
+            <div class="site-menu">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="training.html">Training</a>
+                    </li>
+                    <li>
+                        <a href="conferences.html">Conferences</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About us</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul class="site-nav">
+                    <li class="site-nav-item">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="site-nav-item">
+                        <a href="training.html">Training</a>
+                    </li>
+                    <li class="site-nav-item">
+                        <a href="conferences.html">Conferences</a>
+                    </li>
+                    <li class="site-nav-item">
+                        <a href="about.html">About us</a>
+                    </li>
+                </ul>
+            </nav>
+            </div>
+            <div class="main-content">
+                <article>
+                    <header>
+                        <h1>Justin Beaver: Ever since I learned HTML, my lifehas made a complete 180</h1>
+                        <p>Posted by: Damian Wielgosik</p>
+                    </header>
+                    <p>Justin Beaver confessed something that even hisgreatest fans would have never expected of the skilled musiciansand lyricist. The young rock-and-roller admitted that since hetyped his first title tag, his life became easier. It has beenreported by those surrounding the Canadian that Beaver's privatementors, Ryan Loseling and Nicolas Crate, often walk around LosAngeles disputing what a great tool the HTML validator is.</p>
+                    <figure>
+                        <img src="cat.jpg" alt="Justin Beaver's cat is pleased">
+                        <figcaption>Justin Beaver's happy cat</figcaption>
+                    </figure>
+                    <p>Beaver has already created some websites and does notintend to stop there. <q>I will probably have a song about HTMLon my next album,</q> - the artist added.
+                    </p>
+                </article>
+                <form>
+<div>
+    <label for="nickname">Your nickname:</label>
+</div>
+<div>
+    <input type="text" id="nickname" name="nickname">
+</div>
+<div>
+    <label for="user-email">Your e-mail:</label>
+</div>
+<div>
+    <input type="email" id="user-email" name="user-email" required>
+</div>
+<div>
+    <label for="content">Content:</label>
+</div>
+<div>
+    <textarea rows="10" cols="50" id="content" name="content"placeholder="Enter a comment here. Be nice andpolite!"></textarea>
+</div>
+<div>
+    <input type="submit" value="Add">
+</div>
+                </form>
+            </div>
+            <aside class="sidebar">
+                <div>
+                    <p>test paragraph</p>
+                </div>
+            </aside>
+        </div>
+    </body>
+
+
+
+
+
+</html>

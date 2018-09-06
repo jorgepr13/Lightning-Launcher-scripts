@@ -1,0 +1,543 @@
+https://www.google.com/amp/s/amp.reddit.com/r/tasker/comments/2yzk9l/how_to_get_and_parse_json_data_in_tasker/
+-Weather Underground example
+Tasker Javascriptlet
+var imageurl = JSON.parse(global('HTTPD')).data.children[1].data.url;
+
+
+
+http://stackoverflow.com/questions/17785592/difference-between-json-stringify-and-json-parse
+
+Firstly, 
+JSON.stringify() function converts a JavaScript value to a JavaScript Object Notation (JSON) string. 
+JSON.parse() function converts a JavaScript Object Notation (JSON) string into an object. For more information about these two functions, please refer to the following links.
+
+https://msdn.microsoft.com/library/cc836459(v=vs.94).aspx
+https://msdn.microsoft.com/library/cc836466(v=vs.94).aspx
+
+Secondly, the following sample will be helpful for you to understand these two functions.
+
+<form id="form1" runat="server"> <div> <div id="result"></div> </div> </form> 
+<script> 
+$(function () { 
+//define a json object 
+var employee = { "name": "John Johnson", "street": "Oslo West 16", "phone": "555 1234567" }; 
+//use JSON.stringify to convert it to json string 
+var jsonstring = JSON.stringify(employee); 
+$("#result").append('<p>json string: ' + jsonstring + '</p>'); 
+
+//convert json string to json object using JSON.parse function 
+var jsonobject = JSON.parse(jsonstring); 
+var info = '<ul><li>Name:' + jsonobject.name + '</li><li>Street:' + jsonobject.street + '</li><li>Phone:' + jsonobject.phone + '</li></ul>'; 
+$("#result").append('<p>json object:</p>'); 
+$("#result").append(info); }); 
+</script>
+
+share improve this answer
+
+
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects
+
+The following example creates myHonda with three properties. Note that the engine property is also an object with its own properties.
+
+var myHonda = {color: "red", wheels: 4, engine: {cylinders: 4, size: 2.2}};
+
+You can also use object initializers to create arrays. See array literals.
+
+
+
+Using a constructor function
+
+Alternatively, you can create an object with these two steps:
+
+Define the object type by writing a constructor function. There is a strong convention, with good reason, to use a capital initial letter.
+Create an instance of the object with new.
+To define an object type, create a function for the object type that specifies its name, properties, and methods. For example, suppose you want to create an object type for cars. You want this type of object to be called car, and you want it to have properties for make, model, and year. To do this, you would write the following function:
+
+function Car(make, model, year) {
+  this.make = make;
+  this.model = model;
+  this.year = year;
+}
+Notice the use of this to assign values to the object's properties based on the values passed to the function.
+
+Now you can create an object called mycar as follows:
+
+var mycar = new Car("Eagle", "Talon TSi", 1993);
+This statement creates mycar and assigns it the specified values for its properties. Then the value of mycar.make is the string "Eagle", mycar.year is the integer 1993, and so on.
+
+You can create any number of car objects by calls to new. For example,
+
+var kenscar = new Car("Nissan", "300ZX", 1992);
+var vpgscar = new Car("Mazda", "Miata", 1990);
+
+
+An object can have a property that is itself another object. For example, suppose you define an object called person as follows:
+
+function Person(name, age, sex) {
+  this.name = name;
+  this.age = age;
+  this.sex = sex;
+}
+and then instantiate two new person objects as follows:
+
+var rand = new Person("Rand McKinnon", 33, "M");
+var ken = new Person("Ken Jones", 39, "M");
+Then, you can rewrite the definition of car to include an owner property that takes a person object, as follows:
+
+function Car(make, model, year, owner) {
+  this.make = make;
+  this.model = model;
+  this.year = year;
+  this.owner = owner;
+}
+To instantiate the new objects, you then use the following:
+
+var car1 = new Car("Eagle", "Talon TSi", 1993, rand);
+var car2 = new Car("Nissan", "300ZX", 1992, ken);
+Notice that instead of passing a literal string or integer value when creating the new objects, the above statements pass the objects rand and ken as the arguments for the owners. Then if you want to find out the name of the owner of car2, you can access the following property:
+
+car2.owner.name
+Note that you can always add a property to a previously defined object. For example, the statement
+
+car1.color = "black";
+adds a property color to car1, and assigns it a value of "black." However, this does not affect any other objects. To add the new property to all objects of the same type, you have to add the property to the definition of the car object type.
+
+
+
+
+
+https://developers.google.com/maps/web-services/overview#ParsingJSON
+
+Processing JSON with Javascript
+
+JSON (Javascript Object Notation) has an obvious advantage over XML in that the response is lightweight. Parsing such a result is trivial in JavaScript as the format is already a valid Javascript object. For example, to extract the value of the 'formatted_address' keys within a JSON result object, simply access them using the following code:
+
+for (i = 0; i < myJSONResult.results.length; i++) {
+  myAddress[i] = myJSONResult.results[i].formatted_address;
+}
+
+Note that because JSON may contain multiple values, it's wisest to iterate over the length of theresults array if you want to capture all possible values. In practice, you may wish to only return the first result (results[0]), however.
+
+Parsing JSON in other languages is only moderately more difficult.
+
+
+
+
+
+Log in / Register
+
+r/taskerHow To
+
+[How To] Parse JSON into local variables
+
+u/JustRollWithIt271d, 16h
+
+I created a short little JS script that takes in a JSON string and creates local variables based on the key/value pairs in the JSON object. Here's the script I wrote: jsonVarParse.js. It has a comment at the top to explain how to use it.
+
+You can use this to easily parse JSON responses from an API request and use the results in Tasker. I've found it useful for sending multiple parameters to and from different tasks. For example, when you use Perform Task you can return a JSON string with multiple values and then use this to parse it in the calling task.
+
+I've personally used it with AutoNotification to send full notification information between tasks by creating a JSON string with all the notification properties.
+
+EDIT: Updated my script to set the local variable to the JSON string if you're parsing a complex JSON object.
+
+EDIT2: Updated my script again to parse arrays into Tasker arrays.
+
+7
+
+22
+
+Best
+
+Post is archived
+
+Ratchet_Guy
+
+•
+
+271d, 16h
+
+"For example, when you use Perform Task you can return a JSON string with multiple values and then use this to parse it in the calling task."
+
+THIS is a very cool idea. One of the seemingly limitations to using Perform Task is that there's only one Return field. But using this method you're absolutely correct - just sent it all back in JSON :))
+
+Also if you if you're using the AutoApps, you may also want to take a look into the AutoTools alpha, it has fairly in-depth JSON Read/Write Actions.
+
+But again - damn good idea about sending data back through JSON in the Return field :)
+
+3
+
+JustRollWithIt
+
+🏆 Javascript Master of /r/Tasker
+
+•
+
+271d, 15h
+
+Thanks! I've bought a fair amount of the AutoApp plug-ins, but I haven't subscribed for the alpha apps. I'm a little hesitant to subscribe, but I'll definitely take a look at it once it gets into the beta channel. The dialog stuff I've seen on the Google+ page looks particularly cool.
+
+1
+
+erdius
+
+•
+
+271d
+
+So I got your example to work but how do I use this to grab JSON data from a website and push it to varprefix? Sorry if dumb question
+
+1
+
+JustRollWithIt
+
+🏆 Javascript Master of /r/Tasker
+
+•
+
+271d
+
+The varprefix property is really only useful if you're creating the JSON data yourself. You don't have to set it, and then it will just default to "json". So once you get the JSON data (e.g. through HTTP GET), set the response to a variable %jsonvar then call the script. Then you'll get all the properties of the JSON data as local variables prefixed by "json". You can of course change that default to whatever you want by modifying the if statement in the script.
+
+1
+
+erdius
+
+•
+
+271d
+
+Can't seem to get it to work, I successfully have my json data (using forecast.io to play with) into jsonvar (flash confirms all json data is there). I then called the script. One of the json properties is "offset": -8. I flash $json_offset and it's blank, nothing is there. Am I doing something wrong?
+
+1
+
+JustRollWithIt
+
+🏆 Javascript Master of /r/Tasker
+
+•
+
+270d, 22h
+
+I was able to use it successfully for that property with forecast.io. Make sure you're flashing %json_offsetand not $json_offset.
+
+I haven't actually used this script on data from the web, and doing this exercise made me realize that the script won't work for complex JSON data. So taking the forecast.io example, you would be able to read the offset property, but none of the data in nested objects and arrays.
+
+Nested objects (not arrays) shouldn't be too hard if you just set the local variable to JSON.stringify(j[key])instead of j[key] directly. Then you can call the script again with the new JSON string. That could potentially get confusing though. A proper JSON parsing script that could take in a particular element to look for and return the value would be much better.
+
+EDIT: Updated my script to set the local variable to the JSON string if you're parsing a complex JSON object.
+
+1
+
+erdius
+
+•
+
+270d, 21h
+
+Worked thanks! Didn't even notice I had $ instead of %
+
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Log in / Register
+
+r/tasker
+
+[How-To] A beginner's tutorial on "HTTP Get" to get data from websites/API's
+
+u/chrispy212606d, 16h
+
+So, you want to learn to use HTTP Get? This tutorial assumes a basic background knowledge of Tasker (what profiles and tasks are etc.), which is information readily available elsewhere. You should understand basic concepts like what an API is, and what variables, arrays and arguments/parameters are. I don't claim to be an expert by any means, and I'm sure some of what I suggest isn't best practice. It does work, however!
+
+What is HTTP Get? HTTP Get is a way of requesting information from a webpage. A request is transmitted based on the options you provide, and a response is returned in the %HTTPD variable in Tasker. For example, if you used HTTP Get on the url of this webpage, %HTTPD would contain all the HTML that this page composes of.
+
+HTTP Get 101
+
+Introduction In this tutorial, I'm going to teach you to use a Google API to turn your location into an approximate address. This will involve sending a HTTP Get request to the API's URL with your various parameters (such as your location), and then extracting from the resulting data whatever useful information we need, in this case the address, and storing it in a Tasker variable so we can do whatever we want with it.
+
+Preparation
+
+You will require a Google account. The Geocode API which we will use requires you to send it an API 'key.' This is an alphanumeric identifier, unique to you, that Google uses to track usage of the API, and prevent abuse. Free usage is capped at 2,500 requests/day, so it's more than adequate for our use! You can read the documentation of the API here, although I'll cover all the salient points in the tutorial. 1. To get started, head to the Google API Console 2. Click Services on the left, find Geocoding API, turn the switch on. 3. Click API Access on the left. Make a note of your API Key from the "Simple API" section. Whenever I refer to your API key, this is the string I want you to use.
+
+Also, set Tasker to advanced mode, by disabling beginner mode in the preferences.
+
+It's not compulsory at all, but I highly recommend setting up Pushbullet on your Desktop and Mobile if you're reading this tutorial at your PC. It'll let you send code snippets straight to your phone without having to type them out each time.
+
+1. Start
+
+Create a new project in Tasker by long-pressing the Home icon at the bottom, and selecting "Add." Projects allow you to keep tasks and profiles that fulfil specific purposes together, and I highly recommend using them, though this is not compulsory. Create a new task in your project called "Location Parser". Add a "Get Location" action to your new task. The source should be GPS, I lowered the timeout to 60 sec.
+
+2. HTTP Get
+
+Add a HTTP Get action as your second action (Add>Net>HTTP Get). Server:Port is the address we wish to "get" the data from. The URL for the geocode API ishttps://maps.googleapis.com/maps/api/geocode/output?parameters Where (see previous link on API documentation for more details)
+
+Output can be either JSON or XML. When you write your own HTTP get tasks in future, the majority of your design won't be around sending the request, it'll be about what to do with the data. Often, you won't get a choice as to how the data you requested is returned. Since we do get a choice, we're going to opt for JSON, since it's easier to work with (in my opinion anyway!).Parameters are the arguments we wish to send. In this case, we have 2 arguments. We need to tell the Geocode API our device's latitude and longitude (GPS coordinates), so that it can take a guess at our location. We also need to send our API key, as mentioned before. We want to send our Lat/Long dynamically. Tasker has a variable called %LOC, which conveniently, stores our location as [lat],[long]! So, all we need to do is send %LOC as an argument, and the API will receive our location. %LOC is updated every time our device location is, such as during the "Get Location" action in our task!
+
+So, if your API key was "abcde", and you wanted to get your approximate address returned in JSON format, the web address we'd use is:
+
+https://maps.googleapis.com/maps/api/geocode/json?latlng=%LOC&key=abcde
+
+What we have here is the URL to the API, as mentioned before, including the 'json' part. The '?' marks where we send our query/arguments/parameters, which are latlng and key. Both of these are defined by the API itself, and as mentioned, are in the documentation. When working on your own tasks, make sure to find out what arguments the API will need, and what form they need to be in.
+
+3. Put response into a local variable
+
+Next, we put the HTTP response into a local tasker variable. Local variables are all lowercase, such as %locjson, and are only available to the current task. In this case, I did this for a few reasons. Most importantly, it means that if another HTTP Get request is sent by another task before we've had a chance to process this one, our data isn't lost and will still be processed. Also, local variables are easier to access via Javascript, as we'll see later. This part is simple: add a "Variable Set" action, and set a new local variable %locjson to %HTTPD. %HTTPD is the Tasker variable that holds the response from a HTTP Get.
+
+4. Initialise local variable for result Just create a "variable set" that sets %apxadd to "unknown". This way, we have a local variable (easier for javascript) that will contain the word "unknown" if our parsing fails for any reason.
+
+5. Parsing result
+
+This is the complicated bit! To see the data you'll get back from your HTTP Get, paste the following into a browser:https://maps.googleapis.com/maps/api/geocode/json?latlng=38.8977,77.0366&key=[key], replacing [key] with your API key. Copy and paste the text from the webpage into the left pane of this website which makes viewing JSON much simpler. Click the arrow facing right to turn the raw JSON into an interactive tree.
+
+JSON, or javascript object notation, is just a way of transmitting data over the internet. It follows a tree structure, which is easier understood by playing with the json viewer above and comparing what you see to the raw json.
+
+As you will begin to understand, our Google API returns an array of 'results,' with the first ([0]) being the most accurate, and each subsequent result being less specific. Within each result is a bunch of data, but all we really care about is the "formatted address" of the first result, because that's Google's best guess at our address based on the arguments (latitude and longitude) we gave them. When writing your own algorithms for data parsing, just put the data you got into a JSON viewer like this one, and figure out exactly where in the JSON tree the bit you want lives.
+
+The easiest way to parse JSON is with Javascript. Tasker has two Javascript actions: Javascript and Javascriptlet. The only difference I can find is, that Javascript takes an external text file containing code and runs that, whereas Javascriptlet lets you paste code directly into it. Lets use that!
+
+Add a Javascriptlet action (Script>javascriptlet) with the following code:
+
+var geocodeResult = JSON.parse(locjson); apxadd = geocodeResult.results[0].formatted_address; 
+
+Simple, right? Only 2 lines of code! You don't really need to learn to program to write stuff like this. The first line declares a variable called geocodeResult. It uses a built-in javascript function called JSON.parse, to which we pass the variable "locjson." If you remember from before, locjson is a local variable we created in Tasker to hold our HTTP data that we got from %HTTPD. Remember how I said local variables are really easy to access inside javascript? They're so easy, you just use their name as usual, without the '%'! So here, we're saying "run the JSON.parse command on the variable called locjson, and store that in a new variable called geocodeResult"
+
+So now, we have a javascript variable that has all the data from our HTTP result set up all neatly, as arrays. So, to get what we want, which is the formatted_address of result 0 (the first result), we simply take our initialised local variable apxadd, and tell it to look in the first index (number 0) of the array called "results" (i.e. results[0]), and inside that, to get the formatted address.
+
+If this seems complex, switch back and forth between the javascript code, the raw json, and the JSON viewer to see exactly how our code is extracting that "formatted_address" from the results.
+
+6. Using the result
+
+Since our parsed result is stored in a local variable for convenience, we need to put it in a global variable so other tasks can use it. Use another Variable Set action to set %APRADD to %apxadd.
+
+7. Testing
+
+How do we know if it works? First, save the task by pressing back until Tasker exists, then open it again. Create a new task called "Location Demo" inside your project. Inside, first, add a Perform Task action (Task>Perform Task). Leave all the options as default, and use the search button to find our "Location Parser" task we just created. Next, add a Flash "Alert>Flash" Using the variable button, set the text to be %APRADD, the global variable from before. Now, click the play button. Your phone will get your location, parse the result, and flash your approximate address at the bottom of the screen!
+
+What next?
+
+For practice, using the API documentation, create If statements that handle situations where the "status" of the request is not "ok". Hint: Add a line to the Javascriptlet that parses our data to put the status in a new variable, and then use if statements to decide what to do for different statuses.
+
+Implement this task as part of a project. For example, when a loved one texts you saying "Where Are You?" you could automatically compose and send an SMS back to them with your address!
+
+Find an API you want to parse data from. For example, the page from a sports team that holds their fixtures and results, and use it to create notifications about upcoming games.
+
+I'll try and answer any questions you have. Thanks!
+
+Edit1: Formatting, Google API access instructions.
+
+15
+
+87
+
+Best
+
+Post is archived
+
+plepleus
+
+📱S5 Lollipop, no root
+
+•
+
+606d, 15h
+
+Great post
+I use this method to pull the weather every morning using:
+
+HTTP Get Server:Port api.wunderground.com Path /api/[api key]/conditions/forecast/q/%LOC.json 
+
+For example to get the forecast for the day:
+
+JavaScriptlet var forecast = JSON.parse(global('HTTPD')).forecast.txt_forecast.forecastday[0].fcttext; 
+
+Which I display using the %forecast variable to set the text of a very basic scene
+
+2
+
+chrispy212
+
+•
+
+606d, 3h
+
+Thanks for replying. That's a tidier way of doing the parse, including just pulling the HTTPD in directly from its global variable. I just split it out into two commands for clarity of the explanation
+
+1
+
+FoxXix
+
+•
+
+516d, 13h
+
+Hey, this is an awesome post! Helped me out a lot. I think there is a small syntax error in the Javascript you have, where the first line is missing the semicolon. This gave me an error when I tried to run it and adding the semicolon no longer produces an error. Just thought I'd give a heads up on that. Thanks again!
+
+3
+
+chrispy212
+
+•
+
+516d, 11h
+
+Thanks! And cheers for noticing the error, I've edited the post
+
+2
+
+drc2016
+
+•
+
+606d, 12h
+
+I'm glad you posted this, because I've been struggling with a JSON task for a day now, and still cannot get it to work. Any chance you could help out a bit?
+
+Basically, I'm trying to get a list of post titles in a specific subreddit for use in another task. I've been able to do it just by pulling the html and splitting it, but hoping to do it faster using JSON.
+
+Here is the data, using this subreddit as an example:
+
+/r/tasker/new.json?sort=new
+
+And here is what I have for java code, based on my reading of the json data using the site you linked for formatting:
+
+var jsondata = JSON.parse(subjson); title = jsondata.data.children[0].data.title; 
+
+Once I can get this working, I'm going to loop through the first 5 posts or so, but I cannot get this to work. I looked at your example, used the website to compare to the geocoding data, and I'm stumped.
+
+2
+
+plepleus
+
+📱S5 Lollipop, no root
+
+•
+
+606d, 10h
+
+This shows me the newest post
+
+HTTP Get Server:Port www.reddit.com Path /r/tasker/new.json?sort=new JavaScriptlet var title = JSON.parse(global('HTTPD')).data.children[0].data.title; 
+
+2
+
+drc2016
+
+•
+
+606d, 10h
+
+That works, thanks! Still no idea what I was doing wrong, but I'm not a programmer so I'm OK with just having something that works :)
+
+2
+
+plepleus
+
+📱S5 Lollipop, no root
+
+•
+
+606d, 10h
+
+This post showed that some people were having issues separating the parsing the step from the variable assignment step to the obtained data (if that makes sense) (i.e. I combined the two steps you had into one)
+
+1
+
+drc2016
+
+•
+
+606d, 10h
+
+I attempted to do the same thing, but couldn't get that right either lol. Just got sick of fighting it
+
+2
+
+chrispy212
+
+•
+
+606d, 3h
+
+Glad you got it working :) In future, I tend to find it easiest to create a copy of troublesome tasks, and then add a bunch of 'debugging' actions in so you know what's going on. Often, I'll use Alert>Flash to display the contents of a variable each time it changes, to pinpoint errors in the task. With longer variables, such as JSON results, it's often useful to store them to a text file on your SD card with File>Write File to see whether you're getting something back you didn't expect.
+
+2
+
+zak75
+
+•
+
+606d
+
+Really nice guide! :)
+
+When experimenting with new projects or data it can be a bit of a chore trying to do it entirely on an android device. So my little tip would be to install an extension in your computer browser to instantly see the output of HTTP Get/Push/etc requests.
+
+It usually makes it faster to experiment, generally gives a better overview of the data and makes working with the data easier too, as you can easily see the data when you're writing the task.
+
+Firefox users could install HTTP Requester and Chrome users could install one of the Postman Extensions.
+
+2
+
+ironlion27
+
+•
+
+606d, 12h
+
+Thanks!
+
+2
+
+scooper86
+
+•
+
+598d, 22h
+
+For some reason the %APRADD variable is empty and only posts %apxadd.
+
+Any reason why? HTTPD populates fine BTW.
+
+Thanks again for this quick guide it's helped me learn a lot!
+
+1
+
+chrispy212
+
+•
+
+598d, 1h
+
+Hmm... The do you mean the variable %APRADD contains the word "%apxadd" as its value? Are you 1. Initialising %apxadd and 2. sure you copied the javascript correctly? If %apxadd initialised correctly, it should just contain "unknown" if the javascript fails. Also, make sure you aren't mixing up x's and r's! I should have named my variables better really
+
+1
+
+mikey14048
+
+•
+
+573d, 14h
+
+I had this same issue, and the simple fix was to change the second line to:
+
+var apxadd = geocodeResult.results[0].formatted_address;
+
+just added var before your local variable your creating. Thats what worked for me.
+
+1
+

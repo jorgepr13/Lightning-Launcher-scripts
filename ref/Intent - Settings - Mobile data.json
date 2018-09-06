@@ -1,0 +1,14 @@
+{
+"id":"MOBILE_DATA_SETTINGS",
+"appname":"Settings",
+"name":"Data Usage",
+"target":"Activity",
+"package":"com.android.settings",
+"class":"com.android.settings.Settings$DataUsageSummaryActivity",
+"hasOutput":false,
+"categories":[{
+"category":"android.intent.category.DEFAULT",
+"name":"android.intent.category.DEFAULT"
+}],
+"extras":[]
+}

@@ -1,0 +1,233 @@
+// Based on https://plus.google.com/+LukasMorawietz/posts/QRrizcPUu47
+
+var items_refresh_interval_minutes = 10;
+var pattern = "HH:mm"; //format has to match http://developer.android.com/reference/java/text/SimpleDateFormat.html
+var showEnd = true;
+var maxDays = 10; //how far to search from today (might be not exact)
+var dayOffFix = false; //when true adds one to all-day entries
+
+// reset current tag to select new agenda's
+//LL.getCurrentScript().setTag(null);
+
+LL.bindClass("android.provider.CalendarContract");
+LL.bindClass("java.util.Calendar");
+LL.bindClass("android.content.ContentUris");
+LL.bindClass("java.text.SimpleDateFormat");
+LL.bindClass("android.app.AlertDialog");
+LL.bindClass("android.widget.SimpleCursorAdapter");
+LL.bindClass("android.R");
+LL.bindClass("android.content.DialogInterface");
+LL.bindClass("android.widget.AbsListView");
+var Calendars = CalendarContract.Calendars;
+var Instances = CalendarContract.Instances;
+var cx = LL.getContext();
+var cr = cx.getContentResolver();
+
+function ResetCache() {
+  var agenda = {};
+      agenda.cals = "";
+      agenda.items = [];
+      agenda.days = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+      agenda.last = 1;
+      myTag = JSON.stringify(agenda);
+      LL.getCurrentScript().setTag(myTag);
+}
+
+var myTag = LL.getCurrentScript().getTag();
+ if (myTag === null || myTag === "") {
+        ResetCache();
+    }else{
+        var agenda = JSON.parse(myTag);
+        if (typeof agenda.cals == "undefined") {
+            ResetCache();
+        }
+   }
+
+if (agenda.cals === "") {
+    var projection = [Calendars._ID, Calendars.NAME];
+    var calCursor = cr.query(Calendars.CONTENT_URI, projection, Calendars.VISIBLE + " = 1", null, Calendars._ID + " ASC");
+    if (!calCursor.moveToFirst()) {
+        Android.makeNewToast("No Calendar(s) found", true).show();
+        calCursor.close();
+        return;
+    }
+    var adapter = new SimpleCursorAdapter(cx, R.layout.simple_list_item_multiple_choice, calCursor, [Calendars.NAME], [R.id.text1], 0);
+    var dialog = new AlertDialog.Builder(cx)
+        .setAdapter(adapter, null)
+        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            onClick: function(dialog, which) {
+                var checked = dialog.getListView().getCheckedItemPositions();
+                for (var i = 0; i < checked.size(); i++) {
+                    calCursor.moveToPosition(i);
+                    if (checked.get(checked.keyAt(i))) {
+                        if (agenda.cals === "") {
+                            agenda.cals += "(" + calCursor.getLong(0);
+                        } else {
+                            agenda.cals += "," + calCursor.getLong(0);
+                        }
+                    }
+                }
+                agenda.cals += ")";
+                myTag = JSON.stringify(agenda);
+                LL.getCurrentScript().setTag(myTag);
+                Android.makeNewToast("Calendar Instances Saved!", true).show();
+                calCursor.close();
+                refreshAgenda();
+            }
+        })
+        .setNegativeButton("Cancel", null)
+        .setTitle("Select Calendar(s)")
+        .create();
+    dialog.getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+    dialog.show();
+} else {
+
+// refreshAgenda();
+  self.runEvery(refreshAgenda,(items_refresh_interval_minutes * 60000));
+}
+
+function updateItems() {
+    if (agenda.cals.length < 1) {
+        Android.makeNewToast("No Calendars to update!", true).show();
+        return;
+    }
+    agenda.items = [];
+    var calc = Calendar.getInstance();
+    var d = 0;
+    for (d = 0; d < maxDays; d++) { // fill template with today and next maxDays
+        var Dtmpl = {};
+        var datum = new Date(calc.getTimeInMillis());
+        var jaar = datum.getFullYear();
+        var doy = calc.get(Calendar.DAY_OF_YEAR);
+        Dtmpl.dayno = (jaar * 1000) + doy;
+
+        var DatNr = datum.getDate();
+        Dtmpl.day = agenda.days[datum.getDay()] + " " + DatNr;
+        Dtmpl.appointments = [];
+        agenda.items.push(Dtmpl);
+        calc.add(Calendar.DAY_OF_YEAR, 1);
+    }
+    var myB = agenda.items[0].dayno;
+    var myE = agenda.items[(maxDays-1)].dayno;
+
+    var calNow = Calendar.getInstance();
+    calNow.add(Calendar.DAY_OF_YEAR, -15); // to get most already started multi-day appts
+    var begin = calNow.getTimeInMillis();
+    var calNow = Calendar.getInstance();
+    calNow.add(Calendar.DAY_OF_YEAR, maxDays);
+    var end = calNow.getTimeInMillis();
+
+    var proj = [Instances._ID, Instances.BEGIN, Instances.END, Instances.TITLE, Instances.ALL_DAY];
+    var uriBuilder = Instances.CONTENT_URI.buildUpon();
+    ContentUris.appendId(uriBuilder, begin);
+    ContentUris.appendId(uriBuilder, end);
+    var cursor = LL.getContext().getContentResolver().query(uriBuilder.build(), proj, Instances.CALENDAR_ID + " IN " + agenda.cals, null, Instances.BEGIN + " ASC");
+
+    d = 0;
+    while (cursor.moveToNext()) {
+        var appt = {};
+        appt.start = "";
+        appt.end = "";
+
+        var c = Calendar.getInstance();
+        c.setTimeInMillis(cursor.getLong(1));
+        var c2 = c.clone();
+        c2.setTimeInMillis(cursor.getLong(2));
+        var isAllDay = (cursor.getInt(4) == 1);
+        if (isAllDay)(dayOffFix ? c : c2).add(Calendar.DAY_OF_YEAR, dayOffFix ? 1 : -1);
+    // start dayno
+        var datum = new Date(cursor.getLong(1));
+        var jaar = datum.getFullYear();
+        var doy = c.get(Calendar.DAY_OF_YEAR)
+        var Sdayno = (jaar * 1000) + doy;
+
+     // end dayno
+        var datum = new Date(cursor.getLong(2));
+        var jaar = datum.getFullYear();
+        var doy = c2.get(Calendar.DAY_OF_YEAR)
+        var Edayno = (jaar * 1000) + doy;
+        var format = new SimpleDateFormat(pattern);
+
+        while (Sdayno > agenda.items[d].dayno) {
+            d += 1;
+            if (d >= maxDays) {
+                cursor.close;
+                return;
+            }
+        }
+        var dDayno = agenda.items[d].dayno;
+
+        if (dDayno == Sdayno || dDayno == Edayno) {
+
+            if (!isAllDay) {
+                if (dDayno == Sdayno) {
+                    appt.start = format.format(c.getTime());
+                } else {
+                    appt.start = "<--";
+                }
+                if (showEnd) {
+                    if (dDayno == Edayno) {
+                        appt.end = format.format(c2.getTime());
+                    } else {
+                        appt.end = "-->";
+                    }
+                }
+            }
+            appt.desc = cursor.getString(3).replace(/['"]/g, "");
+            agenda.items[d].appointments.push(appt);
+        }
+ // ends after this day
+        appt = {};
+        if ((dDayno < Edayno) && (Edayno <= myE)) {
+            appt.start = "<--"
+            appt.end   = format.format(c2.getTime());
+            appt.desc  = cursor.getString(3).replace(/['"]/g, "");
+            agenda.items[(Edayno - myB)].appointments.push(appt);
+       }
+    }
+    cursor.close();
+}
+
+function refreshAgenda() { 
+        updateItems();
+        agenda.last = new Date();
+        myTag = JSON.stringify(agenda);
+        LL.getScriptByName("Agenda-load").setTag(myTag);
+
+        LL.runScript('Agenda-binders', myTag);
+}
+
+/*
+[
+  { "dayno": "2015109",
+    "day": "wo 9",
+    "appointments": [
+      { "desc": "abc",
+        "start": "01:00",
+        "end": "02:00"
+      }
+    ]
+  },
+  { "dayno": "2015110",
+    "day": "do 10",
+    "appointments": []
+  },
+  { "dayno": "2015111",
+    "day": "vr 11",
+    "appointments": [
+      { "desc": "abc",
+        "start": "01:00",
+        "end": "02:00"
+      },
+      { "desc": "abc",
+        "start": "01:00",
+        "end": "02:00"
+      },
+      { "desc": "abc",
+        "start": "01:00",
+        "end": "02:00"
+      }
+    ]
+  }
+]
+*/

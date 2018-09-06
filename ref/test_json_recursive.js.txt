@@ -1,0 +1,26 @@
+
+if (!jsonvar) {exit();}
+
+//alert(jsonvar);
+
+var data = JSON.parse(jsonvar);
+
+//alert(JSON.stringify(data));
+
+var keys="";
+var vals="";
+
+for (key in data) { 
+//	if (typeof key === 'undefined' || key ==="" || key === null) {continue;};
+if (typeof key === 'object') {continue;};
+//	flash(key);
+	keys=keys +""+ key+", ";
+	vals=vals+""+JSON.stringify(data[key])+"\n";
+};
+
+var key=keys;
+var val=vals;
+//setLocal(key_b,keys);
+//setLocal(val,vals);
+
+//exit();

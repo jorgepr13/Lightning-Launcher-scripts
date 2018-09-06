@@ -1,0 +1,23 @@
+/* About the script
+ *  Purpose : Load multiple scripts in the right order.
+ *  Author  : Jappie Toutenhoofd (https://plus.google.com/+JappieToutenhoofd)
+ *  Link    : https://plus.google.com/+JappieToutenhoofd/posts/
+ */
+
+function delayedLoad(scrpt) {
+    var exist = LL.getScriptByName(scrpt);
+    if (exist === null) {
+        alert(scrpt + " script does not exist.");
+        return;
+    }
+    setTimeout(LL.runScript(scrpt, null), d);
+    d += 400;
+}
+var d = 100;
+
+delayedLoad("RunOffUI-load");
+delayedLoad("APIcomm");
+delayedLoad("IMGcomm");
+delayedLoad("QuickTheme-load");
+delayedLoad("Agenda-load");
+delayedLoad("OWM-load");

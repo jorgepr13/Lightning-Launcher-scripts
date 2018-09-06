@@ -1,0 +1,166 @@
+/*
+input: element name, data or none
+usage: run script from elements in LL
+description:
+		get the information from the item who called the script
+		set the time,id,click to the script tag
+		wait for the 'delta' time, launch if id and time are the same
+			the time will change when clicking other or the same item
+
+		launch the item with LL if no data or name is set
+		attempt to search for a task and launch it,
+		if it fails, launch the item with LL
+
+*/
+
+
+/*
+set the tag to 
+[[label, intent],[label, intent]] 
+create another script with the multi touch 
+that will read from the tag
+if the intent contains task/tasker it will be passed to tasker 
+if the tag is empty, the item will launch 
+
+
+var itm_tag=getTag();
+
+
+label=[]
+intent=[]
+
+var label=.label
+var intent=.intent
+if (intent === null || intent === undefined) {itm.launch();return;}
+if (label === null || label === undefined) {label=getDefaultlabel();}
+
+if (.intent.length === .label.length) {
+	intent=.intent[];
+	label=.label[];
+}
+
+
+*/
+
+
+//time between clicks, in milliseconds 
+var delta = 500;
+
+var event = LL.getEvent();
+var time = event.getDate();
+//var cnt = event.getContainer();
+var itm = event.getItem();
+var id = itm.getId();
+var name = itm.getName();
+var data = event.getData();
+//data passed by manually calling the script (typing a data value in the tap action)
+var tag_data = JSON.parse(LL.getScriptTag())||[-1,-1,-1,-1];
+
+//if the tag is set, and a different item is clicked, launch the previous item 
+if(tag_data[1] != -1 && tag_data[1] != id) {
+	var itm_old = LL.getItemById(tag_data[1]);
+	var data_old = tag_data[3];
+	var name_old = itm_old.getName();
+	var click = tag_data[2];
+	tap(name_old,data_old);
+	
+	//reset the tag data, as a new item called the script
+	tag_data = [-1,-1,-1,-1];
+}
+
+//set the click times, 1 as default, add them if the same item was clicked and it was set on the script tag
+var click=1;
+if(tag_data[2] != -1) {click += tag_data[2];} 
+
+//set the script tag
+LL.setScriptTag(JSON.stringify([time,id,click,data]));
+
+/*
+
+//change the item label before entering the timeout 
+
+
+
+//set the update timer
+if (event_i !== null) {
+	event_i.setTag("weather_upd_time", setTimeout(time_refresh,refresh_period));
+}
+
+function time_cancel() {
+	if (event_i !== null) {
+		var id = event_i.getTag("weather_upd_time");
+		if (id !== null) {clearTimeout(parseInt(id));}
+	}
+	return;
+}
+
+
+*/
+
+//wait for the 'delta' time and read the script
+//it should be the same time that entered the script to launch it, otherwise, it would have started since the beginning 
+setTimeout(function(){
+	var tag_data_b=JSON.parse(LL.getScriptTag())||[-1,-1,-1,-1];
+	if(tag_data_b[0]==time && tag_data_b[1]==id) {tap(name,data);}
+},delta);
+
+//exit the script
+return;
+
+function tap(name,data){
+	//reset the script tag
+	LL.setScriptTag(null);
+	
+	if(data==null && name==null) {
+		itm.launch();
+	} else {
+		if(data==null && name != null) {data="action - tap - " + name;}
+		var i = new TaskerIntent("f Task find and launch");
+		i.addParameter(data); //%par1, task name
+		i.addParameter(click); //%par2
+		var result=LL.sendTaskerIntent(i,true);
+		if(result==false) {itm.launch();};
+	}
+}
+
+
+
+/*
+var task = "test LL";
+var i = new TaskerIntent(task);
+i.addParameter( "1" );
+//i.addVariable( "%name", "value" );
+LL.sendTaskerIntent(i, false);
+
+//LL.sendTaskerIntent(new TaskerIntent("MyTask"), false);
+*/
+
+/*
+var i = new TaskerIntent("Say");
+i.addAction(ActionCodes.SAY);
+i.addArg("hello");
+i.addArg("com.google.android.tts:en-gbr");
+i.addArg(0);
+i.addArg(5);
+i.addArg(5);
+i.addArg(true);
+i.addArg(false);
+i.addArg(false);
+LL.sendTaskerIntent(i, true);
+alert("done");
+
+public boolean�sendTaskerIntent�(TaskerIntent intent, boolean synchronous)
+
+Send a tasker intent, optionally waiting for its completion to return.
+
+Parameters intent an intent built with TaskerIntent
+(see http://tasker.dinglisch.net/invoketasks.html for samples)
+
+synchronous when true,
+Lightning will wait for Tasker task completion before to return,
+otherwise it will return immediately
+
+Returns when synchronous is true returns true if the intent has been sent successfully
+and Tasker reports a success too, when synchronous is false this method always returns true..
+
+*/

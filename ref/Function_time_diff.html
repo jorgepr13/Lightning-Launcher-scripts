@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+  <title>Time difference</title>
+</head>
+<h2>Time difference calculator</h2>
+<body>
+  <input type="number" id="date_a" name="time_start" onchange="calc_b()" placeholder="Enter the start time.">
+  
+  <div><input type="number" id="date_b" name="time_end" maxlength=5 onchange="calc_b()" placeholder="Enter the end time."></div>
+  
+  <input type="text" id="result" name="date_diff" placeholder="Result shown here.">
+  <input type="text" id="result_b" name="date_diff_b" placeholder="Result shown here.">
+<input type="submit" value="Calculate" onclick="calc()">
+
+</body>
+
+<script>
+//var mod_date = "20171209";
+//<input type="text" id="date_a" name="time start" maxlength=5 placeholder="Enter the start time.">
+//<textarea rows="1" cols="20" id="result" name="content" placeholder="Result here."></textarea>
+
+function checkTime(myTime){
+  var myTime = myTime.toString();
+  var myTime = "0000" + myTime.split(/\D*/).join("");
+  var myTime = myTime.match(/\d{4}$/);
+  //alert(myTime);
+  return myTime;
+}
+
+function calc(){
+  //alert("test");
+  var date_a = document.getElementById("date_a").value;
+  var date_b = document.getElementById("date_b").value;
+  
+  var date_a = checkTime(date_a).toString();
+  var date_b = checkTime(date_b).toString();
+  //alert(date_a + "|" + date_b);
+  var hh_a = date_a.match(/\d{2}/);
+  var mm_a = date_a.match(/\d{2}$/);
+  var hh_b = date_b.match(/\d{2}/);
+  var mm_b = date_b.match(/\d{2}$/);
+  //alert(hh_a + ":" + mm_a + " | " + hh_b + ":" + mm_b);
+  
+  var time_difference = (parseInt(hh_b) * 60 + parseInt(mm_b)) - (parseInt(hh_a) * 60 + parseInt(mm_a));
+  if(time_difference < 0){time_difference += 24 * 60;}
+ 
+  var r_h = Math.floor(time_difference / 60);
+  time_difference -= r_h * 60; 
+  var r_m = time_difference;
+  if(r_m < 10) {var r_m = "0" + r_m;}
+
+  var result = r_h + ":" + r_m;
+
+  //document.getElementById("result").innerText = date_a;
+  document.getElementById("result").value = result + " | " + date_a + " - " + date_b;
+  return result;
+}
+
+function calc_b() {document.getElementById("result_b").value = calc();}
+
+//document.addEventListener('DOMContentLoaded',function() {
+//   document.querySelector('input[name="time_start"]').onchange=changeEventHandler;
+//   document.querySelector('input[name="time_end"]').onchange=changeEventHandler;
+//},false);
+
+//function changeEventHandler(event) {
+//  document.getElementById("result_b").value = calc();
+  // You can use “this” to refer to the selected element.
+  //if(!event.target.value) alert('Please Select One');
+  //else alert('You like ' + event.target.value + ' ice cream.'); 
+//}}
+
+</script>
+</html>

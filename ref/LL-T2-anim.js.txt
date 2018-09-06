@@ -1,0 +1,21 @@
+var desk   = LL.getCurrentDesktop();
+var items = desk.getItems();
+var n = items.getLength(); 
+var opn = self.TAT.lastPressed;
+var pnl = (desk.getHeight()*.45); 
+var step = ((desk.getHeight()*.55)/(n-1));
+var posy = 0;
+
+for(var i=0;i<n;++i)
+{
+  curi = items. getAt(i);
+  curi.setSize(desk.getWidth(),pnl);
+  curi.getContainer().setPosition(0,0,1, false);
+  curi.setPosition(0, posy); 
+  if (opn == i)
+     { posy += (pnl - step);
+       curi.getContainer().setPosition(0,step,1,true);
+     }  
+  posy += step;
+
+}

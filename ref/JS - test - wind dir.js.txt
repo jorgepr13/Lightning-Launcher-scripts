@@ -1,0 +1,42 @@
+
+
+var wind_deg=15000;
+//var wind_deg;
+//var wind_dir_zones=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+var wind_dir_zones=["N","NE","E","SE","S","SW","W","NW"];
+
+console.log(getCardinalZones(wind_deg,wind_dir_zones));
+console.log(getCardinalZones(wind_deg,[]));
+
+//console.log("d:"+wind_dir+", "+wind_dir_zones[wind_dir]+", z.d:"+wind_dir_zones_deg+", z:"+wind_dir_zones.length);
+//console.log("d:"+wind_dir);
+
+
+function getCardinalZones(degrees,zones) {
+	//function checks
+	if (isNaN(degrees) || degrees === null || degrees === undefined) {
+    //alert("getCardinalZones Error: No number received.");
+		console.log("getCardinalZones Error: No number received.");
+    return;
+  }
+	//avoid number below 0, or above 360 using recursion
+	if (degrees < 0) {return getCardinalZones(degrees+360,zones);}
+	if (degrees > 360) {return getCardinalZones(degrees-360,zones);}
+
+	if (zones === null || zones === undefined || zones.length == 0) {
+		var zones=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+	}
+	//else {if (zones.length == 0) {var zones=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];}}
+
+	//get the amount of degrees by cardinal zone, then get one half of it (assuming that it starts from 0)
+	var zones_deg=180/zones.length; //360/zones.length/2
+
+	//var zone_i=0;
+	//get the cardinal zone index
+	for (var i = 0; i < zones.length; i++) {
+		if (degrees < zones_deg*(1+2*i)) {break;}
+		//if (degrees < zones_deg*(1+2*i)) {zone_i=i;break;}
+	}
+	return zones[i];
+	//return zones[zone_i];
+}

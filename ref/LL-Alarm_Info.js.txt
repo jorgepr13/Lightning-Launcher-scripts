@@ -1,0 +1,80 @@
+/*
+tap - launch app
+long - time to alarm
+resume - check item time vs alarm time, update item if they are different
+*/
+
+if (typeof self.timeElapsed == "undefined" || typeof self.getTimeAgo == "undefined") {
+    var api_script = LL.getScriptByName("f-Time");
+    if (api_script === null) {
+        //alert("Import script 'f-Time'. \n This script depends on it.");
+        Android.makeNewToast("Import script 'f-Time'. \n This script depends on it.",false).show();
+        return;
+    }
+    //initialize the self method
+    LL.runScript("f-Time", null);
+}
+
+LL.bindClass("android.app.AlarmManager");
+LL.bindClass("android.app.AlarmManager.AlarmClockInfo");
+LL.bindClass("android.content.Context");
+
+
+
+/*
+AlarmManager alarmManager = (AlarmManager)ctx.getSystemService(Context.ALARM_SERVICE);
+long nextAlarmTime =alarmManager.getNextAlarmClock().getTriggerTime();
+var p = PendingIntent.getBroadcast(ctx,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+*/
+var ctx=LL.getContext();
+
+var am = ctx.getSystemService(Context.ALARM_SERVICE);
+//var am = ctx.getSystemService(Context.<span class="search_hit">ALARM</span>_SERVICE);
+
+//var alarm = AlarmManager.getNextAlarmClock();
+//var json_str = self.timeElapsed(alarm.getTriggerTime());
+
+var alarm = am.getNextAlarmClock().getTriggerTime();
+var json_str = self.timeElapsed(alarm);
+
+//var json_str = self.timeElapsed(alarm.AlarmManager.AlarmClockInfo.getTriggerTime());
+
+//var json_str = self.timeElapsed(alarm.AlarmClockInfo.getTriggerTime());
+
+var dt=new Date(alarm);
+alert(alarm +"\n"+ dt.getDate()	 +"-"+ (dt.getMonth()+1)+" "+ dt.getHours()	+":"+ dt.getMinutes() +"\n"+ json_str);
+
+//alert(json_str);
+
+
+
+
+
+
+return;
+
+/*
+https://developer.android.com/reference/android/app/AlarmManager.html
+
+https://developer.android.com/reference/android/app/AlarmManager.AlarmClockInfo.html
+*/
+
+android.app.AlarmManager
+
+//AlarmManager.AlarmClockInfo	
+getNextAlarmClock()
+//Gets information about the next alarm clock currently scheduled. The alarm clocks considered are those scheduled by any application using the setAlarmClock(AlarmManager.AlarmClockInfo, PendingIntent) method.
+//Returns
+//An AlarmManager.AlarmClockInfo object describing the next upcoming alarm clock event that will occur. If there are no alarm clock events currently scheduled, this method will return null.
+
+
+android.app.AlarmManager.AlarmClockInfo
+
+//long	
+getTriggerTime()
+//Returns the time at which the alarm is going to trigger. This value is UTC wall clock time in milliseconds, as returned by currentTimeMillis() for example.
+//currentTimeMillis(), returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
+
+
+
