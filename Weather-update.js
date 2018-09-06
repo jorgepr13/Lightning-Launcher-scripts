@@ -2,9 +2,9 @@
 need support for multiple locations, providers
 */
 var refresh_interval = 20 * 60000; //ms, = min * 60s * 1000ms
-var weather_api_key = "e000fb1333b830be";
 //var weather_loc = "47.0332559,-122.7967021";
 //var weather_loc = $location_gps;
+var weather_api_key = LL.getVariables().getString("api_key_weather_wu");
 var weather_loc = LL.getVariables().getString("location_net");
 var eventt = LL.getEvent();
 //var event_d = eventt.getData();
