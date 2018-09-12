@@ -5,7 +5,12 @@ kitchen_light
 bedroom_light
 living_room_light
 living_room_speakers
+
 */
+//import Dialog "class"
+try {eval(getScriptByName("Dialog_class").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+
+
 var api_key = LL.getVariables().getString("api_key_webhooks");
 var eventt = LL.getEvent();
 var event_d = eventt.getData();
@@ -36,11 +41,39 @@ function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDurati
 if (emptyVariable(api_key)) {showToast("You need a WebHooks api key!", true); return;}
 
 //check data
-if (emptyVariable(event_d)) {showToast("You need to pass an event data!", true); return;}
+var device = null; var num = 0; 
+var devices = [["bedroom_light", "Bedroom light"], ["kitchen_light", "Kitchen light"], ["living_room_light", "Living room light"], ["living_room_speakers", "Speakers"]];
+var mnu = new dialogList(); mnu.setId("menu"); mnu.setTitleText("Select a device"); mnu.exitOnClick(); mnu.hideButtonPositive(); mnu.hideButtonNegative(); mnu.hideButtonNeutral();
+//var mnu = new dialogList(); mnu.setId("menu"); mnu.setTitleText("Select a device"); mnu.exitOnClick(); mnu.hideButtonPositive(); mnu.hideButtonNegative(); mnu.setButtonNegativeText("Exit"); mnu.hideButtonNeutral();
 
+//if (emptyVariable(event_d)) {showToast("You need to pass an event data!", true); return;}
+if (!emptyVariable(event_d)) {device = event_d; runEvent();}
+else {
+  //prepare a list of devices to show on a prompt
+  var lst = [];
+  for (var i = 0; i < devices.length; i++) {lst.push(devices[i][1]);}
+  mnu.setItems(lst); mnu.show();
+}
+
+function runEvent(){
 //run the event
-var result = readWebStream("https://maker.ifttt.com/trigger/" + event_d + "/with/key/" + api_key);
-showToast(result, true);
+  var result = readWebStream("https://maker.ifttt.com/trigger/" + device + "/with/key/" + api_key);
+  showToast(result, true);
+}
+
+function dialogHandler(dialogData) {
+  if (emptyVariable(dialogData)) {return;}
+  var myDialog = JSON.parse(dialogData);
+  //if (emptyVariable(prevDialog)) {prevDialog = myDialog;}
+
+  if (myDialog.id == mnu.getId()) {
+    if (myDialog.position != -1) {
+      device = devices[myDialog.position][0];
+      runEvent();
+    } 
+  }
+
+} //dialogHandler
 
 function readWebStream (my_url) {
     var conn = null;
