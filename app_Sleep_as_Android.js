@@ -2,7 +2,7 @@
 //event_dat = "start","stop","pause"
 
 //import Tasker functions
-try {eval(getScriptByName("Tasker_class").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+try {eval(getScriptByName("class_Tasker").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 
 //set main script variables
 var eventt = getEvent();
@@ -14,8 +14,10 @@ var context = cscreen.getContext();//var context = LL.getContext();
 event_dat = event_dat.toString().toLowerCase();
 
 //get the current status
-var sleepTrack = getTaskerVariable("%SLEEP_TRACK");
-if (sleepTrack == null) {sleepTrack = cscript.getTag("SLEEP_TRACK");}
+var sleepTrack;
+//var sleepTrack = getTaskerVariable("%SLEEP_TRACK");
+//if (sleepTrack == null) {sleepTrack = cscript.getTag("SLEEP_TRACK");}
+sleepTrack = cscript.getTag("SLEEP_TRACK");
 if (sleepTrack == undefined){sleepTrack = 0;}
 
 //set the action to perform

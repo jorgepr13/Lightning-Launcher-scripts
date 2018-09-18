@@ -2,7 +2,7 @@
 //event_dat = "on","off","toggle"[default]; no event_dat (null) will resolve to "toggle"
 
 //import Tasker functions
-try {eval(getScriptByName("Tasker_class").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+try {eval(getScriptByName("class_Tasker").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
 
 //set main script variables
 var eventt = getEvent();
@@ -14,8 +14,10 @@ var context = cscreen.getContext();//var context = LL.getContext();
 event_dat = event_dat.toString().toLowerCase();
 
 //get the current status
-var screenFilter = getTaskerVariable("%SCREEN_FILTER");
-if (screenFilter == null) {screenFilter = cscript.getTag("SCREEN_FILTER");}
+var screenFilter;
+//screenFilter = getTaskerVariable("%SCREEN_FILTER");
+//if (screenFilter == null) {screenFilter = cscript.getTag("SCREEN_FILTER");}
+screenFilter = cscript.getTag("SCREEN_FILTER");
 if (screenFilter == undefined) {screenFilter = 0;}
 
 //set the action to perform
