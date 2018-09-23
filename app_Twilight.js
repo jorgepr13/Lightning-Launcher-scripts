@@ -43,7 +43,6 @@ context.startService(intentt);
 
 //update the tag and variable
 getVariables().edit().setInteger("SCREEN_FILTER", screenFilter).commit();
-//cscript.setTag("SCREEN_FILTER", null);
 //cscript.setTag("SCREEN_FILTER", screenFilter);
 setTaskerVariable("%SCREEN_FILTER", screenFilter);
 
