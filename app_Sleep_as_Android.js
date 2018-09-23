@@ -17,7 +17,8 @@ event_dat = event_dat.toString().toLowerCase();
 var sleepTrack;
 //var sleepTrack = getTaskerVariable("%SLEEP_TRACK");
 //if (sleepTrack == null) {sleepTrack = cscript.getTag("SLEEP_TRACK");}
-sleepTrack = cscript.getTag("SLEEP_TRACK");
+//sleepTrack = cscript.getTag("SLEEP_TRACK");
+sleepTrack = getVariables().getInteger("SLEEP_TRACK");
 if (sleepTrack == undefined){sleepTrack = 0;}
 
 //set the action to perform
@@ -39,7 +40,9 @@ if (action == "pause") {
 
 //update the tag and variable
 if (action != "pause") {
-  cscript.setTag("SLEEP_TRACK", sleepTrack);
+  getVariables().edit().setInteger("SLEEP_TRACK", sleepTrack).commit();
+  cscript.setTag("SLEEP_TRACK", null);
+  //cscript.setTag("SLEEP_TRACK", sleepTrack);
   setTaskerVariable("%SLEEP_TRACK", sleepTrack);
 }
 /*

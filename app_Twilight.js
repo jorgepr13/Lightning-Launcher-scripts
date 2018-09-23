@@ -17,7 +17,8 @@ event_dat = event_dat.toString().toLowerCase();
 var screenFilter;
 //screenFilter = getTaskerVariable("%SCREEN_FILTER");
 //if (screenFilter == null) {screenFilter = cscript.getTag("SCREEN_FILTER");}
-screenFilter = cscript.getTag("SCREEN_FILTER");
+//screenFilter = cscript.getTag("SCREEN_FILTER");
+screenFilter = getVariables().getInteger("SCREEN_FILTER");
 if (screenFilter == undefined) {screenFilter = 0;}
 
 //set the action to perform
@@ -41,8 +42,11 @@ intentt.putExtra(extra, extra);
 context.startService(intentt);
 
 //update the tag and variable
-cscript.setTag("SCREEN_FILTER", screenFilter);
+getVariables().edit().setInteger("SCREEN_FILTER", screenFilter).commit();
+//cscript.setTag("SCREEN_FILTER", null);
+//cscript.setTag("SCREEN_FILTER", screenFilter);
 setTaskerVariable("%SCREEN_FILTER", screenFilter);
+
 
 /*
 //getActiveScreen().getContext().sendBroadcast(intent);
