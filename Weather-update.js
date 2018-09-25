@@ -4,9 +4,9 @@ need support for multiple locations, providers
 var refresh_interval = 20 * 60000; //ms, = min * 60s * 1000ms
 //var weather_loc = "47.0332559,-122.7967021";
 //var weather_loc = $location_gps;
-var weather_api_key = LL.getVariables().getString("api_key_weather_wu");
-var weather_loc = LL.getVariables().getString("location_net");
-var eventt = LL.getEvent();
+var weather_api_key = getVariables().getString("api_key_weather_wu");
+var weather_loc = getVariables().getString("location_net");
+var eventt = getEvent();
 //var event_d = eventt.getData();
 var event_s = eventt.getSource();
 var event_i = eventt.getItem();
@@ -14,19 +14,19 @@ var event_i = eventt.getItem();
 //http://www.lightninglauncher.com/scripting/reference/api/reference/net/pierrox/lightning_launcher/script/api/Event.html
 
 //prevent android.os.NetworkOnMainThreadException
-LL.bindClass("android.os.StrictMode");
+bindClass("android.os.StrictMode");
 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
 
 //import readWebStream classes
-LL.bindClass("java.net.URL");
-LL.bindClass("java.net.HttpURLConnection");
-LL.bindClass("java.io.BufferedInputStream");
+bindClass("java.net.URL");
+bindClass("java.net.HttpURLConnection");
+bindClass("java.io.BufferedInputStream");
 
 //import readStream classes
-LL.bindClass("java.io.BufferedReader");
-LL.bindClass("java.io.InputStreamReader");
-LL.bindClass("java.io.FileInputStream");
-LL.bindClass("java.lang.StringBuilder");
+bindClass("java.io.BufferedReader");
+bindClass("java.io.InputStreamReader");
+bindClass("java.io.FileInputStream");
+bindClass("java.lang.StringBuilder");
 
 var context = getActiveScreen().getContext();
 bindClass("android.widget.Toast");
@@ -47,12 +47,12 @@ function msgShow(msg,flag){
     if (flag == null || flag == undefined || flag == "" || isNaN(flag)) {flag = false;}
     if (flag == 1) {flag = true;}
     if (typeoff(flag) == "boolean") {
-    Android.makeNewToast(msg,flag).show();
-    //var duration = Toast.LENGTH_SHORT; //Toast.LENGTH_LONG
-    //var toast = Toast.makeText(context, text, duration)
-    //Toast.makeText(context, text, duration).setGravity().show();
-    //setGravity(int_Gravity_constant, int_x_offset, int_y_offset);
-    //toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);//Gravity.CENTER_VERTICAL
+      Android.makeNewToast(msg,flag).show();
+      //var duration = Toast.LENGTH_SHORT; //Toast.LENGTH_LONG
+      //var toast = Toast.makeText(context, text, duration)
+      //Toast.makeText(context, text, duration).setGravity().show();
+      //setGravity(int_Gravity_constant, int_x_offset, int_y_offset);
+      //toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);//Gravity.CENTER_VERTICAL
     }
     else {alert(msg);}
     return 0;
