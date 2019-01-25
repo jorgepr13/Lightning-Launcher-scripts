@@ -1,8 +1,8 @@
 
-//http://www.lightninglauncher.com/wiki/doku.php?id=script_external_editor_script_importer
+//http://www.lightninglauncher.com/wiki/doku.php?id=script_external_editor_scrip
 
 bindClass("android.os.Environment");
-
+//var scriptFolder = "/storage/emulated/0/_Backup/0-Scripts/Import_to_LL";
 var scriptFolder = Environment.getExternalStorageDirectory().getAbsolutePath() + "/_Backup/0-Scripts/Import_to_LL/";
 
 bindClass("java.io.FileReader");
