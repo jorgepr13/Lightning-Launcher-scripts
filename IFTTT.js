@@ -19,8 +19,8 @@ var event_d = eventt.getData();
 if (emptyVariable(api_key)) {showToast("You need a WebHooks api key!", true); return;}
 
 //check data
-var device = null; var num = 0; 
-var devices = [["bedroom_light", "Bedroom light"], ["kitchen_light", "Kitchen light"], ["living_room_light", "Living room light"], ["living_room_speakers", "Speakers"]];
+var device = null; var num = 0;
+var devices = [["bedroom_light", "Bedroom light"], ["living_room_light", "Living room light"], ["living_room_speakers", "Speakers"], ["kitchen_light", "Kitchen light"], ["bedroom_light_on", "Bedroom light On"], ["bedroom_light_off", "Bedroom light Off"],["living_room_light_on", "Living room light On"], ["living_room_light_off", "Living room light Off"], ["living_room_speakers_on", "Speakers On"], ["living_room_speakers_off", "Speakers Off"], ["kitchen_light_on", "Kitchen light On"], ["kitchen_light_off", "Kitchen light Off"]];
 var mnu = new dialogList(); mnu.setId("menu"); mnu.setTitleText("Select a device"); mnu.exitOnClick(); mnu.hideButtonPositive(); mnu.hideButtonNegative(); mnu.hideButtonNeutral();
 
 //if (emptyVariable(event_d)) {showToast("You need to pass an event data!", true); return;}
@@ -46,7 +46,7 @@ function dialogHandler(dialogData){
     if (myDialog.position != -1) {
       device = devices[myDialog.position][0];
       runEvent();
-    } 
+    }
   }
 
 } //dialogHandler

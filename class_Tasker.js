@@ -1,5 +1,5 @@
 
-/*Tasker Functions
+/*Tasker Class
 About the script
 Purpose: This is a script with useful Tasker functions.
 Author: jorgepr13
@@ -15,8 +15,8 @@ getTaskerVariable(["%BLUE","%LOCN","%AIR","%LOC","%SCREEN","%WIFI","%GPS"]);
 
 3. Optional
 You can have your Tasker "class" as an individual script and "import" it with the following code.
-try {eval(getScriptByName("Tasker_Functions").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
-Where "Tasker_Functions" is the name of the script.
+try {eval(getScriptByName("class_Tasker").getText());} catch (e) {bindClass("android.widget.Toast");Toast.makeText(getActiveScreen().getContext(), "One of the required scripts couldn't be loaded.\nPlease try again.\n\n" + e, Toast.LENGTH_LONG).show(); return null;}
+Where "class_Tasker" is the name of the script.
 
 Additional
 runTaskerTask(name, wait)
@@ -37,7 +37,6 @@ function emptyVariable(myVar) {return myVar == null || myVar == undefined || myV
 function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDuration = Toast.LENGTH_SHORT; if (emptyVariable(longDuration) || typeoff(longDuration) != "boolean") {longDuration = false;} if (longDuration) {mDuration = Toast.LENGTH_LONG;} Toast.makeText(context, myMsg, mDuration).show();}}
 
 var taskerStatus = TaskerIntent.testStatus(context);
-
 
 function runTaskerTask(name, wait) {
   if (taskerStatus != "OK") {

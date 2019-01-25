@@ -1,8 +1,9 @@
 
 //http://www.lightninglauncher.com/wiki/doku.php?id=script_external_editor_script_importer
 
-var scriptFolder = "/storage/emulated/0/_Backup/0-Scripts/Import_to_LL";
-var importPath = "/";
+bindClass("android.os.Environment");
+
+var scriptFolder = Environment.getExternalStorageDirectory().getAbsolutePath() + "/_Backup/0-Scripts/Import_to_LL/";
 
 bindClass("java.io.FileReader");
 bindClass("java.io.BufferedReader");
@@ -18,23 +19,24 @@ function showToast(myMsg, longDuration) {if (!emptyVariable(myMsg)) {var mDurati
 
 function read(filePath) {
   try {
-    var r = new BufferedReader(new FileReader(filePath)); 
-    var s = new StringBuilder(); 
-    var l; 
+    var r = new BufferedReader(new FileReader(filePath));
+    var s = new StringBuilder();
+    var l;
     while ((l = r.readLine())!=null) {s.append(l + "\n");}
     return s;
   } catch (e) {
     alert(e);
-    return ""; 
+    return "";
   }
 }
 
 function updateScripts(folder) {
+  if (typeof folder == "null") {return 1;}
   folder.listFiles().forEach(function(file) {
+    if (file.isDirectory()) {updateScripts(file);}
     var fileName = file.getName();
     var length = fileName.length;
-    if (file.isDirectory()) {updateScripts(file);
-    } else if (fileName.substring(length - 3, length) == ".js") {
+    if (fileName.substring(length - 3, length) == ".js") {
       var name = fileName.slice(0,-3);
       var path = folder.getPath().substring(scriptFolder.length);
       var script = getScriptByName(name);
@@ -52,14 +54,15 @@ function updateScripts(folder) {
       }
     }
   });
+  return 0;
 }
- 
-//var scriptNames = []
+
+//var scriptNames = [];
 var time = new Date().getTime();
 var updatedScripts = [];
 var folder = new File(scriptFolder);
 updateScripts(folder);
- 
+
 if (updatedScripts.length > 0) {showToast("Updated scripts: " + updatedScripts.join(", "), true);}
 
 //showToast("Importing scripts complete.", true);
